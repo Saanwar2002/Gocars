@@ -44,6 +44,15 @@ const config: Config = {
         '88': '22rem',
         '128': '32rem',
         '144': '36rem',
+        // Touch-friendly spacing
+        'touch-sm': '2.75rem', // 44px - minimum touch target
+        'touch': '3rem', // 48px - comfortable touch target
+        'touch-lg': '3.5rem', // 56px - large touch target
+        // Safe area spacing
+        'safe': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
       },
       // GoCars Color System
       colors: {
@@ -265,6 +274,42 @@ const config: Config = {
       transitionTimingFunction: {
         'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
+      // Responsive breakpoints
+      screens: {
+        'xs': '475px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        // Touch-specific breakpoints
+        'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
+        'no-touch': { 'raw': '(hover: hover) and (pointer: fine)' },
+        // Orientation breakpoints
+        'portrait': { 'raw': '(orientation: portrait)' },
+        'landscape': { 'raw': '(orientation: landscape)' },
+        // High DPI breakpoints
+        'retina': { 'raw': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)' },
+      },
+      // Container queries
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '1.5rem',
+          lg: '2rem',
+          xl: '2.5rem',
+          '2xl': '3rem',
+        },
+        screens: {
+          'xs': '475px',
+          'sm': '640px',
+          'md': '768px',
+          'lg': '1024px',
+          'xl': '1280px',
+          '2xl': '1400px',
+        },
       },
     },
   },
