@@ -67,8 +67,8 @@ export default function PhoneVerification() {
   return (
     <div className="mb-6">
       <div className="mb-2">
-        <strong>Phone Number:</strong> {user.phoneNumber || &apos;Not set&apos;}<br />
-        <strong>Status:</strong> {user.phoneVerified ? &apos;Verified&apos; : &apos;Unverified&apos;}
+        <strong>Phone Number:</strong> {user.phoneNumber || "Not set"}<br />
+        <strong>Status:</strong> {user.phoneVerified ? "Verified" : "Unverified"}
       </div>
       {(!user.phoneVerified || editing) ? (
         <div>

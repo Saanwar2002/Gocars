@@ -1,14 +1,15 @@
 
 import type { Metadata } from "next";
-import { PT_Sans } from "next/font/google"; // Changed from Inter to PT_Sans
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ThemeInitializer } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
-const ptSans = PT_Sans({ // Initialize PT Sans
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "700"] // Include weights you need
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className={ptSans.className}> {/* Apply PT Sans class */}
+      <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
           <ThemeInitializer>
             <Toaster />

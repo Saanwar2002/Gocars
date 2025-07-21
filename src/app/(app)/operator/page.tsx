@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'; 
 import { Briefcase, Car, Users, BarChart3, AlertTriangle, Map, Loader2, ListChecks, ShieldCheck, TrafficCone, UserPlus, Edit, CheckCircle as CheckCircleIconLucide, TimerIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import dynamic from 'next/dynamic';

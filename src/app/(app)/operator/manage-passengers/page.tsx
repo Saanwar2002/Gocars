@@ -195,7 +195,7 @@ export default function OperatorManagePassengersPage() {
                     <TableRow key={passenger.id}>
                       <TableCell className="font-medium">{passenger.name}</TableCell>
                       <TableCell>{passenger.email}</TableCell>
-                      <TableCell>{passenger.phone || &apos;N/A&apos;}</TableCell>
+                      <TableCell>{passenger.phone || "N/A"}</TableCell>
                       <TableCell>{formatDateFromTimestamp(passenger.createdAt)}</TableCell>
                       <TableCell className="text-center space-x-1">
                          <Button variant="outline" size="icon" className="h-8 w-8" title="View Details (Placeholder)">

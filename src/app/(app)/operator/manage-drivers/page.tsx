@@ -473,7 +473,7 @@ export default function OperatorManageDriversPage() {
                       <TableCell className="font-medium">{driver.name}</TableCell>
                       <TableCell>
                         <div>{driver.email}</div>
-                        <div className="text-xs text-muted-foreground">{driver.phone || &apos;N/A&apos;}</div>
+                        <div className="text-xs text-muted-foreground">{driver.phone || "N/A"}</div>
                       </TableCell>
                       <TableCell>
                         <button
@@ -610,7 +610,7 @@ export default function OperatorManageDriversPage() {
               <div className="space-y-2">
                 <div><strong>Name:</strong> {selectedDriver.name}</div>
                 <div><strong>Email:</strong> {selectedDriver.email}</div>
-                <div><strong>Phone:</strong> {selectedDriver.phone || &apos;N/A&apos;}</div>
+                <div><strong>Phone:</strong> {selectedDriver.phone || "N/A"}</div>
                 <div><strong>Driver ID:</strong> {selectedDriver.driverIdentifier || selectedDriver.customId || 'N/A'}</div>
                 <div><strong>Operator Code:</strong> {selectedDriver.operatorCode || 'N/A'}</div>
                 <div><strong>Status:</strong> {selectedDriver.status}</div>
