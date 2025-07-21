@@ -4,13 +4,19 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  "relative w-full rounded-lg border p-4 shadow-gocars-sm transition-all duration-200 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground animate-fade-in",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
+        default: "bg-background text-foreground border-border",
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive bg-destructive/5",
+        success:
+          "border-gocars-green-200 bg-gocars-green-50 text-gocars-green-800 dark:border-gocars-green-800 dark:bg-gocars-green-900/20 dark:text-gocars-green-200 [&>svg]:text-gocars-green-600",
+        warning:
+          "border-gocars-orange-200 bg-gocars-orange-50 text-gocars-orange-800 dark:border-gocars-orange-800 dark:bg-gocars-orange-900/20 dark:text-gocars-orange-200 [&>svg]:text-gocars-orange-600",
+        info:
+          "border-gocars-blue-200 bg-gocars-blue-50 text-gocars-blue-800 dark:border-gocars-blue-800 dark:bg-gocars-blue-900/20 dark:text-gocars-blue-200 [&>svg]:text-gocars-blue-600",
       },
     },
     defaultVariants: {

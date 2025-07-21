@@ -31,10 +31,10 @@ export default function LandingPage() {
       <section className="pt-0 md:pt-1 lg:pt-1 pb-0 md:pb-1 lg:pb-1 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <Image
-            src="/gocars-logo.png"
+            src="/gocars-logo.svg"
             alt="GoCars Logo"
-            width={500}
-            height={150}
+            width={400}
+            height={120}
             className="mx-auto py-8"
             priority
           />

@@ -8,12 +8,12 @@
   "description": "GoCars - Your Journey, Our Priority. Modern taxi booking platform with AI-powered features.",
   "icons": [
     {
-      "src": "/gocars-logo.png",
+      "src": "/gocars-icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/gocars-logo.png",
+      "src": "/gocars-icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
