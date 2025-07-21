@@ -31,25 +31,25 @@ export default function LandingPage() {
       <section className="pt-0 md:pt-1 lg:pt-1 pb-0 md:pb-1 lg:pb-1 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <Image
-            src="/Mybase-new-logo.png"
-            alt="MyBase Logo"
+            src="/gocars-logo.png"
+            alt="GoCars Logo"
             width={500}
             height={150}
             className="mx-auto py-8"
             priority
           />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-headline tracking-tight text-primary mb-3 max-w-2xl mx-auto">
-            MyBase: Your Journey, Simplified.
+            GoCars: Your Journey, Our Priority.
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-4">
-            The all-in-one taxi platform connecting passengers, drivers, and operators for a seamless, efficient, and reliable experience.
+            The modern taxi booking platform with AI-powered features, connecting passengers, drivers, and operators for a seamless, efficient, and reliable experience.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-lg mx-auto">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-3 shadow-md hover:shadow-lg transition-shadow" asChild>
-              <Link href="/register?role=passenger">Ride with MyBase</Link>
+              <Link href="/register?role=passenger">Ride with GoCars</Link>
             </Button>
             <Button size="lg" className="bg-blue-900 hover:bg-blue-800 text-white text-lg px-8 py-3 shadow-md hover:shadow-lg transition-shadow border border-blue-900" asChild>
-              <Link href="/register?role=driver">Drive for MyBase</Link>
+              <Link href="/register?role=driver">Drive for GoCars</Link>
             </Button>
             <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-3 shadow-md hover:shadow-lg transition-shadow" asChild>
               <Link href="/login">Log In</Link>
@@ -68,7 +68,7 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="py-12 md:py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10 text-foreground">Why Choose MyBase?</h2>
+          <h2 className="text-3xl font-bold text-center mb-10 text-foreground">Why Choose GoCars?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
               icon={Zap}
@@ -116,7 +116,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg mb-8 max-w-xl mx-auto">
-            Join the MyBase community today and experience the future of taxi services.
+            Join the GoCars community today and experience the future of taxi services.
           </p>
           <Button size="lg" className="bg-background text-foreground hover:bg-background/90 text-lg px-10 py-3 shadow-lg hover:shadow-xl transition-shadow" asChild>
             <Link href="/register">Sign Up Now</Link>

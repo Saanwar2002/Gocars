@@ -12,8 +12,8 @@ const ptSans = PT_Sans({ // Initialize PT Sans
 });
 
 export const metadata: Metadata = {
-  title: "MyBase App", // Corrected App Name if necessary
-  description: "The ultimate taxi app solution.",
+  title: "GoCars - Modern Taxi Booking Platform",
+  description: "GoCars - Your Journey, Our Priority. Modern taxi booking platform with AI-powered features, real-time tracking, and seamless user experience.",
 };
 
 export default function RootLayout({
