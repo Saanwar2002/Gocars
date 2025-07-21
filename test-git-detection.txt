@@ -1,0 +1,2 @@
+This is a test file to check if Git source control is working in the IDE.
+Created at: $(Get-Date)
