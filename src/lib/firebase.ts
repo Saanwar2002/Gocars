@@ -121,21 +121,29 @@ export { app, db, auth };
 const connectWithRetry = async (retries = 3): Promise<void> => {
   for (let i = 0; i < retries; i++) {
     try {
-      // Test connection
+      // Test connection with a simple query
       if (db) {
-        await db._delegate._databaseId
+        // Try to access a system collection to test connectivity
+        const { collection, getDocs, limit, query } = await import('firebase/firestore')
+        const testQuery = query(collection(db, '__test__'), limit(1))
+        await getDocs(testQuery)
       }
       console.log('Firebase connection successful')
       return
     } catch (error) {
-      console.warn(`Firebase connection attempt ${i + 1} failed:, error`)
-      if (i === retries - 1) throw error
+      console.warn(`Firebase connection attempt ${i + 1} failed:`, error)
+      if (i === retries - 1) {
+        console.error('Firebase connection failed after all retry attempts')
+        return // Don't throw error to prevent app crash
+      }
       await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
     }
   }
 }
 
-// Initialize connection with retry
+// Initialize connection with retry (non-blocking)
 if (db) {
-  connectWithRetry().catch(console.error)
+  connectWithRetry().catch(error => {
+    console.error('Firebase connection retry failed:', error)
+  })
 }
