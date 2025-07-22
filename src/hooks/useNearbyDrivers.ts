@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { FirebaseError } from '../types/global';
+import { FirebaseError } from '../types';
 
 export interface DriverMarker {
   id: string;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/auth-context';
-import { Timestamp, SerializedTimestamp } from '../types/global';
+import { Timestamp, SerializedTimestamp } from '../types';
 
 export interface OperatorNotification {
   id: string;

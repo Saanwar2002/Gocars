@@ -71,7 +71,7 @@ interface LocationPoint {
 }
 
 // Import SerializedTimestamp and Timestamp from global types
-import { SerializedTimestamp, Timestamp } from '@/types/global';
+import { SerializedTimestamp, Timestamp } from '@/types';
 
 // Enhanced ActiveRide interface with proper type handling
 interface ActiveRide {

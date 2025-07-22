@@ -7,7 +7,7 @@ import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, User as FirebaseUser, signInWithEmailAndPassword, signOut } from 'firebase/auth'; 
 import { doc, getDoc, Timestamp } from 'firebase/firestore'; 
 import { useToast } from '@/hooks/use-toast';
-import { ActiveRide, FirebaseError } from '../types/global'; 
+import { ActiveRide, FirebaseError } from '../types'; 
 
 export type UserRole = 'passenger' | 'driver' | 'operator' | 'admin';
 

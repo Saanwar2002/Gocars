@@ -4,7 +4,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/auth-context';
 import { Button } from '@/components/ui/button';
-import { FirebaseError } from '../../types/global';
+import { FirebaseError } from '../../types';
 
 export default function PhoneVerification() {
   const { user } = useAuth();

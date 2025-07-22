@@ -42,7 +42,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 
 // Import SerializedTimestamp from global types
-import { SerializedTimestamp, Timestamp } from '@/types/global';
+import { SerializedTimestamp, Timestamp } from '@/types';
 
 // Alias SerializedTimestamp to JsonTimestamp for backward compatibility
 type JsonTimestamp = SerializedTimestamp;

@@ -132,4 +132,6 @@ const NotificationTestingAgent: React.FC = () => {
           { id: 'int-ride-workflow', name: 'Ride Notification Workflow', status: 'pending' },
           { id: 'int-emergency-workflow', name: 'Emergency Notification Workflow', status: 'pending' },
           { id: 'int-payment-workflow', name: 'Payment Notification Workflow', status: 'pending' },
-          { id: 'int-promotion-workflow', name: 'Promotion Notification Work
+          { id: 'int-promotion-workflow', name: 'Promotion Notification Workflow', status: 'pending' },
+          { id: 'int-driver-workflow', name: 'Driver Notification Workflow', status: 'pending' },
+          { id: 'int-system-workflow', name: 'System Notification Workflow', status: 'pending' }

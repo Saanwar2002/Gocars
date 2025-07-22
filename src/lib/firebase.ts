@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
-import { FirebaseError } from '../types/global';
+import { FirebaseError } from '../types';
 
 // Fallback Firebase configuration (using user-confirmed working key for Maps as API key fallback)
 const FALLBACK_API_KEY = "AIzaSyAEnaOlXAGlkox-wpOOER7RUPhd8iWKhg4";

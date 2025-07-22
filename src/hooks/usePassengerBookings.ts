@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { Timestamp, SerializedTimestamp, FirebaseError } from '../types/global';
+import { Timestamp, SerializedTimestamp, FirebaseError } from '../types';
 
 export interface Booking {
   id: string;

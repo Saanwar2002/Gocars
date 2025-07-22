@@ -24,7 +24,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle as ShadDialogTitle, Di
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/auth-context';
-import { Booking } from '../../../types/global'; 
+import { Booking } from '../../../types'; 
 
 interface LocationPoint {
   address: string;

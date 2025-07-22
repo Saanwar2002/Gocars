@@ -11,7 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
 import { useEffect, useState } from "react";
-import { CreditAccount } from "../../types/global";
+import { CreditAccount } from "../../types";
 
 
 interface HealthMetricProps {
