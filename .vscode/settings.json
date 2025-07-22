@@ -2,5 +2,6 @@
   "git.enabled": true,
   "git.autorefresh": true,
   "git.autofetch": true,
-  "scm.defaultViewMode": "tree"
+  "scm.defaultViewMode": "tree",
+  "typescript.autoClosingTags": false
 }

@@ -1,135 +1,94 @@
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Minus, 
-  MoreHorizontal, 
-  RefreshCw,
-  Maximize2,
-  Minimize2,
-  Settings,
-  Download,
-  Eye,
-  EyeOff
-} from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loading } from "@/components/ui/loading"
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuSeparator
-} from "@/components/ui/dropdown-menu"
-import { ResponsiveGrid } from "@/components/ui/responsive-grid"
-import { DashboardWidget } from "@/components/ui/dashboard-widget"
+import { Settings, X, Maximize2, Minimize2 } from "lucide-react"
 
 // Widget Configuration Types
-interface WidgetConfig {
+export interface WidgetConfig {
   id: string
   type: 'metric' | 'chart' | 'list' | 'map' | 'action' | 'custom'
   title: string
-  description?: string
   size: 'sm' | 'md' | 'lg' | 'xl'
-  position: { x: number; y: number }
+  position?: { x: number; y: number }
   visible: boolean
-  refreshInterval?: number
   permissions: string[]
   customizable: boolean
   exportable: boolean
-  data?: any
+  refreshInterval?: number
+  data?: Record<string, unknown>
+  config?: Record<string, unknown>
 }
 
-interface WidgetData {
-  value?: string | number
-  previousValue?: string | number
-  trend?: "up" | "down" | "neutral"
-  trendValue?: string
-  loading?: boolean
-  error?: string
-  lastUpdated?: Date
+export interface WidgetData {
+  [key: string]: unknown
 }
 
 // Widget System Context
 interface WidgetSystemContextType {
   widgets: WidgetConfig[]
+  isEditMode: boolean
+  setEditMode: (editMode: boolean) => void
   updateWidget: (id: string, updates: Partial<WidgetConfig>) => void
   removeWidget: (id: string) => void
   addWidget: (widget: WidgetConfig) => void
-  refreshWidget: (id: string) => Promise<void>
-  isEditMode: boolean
-  setEditMode: (enabled: boolean) => void
+  reorderWidgets: (widgets: WidgetConfig[]) => void
 }
 
-const WidgetSystemContext = React.createContext<WidgetSystemContextType | undefined>(undefined)
-
-export const useWidgetSystem = () => {
-  const context = React.useContext(WidgetSystemContext)
-  if (!context) {
-    throw new Error('useWidgetSystem must be used within a WidgetSystemProvider')
-  }
-  return context
-}
+const WidgetSystemContext = React.createContext<WidgetSystemContextType | null>(null)
 
 // Widget System Provider
 interface WidgetSystemProviderProps {
   children: React.ReactNode
-  initialWidgets?: WidgetConfig[]
+  initialWidgets: WidgetConfig[]
   onWidgetUpdate?: (widgets: WidgetConfig[]) => void
 }
 
 export const WidgetSystemProvider: React.FC<WidgetSystemProviderProps> = ({
   children,
-  initialWidgets = [],
+  initialWidgets,
   onWidgetUpdate,
 }) => {
   const [widgets, setWidgets] = React.useState<WidgetConfig[]>(initialWidgets)
-  const [isEditMode, setEditMode] = React.useState(false)
+  const [isEditMode, setIsEditMode] = React.useState(false)
 
-  const updateWidget = React.useCallback((id: string, updates: Partial<WidgetConfig>) => {
-    setWidgets(prev => {
-      const updated = prev.map(widget => 
-        widget.id === id ? { ...widget, ...updates } : widget
-      )
-      onWidgetUpdate?.(updated)
-      return updated
-    })
-  }, [onWidgetUpdate])
+  // Update parent when widgets change
+  React.useEffect(() => {
+    onWidgetUpdate?.(widgets)
+  }, [widgets, onWidgetUpdate])
 
-  const removeWidget = React.useCallback((id: string) => {
-    setWidgets(prev => {
-      const updated = prev.filter(widget => widget.id !== id)
-      onWidgetUpdate?.(updated)
-      return updated
-    })
-  }, [onWidgetUpdate])
+  const setEditMode = (editMode: boolean) => {
+    setIsEditMode(editMode)
+  }
 
-  const addWidget = React.useCallback((widget: WidgetConfig) => {
-    setWidgets(prev => {
-      const updated = [...prev, widget]
-      onWidgetUpdate?.(updated)
-      return updated
-    })
-  }, [onWidgetUpdate])
+  const updateWidget = (id: string, updates: Partial<WidgetConfig>) => {
+    setWidgets(prev => prev.map(widget => 
+      widget.id === id ? { ...widget, ...updates } : widget
+    ))
+  }
 
-  const refreshWidget = React.useCallback(async (id: string) => {
-    // Implement widget refresh logic
-    console.log(`Refreshing widget: ${id}`)
-  }, [])
+  const removeWidget = (id: string) => {
+    setWidgets(prev => prev.filter(widget => widget.id !== id))
+  }
 
-  const value = React.useMemo(() => ({
+  const addWidget = (widget: WidgetConfig) => {
+    setWidgets(prev => [...prev, widget])
+  }
+
+  const reorderWidgets = (newWidgets: WidgetConfig[]) => {
+    setWidgets(newWidgets)
+  }
+
+  const value: WidgetSystemContextType = {
     widgets,
+    isEditMode,
+    setEditMode,
     updateWidget,
     removeWidget,
     addWidget,
-    refreshWidget,
-    isEditMode,
-    setEditMode,
-  }), [widgets, updateWidget, removeWidget, addWidget, refreshWidget, isEditMode])
+    reorderWidgets,
+  }
 
   return (
     <WidgetSystemContext.Provider value={value}>
@@ -138,33 +97,35 @@ export const WidgetSystemProvider: React.FC<WidgetSystemProviderProps> = ({
   )
 }
 
+// Hook to use widget system
+export const useWidgetSystem = () => {
+  const context = React.useContext(WidgetSystemContext)
+  if (!context) {
+    throw new Error('useWidgetSystem must be used within a WidgetSystemProvider')
+  }
+  return context
+}
+
 // Configurable Widget Component
 interface ConfigurableWidgetProps {
   config: WidgetConfig
-  data?: WidgetData
-  children?: React.ReactNode
-  onRefresh?: () => Promise<void>
+  children: React.ReactNode
+  className?: string
+  onConfigure?: () => void
+  onRemove?: () => void
+  onMaximize?: () => void
 }
 
 export const ConfigurableWidget: React.FC<ConfigurableWidgetProps> = ({
   config,
-  data,
   children,
-  onRefresh,
+  className,
+  onConfigure,
+  onRemove,
+  onMaximize,
 }) => {
-  const { updateWidget, removeWidget, isEditMode } = useWidgetSystem()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
-
-  const handleRefresh = async () => {
-    if (onRefresh && !isRefreshing) {
-      setIsRefreshing(true)
-      try {
-        await onRefresh()
-      } finally {
-        setTimeout(() => setIsRefreshing(false), 500)
-      }
-    }
-  }
+  const { isEditMode, updateWidget, removeWidget } = useWidgetSystem()
+  const [isMaximized, setIsMaximized] = React.useState(false)
 
   const handleToggleVisibility = () => {
     updateWidget(config.id, { visible: !config.visible })
@@ -172,224 +133,137 @@ export const ConfigurableWidget: React.FC<ConfigurableWidgetProps> = ({
 
   const handleRemove = () => {
     removeWidget(config.id)
+    onRemove?.()
   }
 
-  const getSizeClasses = (size: string) => {
-    switch (size) {
-      case 'sm': return 'col-span-1 row-span-1'
-      case 'md': return 'col-span-2 row-span-1'
-      case 'lg': return 'col-span-2 row-span-2'
-      case 'xl': return 'col-span-3 row-span-2'
-      default: return 'col-span-1 row-span-1'
-    }
+  const handleMaximize = () => {
+    setIsMaximized(!isMaximized)
+    onMaximize?.()
   }
 
-  if (!config.visible && !isEditMode) {
-    return null
+  const sizeClasses = {
+    sm: "col-span-1 row-span-1",
+    md: "col-span-2 row-span-1", 
+    lg: "col-span-2 row-span-2",
+    xl: "col-span-3 row-span-2"
   }
 
   return (
-    <div 
+    <Card 
       className={cn(
-        "relative group transition-all duration-200",
-        getSizeClasses(config.size),
-        !config.visible && isEditMode && "opacity-50",
-        isEditMode && "ring-2 ring-primary/20 hover:ring-primary/40"
-      )}
-    >
-      {/* Edit Mode Overlay */}
-      {isEditMode && (
-        <div className="absolute inset-0 bg-primary/5 backdrop-blur-sm z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={handleToggleVisibility}
-            >
-              {config.visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={handleRemove}
-            >
-              Remove
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <DashboardWidget
-        title={config.title}
-        description={config.description}
-        value={data?.value}
-        previousValue={data?.previousValue}
-        trend={data?.trend}
-        trendValue={data?.trendValue}
-        loading={data?.loading}
-        refreshable={true}
-        onRefresh={handleRefresh}
-        badge={data?.error ? { text: "Error", variant: "destructive" } : undefined}
-        actions={
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleRefresh} disabled={isRefreshing}>
-                <RefreshCw className={cn("h-4 w-4 mr-2", isRefreshing && "animate-spin")} />
-                Refresh
-              </DropdownMenuItem>
-              {config.exportable && (
-                <DropdownMenuItem>
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Data
-                </DropdownMenuItem>
-              )}
-              {config.customizable && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configure
-                  </DropdownMenuItem>
-                </>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleToggleVisibility}>
-                {config.visible ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-                {config.visible ? 'Hide' : 'Show'}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleRemove} className="text-destructive">
-                Remove Widget
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        }
-      >
-        {children}
-      </DashboardWidget>
-    </div>
-  )
-}
-
-// Dashboard Grid Layout
-interface DashboardGridProps {
-  children: React.ReactNode
-  className?: string
-  editMode?: boolean
-}
-
-export const DashboardGrid: React.FC<DashboardGridProps> = ({
-  children,
-  className,
-  editMode = false,
-}) => {
-  return (
-    <div
-      className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-min",
-        editMode && "min-h-[400px]",
+        "relative transition-all duration-200",
+        sizeClasses[config.size],
+        !config.visible && "opacity-50",
+        isMaximized && "fixed inset-4 z-50 col-span-full row-span-full",
+        isEditMode && "ring-2 ring-primary/20 hover:ring-primary/40",
         className
       )}
     >
-      {children}
-    </div>
-  )
-}
-
-// Widget Toolbar
-interface WidgetToolbarProps {
-  className?: string
-}
-
-export const WidgetToolbar: React.FC<WidgetToolbarProps> = ({ className }) => {
-  const { isEditMode, setEditMode, widgets } = useWidgetSystem()
-  const visibleWidgets = widgets.filter(w => w.visible)
-
-  return (
-    <div className={cn("flex items-center justify-between gap-4 p-4 bg-card rounded-lg border", className)}>
-      <div className="flex items-center gap-4">
-        <div className="text-sm text-muted-foreground">
-          {visibleWidgets.length} of {widgets.length} widgets visible
-        </div>
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <Button
-          variant={isEditMode ? "default" : "outline"}
-          size="sm"
-          onClick={() => setEditMode(!isEditMode)}
-        >
-          {isEditMode ? "Done" : "Edit Layout"}
-        </Button>
+      {/* Widget Header */}
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{config.title}</CardTitle>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              Add Widget
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Metric Widget
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              📊 Chart Widget
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              📋 List Widget
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              🗺️ Map Widget
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
+        <div className="flex items-center gap-1">
+          {/* Widget Status Badge */}
+          {config.refreshInterval && (
+            <Badge variant="secondary" className="text-xs">
+              Live
+            </Badge>
+          )}
+          
+          {/* Edit Mode Controls */}
+          {isEditMode && (
+            <div className="flex items-center gap-1">
+              {config.customizable && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={onConfigure}
+                >
+                  <Settings className="h-3 w-3" />
+                </Button>
+              )}
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleMaximize}
+              >
+                {isMaximized ? (
+                  <Minimize2 className="h-3 w-3" />
+                ) : (
+                  <Maximize2 className="h-3 w-3" />
+                )}
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-destructive hover:text-destructive"
+                onClick={handleRemove}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </CardHeader>
+
+      {/* Widget Content */}
+      <CardContent className="pt-0">
+        {config.visible ? children : (
+          <div className="flex items-center justify-center h-20 text-muted-foreground">
+            <div className="text-center">
+              <div className="text-sm">Widget Hidden</div>
+              {isEditMode && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={handleToggleVisibility}
+                >
+                  Show Widget
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
-// Pre-built Widget Templates
-export const WidgetTemplates = {
-  metric: (id: string, title: string, permissions: string[] = []): WidgetConfig => ({
-    id,
-    type: 'metric',
-    title,
-    size: 'sm',
-    position: { x: 0, y: 0 },
-    visible: true,
-    permissions,
-    customizable: true,
-    exportable: true,
-  }),
-
-  chart: (id: string, title: string, permissions: string[] = []): WidgetConfig => ({
-    id,
-    type: 'chart',
-    title,
-    size: 'lg',
-    position: { x: 0, y: 0 },
-    visible: true,
-    permissions,
-    customizable: true,
-    exportable: true,
-  }),
-
-  list: (id: string, title: string, permissions: string[] = []): WidgetConfig => ({
-    id,
-    type: 'list',
-    title,
-    size: 'md',
-    position: { x: 0, y: 0 },
-    visible: true,
-    permissions,
-    customizable: true,
-    exportable: false,
-  }),
+// Widget Size Utilities
+export const getWidgetSizeClass = (size: WidgetConfig['size']) => {
+  const sizeMap = {
+    sm: "w-full h-32",
+    md: "w-full h-48", 
+    lg: "w-full h-64",
+    xl: "w-full h-80"
+  }
+  return sizeMap[size] || sizeMap.md
 }
 
-export type { WidgetConfig, WidgetData, ConfigurableWidgetProps }
+// Widget Permission Check
+export const hasWidgetPermission = (widget: WidgetConfig, userRole: string) => {
+  return widget.permissions.includes(userRole) || widget.permissions.includes('all')
+}
+
+// Default Widget Configurations
+export const createDefaultWidget = (
+  id: string,
+  title: string,
+  type: WidgetConfig['type'] = 'metric',
+  size: WidgetConfig['size'] = 'md'
+): WidgetConfig => ({
+  id,
+  type,
+  title,
+  size,
+  visible: true,
+  permissions: ['all'],
+  customizable: true,
+  exportable: false,
+})

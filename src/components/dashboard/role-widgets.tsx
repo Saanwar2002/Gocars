@@ -393,7 +393,7 @@ export const OperatorWidgets = {
           </div>
           
           <div className="space-y-2 max-h-32 overflow-y-auto">
-            {(alertsData || []).slice(0, 3).map((alert: any, index: number) => (
+            {(alertsData || []).slice(0, 3).map((alert: { id: string; title: string; severity: string; time: string }, index: number) => (
               <div key={index} className="flex items-start gap-2 p-2 rounded-lg bg-muted/50">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
