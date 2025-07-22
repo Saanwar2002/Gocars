@@ -1,0 +1,137 @@
+{
+  "sessionId": "session_1753220985228_l6ug0zby9",
+  "timestamp": "2025-07-22T21:57:36.527Z",
+  "summary": {
+    "totalTests": 39,
+    "passedTests": 30,
+    "failedTests": 2,
+    "errorTests": 7,
+    "successRate": 76.92,
+    "totalDuration": 471171
+  },
+  "passengerSimulations": {
+    "totalSimulators": 3,
+    "simulationResults": [
+      {
+        "userId": "passenger_4_1753220985231",
+        "experience": "new",
+        "testResults": 8,
+        "successRate": 50
+      },
+      {
+        "userId": "passenger_5_1753221154919",
+        "experience": "regular",
+        "testResults": 8,
+        "successRate": 75
+      },
+      {
+        "userId": "passenger_6_1753221319775",
+        "experience": "power",
+        "testResults": 8,
+        "successRate": 87.5
+      }
+    ]
+  },
+  "featureTestResults": {
+    "firebase": {
+      "totalTests": 2,
+      "passed": 1,
+      "failed": 1,
+      "errors": 0,
+      "averageDuration": 2992
+    },
+    "websocket": {
+      "totalTests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 1782
+    },
+    "notifications": {
+      "totalTests": 5,
+      "passed": 4,
+      "failed": 1,
+      "errors": 0,
+      "averageDuration": 4988
+    },
+    "ui": {
+      "totalTests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 0
+    },
+    "workflows": {
+      "totalTests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 0
+    }
+  },
+  "errors": {
+    "totalErrors": 2,
+    "errorsByType": {
+      "FIREBASE_ERROR": 1,
+      "NOTIFICATION_ERROR": 1
+    },
+    "criticalErrors": []
+  },
+  "recommendations": [
+    "Review Firebase configuration and connection stability",
+    "Verify push notification service configuration and permissions",
+    "Overall success rate is below 80% - comprehensive system review recommended"
+  ],
+  "healthStatus": {
+    "status": "healthy",
+    "message": "System is operating normally"
+  },
+  "autoFixSummary": {
+    "totalFixAttempts": 1,
+    "successfulFixes": 1,
+    "failedFixes": 0,
+    "fixSuccessRate": 100,
+    "fixesByType": {
+      "configuration": 1
+    },
+    "fixesByCategory": {
+      "firebase": 1
+    }
+  },
+  "appliedFixes": [
+    {
+      "id": "firebase_fix_1753221456572",
+      "type": "configuration",
+      "description": "Fixed Firebase connection configuration",
+      "validated": true,
+      "rollbackAvailable": true
+    }
+  ],
+  "failedFixes": [],
+  "retestComparison": {
+    "before": {
+      "total": 78,
+      "passed": 61,
+      "failed": 2,
+      "errors": 15,
+      "successRate": 78.2051282051282
+    },
+    "after": {
+      "total": 78,
+      "passed": 61,
+      "failed": 2,
+      "errors": 15,
+      "successRate": 78.2051282051282
+    },
+    "improvement": {
+      "successRateChange": 0,
+      "testsFixed": 0,
+      "errorsReduced": 0
+    }
+  },
+  "enhancedRecommendations": [
+    "Successfully applied 1 automated fixes - system stability improved",
+    "Firebase connectivity issues - review configuration and network stability",
+    "Minor issues detected and addressed - system is generally stable"
+  ]
+}

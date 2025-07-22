@@ -1,0 +1,84 @@
+{
+  "sessionId": "session_1753220210096_ap9djdybg",
+  "timestamp": "2025-07-22T21:44:33.771Z",
+  "summary": {
+    "totalTests": 39,
+    "passedTests": 32,
+    "failedTests": 0,
+    "errorTests": 7,
+    "successRate": 82.05,
+    "totalDuration": 463578
+  },
+  "passengerSimulations": {
+    "totalSimulators": 3,
+    "simulationResults": [
+      {
+        "userId": "passenger_4_1753220210106",
+        "experience": "new",
+        "testResults": 8,
+        "successRate": 75
+      },
+      {
+        "userId": "passenger_5_1753220410569",
+        "experience": "regular",
+        "testResults": 8,
+        "successRate": 75
+      },
+      {
+        "userId": "passenger_6_1753220588179",
+        "experience": "power",
+        "testResults": 8,
+        "successRate": 62.5
+      }
+    ]
+  },
+  "featureTestResults": {
+    "firebase": {
+      "totalTests": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 2247
+    },
+    "websocket": {
+      "totalTests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 1532
+    },
+    "notifications": {
+      "totalTests": 5,
+      "passed": 4,
+      "failed": 0,
+      "errors": 1,
+      "averageDuration": 4241
+    },
+    "ui": {
+      "totalTests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 0
+    },
+    "workflows": {
+      "totalTests": 0,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "averageDuration": 0
+    }
+  },
+  "errors": {
+    "totalErrors": 0,
+    "errorsByType": {},
+    "criticalErrors": []
+  },
+  "recommendations": [
+    "All tests passed successfully - system is performing well"
+  ],
+  "healthStatus": {
+    "status": "healthy",
+    "message": "System is operating normally"
+  }
+}

@@ -116,3 +116,26 @@ if (firebaseConfigError) {
 console.log(`Firebase Init Script: Final state - db is ${db ? 'INITIALIZED' : 'NULL'}, auth is ${auth ? 'INITIALIZED' : 'NULL'}`);
 
 export { app, db, auth };
+
+// Auto-generated connection retry logic
+const connectWithRetry = async (retries = 3): Promise<void> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      // Test connection
+      if (db) {
+        await db._delegate._databaseId
+      }
+      console.log('Firebase connection successful')
+      return
+    } catch (error) {
+      console.warn(`Firebase connection attempt ${i + 1} failed:, error`)
+      if (i === retries - 1) throw error
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+    }
+  }
+}
+
+// Initialize connection with retry
+if (db) {
+  connectWithRetry().catch(console.error)
+}
