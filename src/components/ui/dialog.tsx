@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils"
 
 const Dialog = DialogPrimitive.Root
 
-const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = DialogPrimitive.Portal
 
@@ -72,7 +71,7 @@ const DialogContent = React.forwardRef<
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
       */}
-    </DialogContent>
+    </DialogPrimitive.Content>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
@@ -84,7 +83,7 @@ const DialogHeader = ({
   <div
     className={cn(
       "flex flex-col space-y-1.5 text-center sm:text-left",
-       // Custom styles for BookRidePage confirmation dialog header
+      // Custom styles for BookRidePage confirmation dialog header
       "[.book-ride-confirmation-dialog_&]:p-6 [.book-ride-confirmation-dialog_&]:pb-4 [.book-ride-confirmation-dialog_&]:border-b",
       className
     )}
