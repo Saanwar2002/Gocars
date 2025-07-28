@@ -35,10 +35,12 @@ import { Alert, AlertDescription, AlertTitle as ShadAlertTitle } from "@/compone
 import { parseBookingRequest, ParseBookingRequestInput, ParseBookingRequestOutput } from '@/ai/flows/parse-booking-request-flow';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useOperators } from '@/hooks/useOperators';
 import { useNearbyDrivers } from '@/hooks/useNearbyDrivers';
 import Link from 'next/link';
 import * as React from 'react';
+import EnhancedMultiStopInterface from '@/components/booking/enhanced-multi-stop-interface';
 
 
 const GoogleMapDisplay = dynamic(() => import('@/components/ui/google-map-display'), {
@@ -298,6 +300,7 @@ export default function BookRidePage() {
   const priorityFeeInputRef = useRef<HTMLInputElement>(null);
 
   const [isMapSdkLoaded, setIsMapSdkLoaded] = useState(false);
+  const [bookingMode, setBookingMode] = useState<'simple' | 'multi-stop'>('simple');
 
   // State for Account Job PIN
   const [isAccountJobAuthPinDialogOpen, setIsAccountJobAuthPinDialogOpen] = useState(false);
