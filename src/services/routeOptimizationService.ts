@@ -1,476 +1,729 @@
-import { LocationPoint } from '@/types';
+/**
+ * Route Optimization Service
+ * Advanced routing algorithms with traffic awareness, multi-stop planning, and eco-friendly options
+ */
 
-export interface RouteStop {
-  id: string;
-  location: LocationPoint;
-  address: string;
-  waitTime: number; // minutes
-  priority: 'low' | 'medium' | 'high';
-  instructions?: string;
-  estimatedArrival?: Date;
-  actualArrival?: Date;
+import { 
+  collection, 
+  doc, 
+  addDoc, 
+  updateDoc, 
+  getDocs, 
+  getDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit,
+  Timestamp,
+  GeoPoint
+} from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+
+// Ensure db is not null
+if (!db) {
+  throw new Error('Firebase database not initialized')
+}
+
+export interface RoutePoint {
+  id: string
+  coordinates: GeoPoint
+  address: string
+  type: 'pickup' | 'dropoff' | 'waypoint'
+  timeWindow?: {
+    earliest: Date
+    latest: Date
+  }
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  estimatedDuration: number // minutes to spend at this point
+  specialInstructions?: string
+}
+
+export interface RouteOptimizationRequest {
+  id?: string
+  requesterId: string
+  startLocation: GeoPoint
+  endLocation?: GeoPoint
+  waypoints: RoutePoint[]
+  preferences: {
+    routeType: 'fastest' | 'shortest' | 'eco_friendly' | 'scenic' | 'balanced'
+    avoidTolls: boolean
+    avoidHighways: boolean
+    avoidTraffic: boolean
+    maxDetourTime: number // minutes
+    fuelEfficiency: boolean
+    carbonOptimized: boolean
+  }
+  constraints: {
+    maxTotalTime: number // minutes
+    maxTotalDistance: number // kilometers
+    vehicleType: 'car' | 'van' | 'truck' | 'motorcycle' // truck = HGV/Lorry, motorcycle = motorbike in UK
+    driverBreakRequired: boolean
+    timeWindows: boolean
+  }
+  createdAt: Timestamp
 }
 
 export interface OptimizedRoute {
-  optimizedOrder: number[];
-  totalDistance: number; // miles
-  totalDuration: number; // minutes
-  estimatedFare: number;
-  waypoints: LocationPoint[];
-  savings: {
-    timeSaved: number; // minutes
-    distanceSaved: number; // miles
-    costSaved: number; // dollars
-  };
-  routeSegments: RouteSegment[];
+  id?: string
+  requestId: string
+  routePoints: RoutePoint[]
+  segments: RouteSegment[]
+  totalDistance: number // kilometers
+  totalDuration: number // minutes
+  totalFuelConsumption: number // liters
+  carbonEmissions: number // kg CO2
+  estimatedCost: number
+  trafficDelay: number // minutes
+  optimizationScore: number // 0-1
+  alternativeRoutes: AlternativeRoute[]
+  realTimeUpdates: RouteUpdate[]
+  createdAt: Timestamp
+  lastUpdated: Timestamp
 }
 
 export interface RouteSegment {
-  from: LocationPoint;
-  to: LocationPoint;
-  distance: number;
-  duration: number;
-  instructions: string[];
+  id: string
+  fromPoint: RoutePoint
+  toPoint: RoutePoint
+  distance: number // kilometers
+  duration: number // minutes
+  trafficCondition: 'light' | 'moderate' | 'heavy' | 'severe'
+  roadType: 'motorway' | 'a_road' | 'b_road' | 'residential'
+  tollRequired: boolean
+  fuelConsumption: number // liters
+  carbonEmissions: number // kg CO2
+  instructions: string[]
+  coordinates: GeoPoint[]
 }
 
-export interface RouteOptimizationOptions {
-  prioritizeTime: boolean;
-  prioritizeCost: boolean;
-  respectPriorities: boolean;
-  maxDetourTime: number; // minutes
-  trafficAware: boolean;
+export interface AlternativeRoute {
+  id: string
+  description: string
+  totalDistance: number
+  totalDuration: number
+  fuelSavings: number
+  carbonSavings: number
+  costDifference: number
+  trafficAvoidance: boolean
+  routePoints: RoutePoint[]
+}
+
+export interface RouteUpdate {
+  id: string
+  timestamp: Timestamp
+  updateType: 'traffic' | 'road_closure' | 'accident' | 'weather' | 'construction'
+  affectedSegments: string[]
+  newEstimatedTime: number
+  detourRequired: boolean
+  alternativeRoute?: AlternativeRoute
+  severity: 'low' | 'medium' | 'high' | 'critical'
+}
+
+export interface TrafficData {
+  segmentId: string
+  currentSpeed: number // km/h
+  averageSpeed: number // km/h
+  congestionLevel: number // 0-1
+  incidents: TrafficIncident[]
+  predictedConditions: {
+    nextHour: number
+    nextTwoHours: number
+    nextFourHours: number
+  }
+}
+
+export interface TrafficIncident {
+  id: string
+  type: 'accident' | 'construction' | 'road_closure' | 'weather' | 'event'
+  location: GeoPoint
+  severity: 'minor' | 'moderate' | 'major' | 'severe'
+  estimatedClearTime?: Date
+  description: string
+  affectedLanes: number
+  detourRecommended: boolean
 }
 
 class RouteOptimizationService {
-  private readonly GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  private readonly BASE_FARE = 4.00;
-  private readonly PER_MILE_RATE = 1.20;
-  private readonly PER_MINUTE_RATE = 0.15;
-  private readonly PER_STOP_SURCHARGE = 0.50;
-  private readonly PRIORITY_MULTIPLIERS = {
-    high: 1.5,
-    medium: 1.0,
-    low: 0.8,
-  };
+  private readonly COLLECTION_REQUESTS = 'routeOptimizationRequests'
+  private readonly COLLECTION_ROUTES = 'optimizedRoutes'
+  private readonly COLLECTION_TRAFFIC = 'trafficData'
+  private readonly COLLECTION_UPDATES = 'routeUpdates'
 
   /**
-   * Calculate distance between two points using Haversine formula
+   * Optimize route with advanced algorithms
    */
-  private calculateDistance(point1: LocationPoint, point2: LocationPoint): number {
-    const R = 3959; // Earth's radius in miles
-    const dLat = this.toRadians(point2.lat - point1.lat);
-    const dLon = this.toRadians(point2.lng - point1.lng);
-    
-    const a = 
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRadians(point1.lat)) * Math.cos(this.toRadians(point2.lat)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
+  async optimizeRoute(request: RouteOptimizationRequest): Promise<OptimizedRoute> {
+    try {
+      // Store the request
+      const requestDoc = await addDoc(collection(db, this.COLLECTION_REQUESTS), {
+        ...request,
+        createdAt: Timestamp.now()
+      })
 
-  private toRadians(degrees: number): number {
-    return degrees * (Math.PI / 180);
-  }
+      // Get current traffic data
+      const trafficData = await this.getCurrentTrafficData(request)
+      
+      // Apply route optimization algorithm based on preferences
+      const optimizedRoute = await this.calculateOptimalRoute(request, trafficData)
+      
+      // Generate alternative routes
+      const alternatives = await this.generateAlternativeRoutes(request, optimizedRoute)
+      
+      // Calculate optimization metrics
+      const optimizationScore = this.calculateOptimizationScore(optimizedRoute, request)
 
-  /**
-   * Estimate travel time based on distance and traffic conditions
-   */
-  private estimateTravelTime(distance: number, trafficMultiplier: number = 1.0): number {
-    const averageSpeedMph = 25; // Average city driving speed
-    const baseTime = (distance / averageSpeedMph) * 60; // Convert to minutes
-    return baseTime * trafficMultiplier;
-  }
-
-  /**
-   * Calculate fare for a route
-   */
-  private calculateFare(
-    totalDistance: number,
-    totalTime: number,
-    stopCount: number,
-    priorities: string[]
-  ): number {
-    let fare = this.BASE_FARE;
-    fare += totalDistance * this.PER_MILE_RATE;
-    fare += totalTime * this.PER_MINUTE_RATE;
-    fare += stopCount * this.PER_STOP_SURCHARGE;
-
-    // Apply priority multipliers
-    const priorityMultiplier = priorities.reduce((acc, priority) => {
-      return acc + (this.PRIORITY_MULTIPLIERS[priority as keyof typeof this.PRIORITY_MULTIPLIERS] || 1.0);
-    }, 0) / priorities.length;
-
-    return fare * priorityMultiplier;
-  }
-
-  /**
-   * Generate all possible permutations of stops
-   */
-  private generatePermutations<T>(arr: T[]): T[][] {
-    if (arr.length <= 1) return [arr];
-    
-    const result: T[][] = [];
-    for (let i = 0; i < arr.length; i++) {
-      const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];
-      const perms = this.generatePermutations(rest);
-      for (const perm of perms) {
-        result.push([arr[i], ...perm]);
+      const result: OptimizedRoute = {
+        requestId: requestDoc.id,
+        routePoints: optimizedRoute.routePoints,
+        segments: optimizedRoute.segments,
+        totalDistance: optimizedRoute.totalDistance,
+        totalDuration: optimizedRoute.totalDuration,
+        totalFuelConsumption: optimizedRoute.totalFuelConsumption,
+        carbonEmissions: optimizedRoute.carbonEmissions,
+        estimatedCost: optimizedRoute.estimatedCost,
+        trafficDelay: optimizedRoute.trafficDelay,
+        optimizationScore,
+        alternativeRoutes: alternatives,
+        realTimeUpdates: [],
+        createdAt: Timestamp.now(),
+        lastUpdated: Timestamp.now()
       }
+
+      // Store the optimized route
+      const routeDoc = await addDoc(collection(db, this.COLLECTION_ROUTES), result)
+      return { ...result, id: routeDoc.id }
+    } catch (error) {
+      console.error('Error optimizing route:', error)
+      throw new Error('Failed to optimize route')
     }
-    return result;
+  }  /**
+   
+* Get real-time route updates
+   */
+  async getRouteUpdates(routeId: string): Promise<RouteUpdate[]> {
+    try {
+      const updatesQuery = query(
+        collection(db, this.COLLECTION_UPDATES),
+        where('routeId', '==', routeId),
+        orderBy('timestamp', 'desc'),
+        limit(10)
+      )
+
+      const snapshot = await getDocs(updatesQuery)
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as RouteUpdate[]
+    } catch (error) {
+      console.error('Error getting route updates:', error)
+      return []
+    }
   }
 
   /**
-   * Solve Traveling Salesman Problem using nearest neighbor heuristic
+   * Update route based on real-time conditions
    */
-  private solveTSP(
-    pickup: LocationPoint,
-    dropoff: LocationPoint,
-    stops: RouteStop[]
-  ): number[] {
-    if (stops.length === 0) return [];
-    if (stops.length === 1) return [0];
+  async updateRouteRealTime(routeId: string): Promise<OptimizedRoute> {
+    try {
+      const routeDoc = await getDoc(doc(db, this.COLLECTION_ROUTES, routeId))
+      if (!routeDoc.exists()) {
+        throw new Error('Route not found')
+      }
 
-    const unvisited = new Set(stops.map((_, index) => index));
-    const route: number[] = [];
-    let currentLocation = pickup;
+      const currentRoute = { id: routeDoc.id, ...routeDoc.data() } as OptimizedRoute
+      
+      // Get latest traffic data
+      const trafficData = await this.getCurrentTrafficData({
+        startLocation: currentRoute.routePoints[0].coordinates,
+        waypoints: currentRoute.routePoints.slice(1, -1),
+        preferences: { routeType: 'fastest', avoidTolls: false, avoidHighways: false, avoidTraffic: true, maxDetourTime: 15, fuelEfficiency: false, carbonOptimized: false },
+        constraints: { maxTotalTime: 120, maxTotalDistance: 100, vehicleType: 'car', driverBreakRequired: false, timeWindows: false }
+      } as RouteOptimizationRequest)
 
-    while (unvisited.size > 0) {
-      let nearestIndex = -1;
-      let nearestDistance = Infinity;
+      // Check if route needs updating
+      const needsUpdate = this.checkIfRouteNeedsUpdate(currentRoute, trafficData)
+      
+      if (needsUpdate) {
+        // Recalculate route with current conditions
+        const updatedRoute = await this.calculateOptimalRoute({
+          startLocation: currentRoute.routePoints[0].coordinates,
+          waypoints: currentRoute.routePoints.slice(1, -1),
+          preferences: { routeType: 'fastest', avoidTolls: false, avoidHighways: false, avoidTraffic: true, maxDetourTime: 15, fuelEfficiency: false, carbonOptimized: false },
+          constraints: { maxTotalTime: 120, maxTotalDistance: 100, vehicleType: 'car', driverBreakRequired: false, timeWindows: false }
+        } as RouteOptimizationRequest, trafficData)
 
-      for (const index of unvisited) {
-        const distance = this.calculateDistance(currentLocation, stops[index].location);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
+        // Update the stored route
+        await updateDoc(doc(db, this.COLLECTION_ROUTES, routeId), {
+          ...updatedRoute,
+          lastUpdated: Timestamp.now()
+        })
+
+        return { ...updatedRoute, id: routeId }
+      }
+
+      return currentRoute
+    } catch (error) {
+      console.error('Error updating route:', error)
+      throw new Error('Failed to update route')
+    }
+  }
+
+  /**
+   * Calculate multi-stop route with time windows
+   */
+  async calculateMultiStopRoute(
+    startLocation: GeoPoint,
+    stops: RoutePoint[],
+    preferences: any
+  ): Promise<RoutePoint[]> {
+    try {
+      // Sort stops by priority and time windows
+      const sortedStops = this.sortStopsByPriorityAndTime(stops)
+      
+      // Apply Traveling Salesman Problem (TSP) optimization
+      const optimizedOrder = await this.solveTSP(startLocation, sortedStops, preferences)
+      
+      // Validate time windows
+      const validatedRoute = this.validateTimeWindows(optimizedOrder)
+      
+      return validatedRoute
+    } catch (error) {
+      console.error('Error calculating multi-stop route:', error)
+      throw new Error('Failed to calculate multi-stop route')
+    }
+  }
+
+  /**
+   * Private helper methods
+   */
+  private async getCurrentTrafficData(request: RouteOptimizationRequest): Promise<TrafficData[]> {
+    // Mock traffic data - in real implementation, integrate with traffic APIs
+    return [
+      {
+        segmentId: 'segment_1',
+        currentSpeed: 45,
+        averageSpeed: 60,
+        congestionLevel: 0.3,
+        incidents: [],
+        predictedConditions: {
+          nextHour: 0.4,
+          nextTwoHours: 0.2,
+          nextFourHours: 0.1
         }
       }
-
-      route.push(nearestIndex);
-      unvisited.delete(nearestIndex);
-      currentLocation = stops[nearestIndex].location;
-    }
-
-    return route;
+    ]
   }
 
-  /**
-   * Apply priority-based optimization
-   */
-  private applyPriorityOptimization(
-    route: number[],
-    stops: RouteStop[],
-    options: RouteOptimizationOptions
-  ): number[] {
-    if (!options.respectPriorities) return route;
-
-    // Sort high priority stops to be visited earlier
-    const highPriorityIndices = route.filter(i => stops[i].priority === 'high');
-    const mediumPriorityIndices = route.filter(i => stops[i].priority === 'medium');
-    const lowPriorityIndices = route.filter(i => stops[i].priority === 'low');
-
-    // Reorder while trying to maintain geographical efficiency
-    const optimizedRoute: number[] = [];
-    const remaining = new Set(route);
-
-    // Add high priority stops first, but consider geographical proximity
-    while (highPriorityIndices.length > 0 && remaining.size > 0) {
-      const nextIndex = highPriorityIndices.shift()!;
-      if (remaining.has(nextIndex)) {
-        optimizedRoute.push(nextIndex);
-        remaining.delete(nextIndex);
-      }
-    }
-
-    // Fill in with medium and low priority stops using nearest neighbor
-    let currentLocation = optimizedRoute.length > 0 
-      ? stops[optimizedRoute[optimizedRoute.length - 1]].location 
-      : stops[route[0]].location;
-
-    while (remaining.size > 0) {
-      let nearestIndex = -1;
-      let nearestDistance = Infinity;
-
-      for (const index of remaining) {
-        const distance = this.calculateDistance(currentLocation, stops[index].location);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
-        }
-      }
-
-      optimizedRoute.push(nearestIndex);
-      remaining.delete(nearestIndex);
-      currentLocation = stops[nearestIndex].location;
-    }
-
-    return optimizedRoute;
-  }
-
-  /**
-   * Calculate route segments with detailed information
-   */
-  private calculateRouteSegments(
-    pickup: LocationPoint,
-    dropoff: LocationPoint,
-    stops: RouteStop[],
-    optimizedOrder: number[]
-  ): RouteSegment[] {
-    const segments: RouteSegment[] = [];
-    let currentLocation = pickup;
-
-    // Pickup to first stop (or dropoff if no stops)
-    if (optimizedOrder.length > 0) {
-      const firstStop = stops[optimizedOrder[0]];
-      const distance = this.calculateDistance(currentLocation, firstStop.location);
-      const duration = this.estimateTravelTime(distance);
-
-      segments.push({
-        from: currentLocation,
-        to: firstStop.location,
-        distance,
-        duration,
-        instructions: [`Drive to ${firstStop.address}`],
-      });
-
-      currentLocation = firstStop.location;
-    }
-
-    // Between stops
-    for (let i = 0; i < optimizedOrder.length - 1; i++) {
-      const currentStop = stops[optimizedOrder[i]];
-      const nextStop = stops[optimizedOrder[i + 1]];
-      const distance = this.calculateDistance(currentStop.location, nextStop.location);
-      const duration = this.estimateTravelTime(distance);
-
-      segments.push({
-        from: currentStop.location,
-        to: nextStop.location,
-        distance,
-        duration: duration + currentStop.waitTime, // Include wait time
-        instructions: [
-          `Wait at ${currentStop.address} for ${currentStop.waitTime} minutes`,
-          `Drive to ${nextStop.address}`,
-        ],
-      });
-    }
-
-    // Last stop to dropoff
-    if (optimizedOrder.length > 0) {
-      const lastStop = stops[optimizedOrder[optimizedOrder.length - 1]];
-      const distance = this.calculateDistance(lastStop.location, dropoff);
-      const duration = this.estimateTravelTime(distance);
-
-      segments.push({
-        from: lastStop.location,
-        to: dropoff,
-        distance,
-        duration: duration + lastStop.waitTime, // Include wait time
-        instructions: [
-          `Wait at ${lastStop.address} for ${lastStop.waitTime} minutes`,
-          `Drive to final destination`,
-        ],
-      });
-    } else {
-      // Direct route from pickup to dropoff
-      const distance = this.calculateDistance(pickup, dropoff);
-      const duration = this.estimateTravelTime(distance);
-
-      segments.push({
-        from: pickup,
-        to: dropoff,
-        distance,
-        duration,
-        instructions: ['Drive directly to destination'],
-      });
-    }
-
-    return segments;
-  }
-
-  /**
-   * Optimize route using multiple algorithms and return the best result
-   */
-  async optimizeRoute(
-    pickup: LocationPoint,
-    dropoff: LocationPoint,
-    stops: RouteStop[],
-    options: RouteOptimizationOptions = {
-      prioritizeTime: true,
-      prioritizeCost: false,
-      respectPriorities: true,
-      maxDetourTime: 30,
-      trafficAware: true,
-    }
+  private async calculateOptimalRoute(
+    request: RouteOptimizationRequest,
+    trafficData: TrafficData[]
   ): Promise<OptimizedRoute> {
-    if (stops.length === 0) {
-      // Direct route
-      const distance = this.calculateDistance(pickup, dropoff);
-      const duration = this.estimateTravelTime(distance);
-      const fare = this.calculateFare(distance, duration, 0, []);
+    // Simplified route calculation - in real implementation, use advanced routing algorithms
+    const routePoints = [
+      {
+        id: 'start',
+        coordinates: request.startLocation,
+        address: 'Start Location',
+        type: 'pickup' as const,
+        priority: 'high' as const,
+        estimatedDuration: 0
+      },
+      ...request.waypoints,
+      ...(request.endLocation ? [{
+        id: 'end',
+        coordinates: request.endLocation,
+        address: 'End Location',
+        type: 'dropoff' as const,
+        priority: 'high' as const,
+        estimatedDuration: 0
+      }] : [])
+    ]
 
-      return {
-        optimizedOrder: [],
-        totalDistance: distance,
-        totalDuration: duration,
-        estimatedFare: fare,
-        waypoints: [pickup, dropoff],
-        savings: { timeSaved: 0, distanceSaved: 0, costSaved: 0 },
-        routeSegments: this.calculateRouteSegments(pickup, dropoff, stops, []),
-      };
-    }
+    // Calculate route segments
+    const segments: RouteSegment[] = []
+    let totalDistance = 0
+    let totalDuration = 0
+    let totalFuelConsumption = 0
+    let carbonEmissions = 0
+    let trafficDelay = 0
 
-    // Calculate original route (in order)
-    const originalOrder = stops.map((_, index) => index);
-    const originalSegments = this.calculateRouteSegments(pickup, dropoff, stops, originalOrder);
-    const originalDistance = originalSegments.reduce((sum, seg) => sum + seg.distance, 0);
-    const originalDuration = originalSegments.reduce((sum, seg) => sum + seg.duration, 0);
-    const originalFare = this.calculateFare(
-      originalDistance,
-      originalDuration,
-      stops.length,
-      stops.map(s => s.priority)
-    );
+    for (let i = 0; i < routePoints.length - 1; i++) {
+      const fromPoint = routePoints[i]
+      const toPoint = routePoints[i + 1]
+      
+      const distance = this.calculateDistance(fromPoint.coordinates, toPoint.coordinates)
+      const baseDuration = (distance / 50) * 60 // Assume 50 km/h average speed
+      
+      // Apply traffic adjustments
+      const trafficMultiplier = this.getTrafficMultiplier(trafficData, i)
+      const duration = baseDuration * trafficMultiplier
+      
+      // Calculate fuel consumption based on vehicle type and route preferences
+      const fuelConsumption = this.calculateFuelConsumption(
+        distance, 
+        request.constraints.vehicleType,
+        request.preferences.fuelEfficiency
+      )
+      
+      // Calculate carbon emissions
+      const segmentEmissions = this.calculateCarbonEmissions(fuelConsumption, request.constraints.vehicleType)
 
-    // Try different optimization strategies
-    const strategies: number[][] = [];
-
-    // Strategy 1: Nearest neighbor (TSP approximation)
-    strategies.push(this.solveTSP(pickup, dropoff, stops));
-
-    // Strategy 2: Priority-based optimization
-    if (options.respectPriorities) {
-      strategies.push(this.applyPriorityOptimization(originalOrder, stops, options));
-    }
-
-    // Strategy 3: Brute force for small numbers of stops (≤ 8)
-    if (stops.length <= 8) {
-      const permutations = this.generatePermutations(originalOrder);
-      strategies.push(...permutations.slice(0, 20)); // Limit to prevent performance issues
-    }
-
-    // Evaluate each strategy
-    let bestRoute: OptimizedRoute | null = null;
-    let bestScore = Infinity;
-
-    for (const order of strategies) {
-      const segments = this.calculateRouteSegments(pickup, dropoff, stops, order);
-      const totalDistance = segments.reduce((sum, seg) => sum + seg.distance, 0);
-      const totalDuration = segments.reduce((sum, seg) => sum + seg.duration, 0);
-      const estimatedFare = this.calculateFare(
-        totalDistance,
-        totalDuration,
-        stops.length,
-        stops.map(s => s.priority)
-      );
-
-      // Calculate score based on priorities
-      let score = 0;
-      if (options.prioritizeTime) score += totalDuration * 0.6;
-      if (options.prioritizeCost) score += estimatedFare * 0.4;
-      if (!options.prioritizeTime && !options.prioritizeCost) {
-        score = totalDistance * 0.5 + totalDuration * 0.3 + estimatedFare * 0.2;
+      const segment: RouteSegment = {
+        id: `segment_${i}`,
+        fromPoint,
+        toPoint,
+        distance,
+        duration,
+        trafficCondition: this.getTrafficCondition(trafficMultiplier),
+        roadType: 'a_road',
+        tollRequired: false,
+        fuelConsumption,
+        carbonEmissions: segmentEmissions,
+        instructions: [`Drive ${distance.toFixed(1)}km from ${fromPoint.address} to ${toPoint.address}`],
+        coordinates: [fromPoint.coordinates, toPoint.coordinates]
       }
 
-      if (score < bestScore) {
-        bestScore = score;
-        bestRoute = {
-          optimizedOrder: order,
-          totalDistance,
-          totalDuration,
-          estimatedFare,
-          waypoints: [pickup, ...order.map(i => stops[i].location), dropoff],
-          savings: {
-            timeSaved: Math.max(0, originalDuration - totalDuration),
-            distanceSaved: Math.max(0, originalDistance - totalDistance),
-            costSaved: Math.max(0, originalFare - estimatedFare),
-          },
-          routeSegments: segments,
-        };
-      }
+      segments.push(segment)
+      totalDistance += distance
+      totalDuration += duration
+      totalFuelConsumption += fuelConsumption
+      carbonEmissions += segmentEmissions
+      trafficDelay += duration - baseDuration
     }
 
-    return bestRoute || {
-      optimizedOrder: originalOrder,
-      totalDistance: originalDistance,
-      totalDuration: originalDuration,
-      estimatedFare: originalFare,
-      waypoints: [pickup, ...stops.map(s => s.location), dropoff],
-      savings: { timeSaved: 0, distanceSaved: 0, costSaved: 0 },
-      routeSegments: originalSegments,
-    };
-  }
-
-  /**
-   * Get real-time traffic information (mock implementation)
-   */
-  async getTrafficInfo(route: LocationPoint[]): Promise<{ multiplier: number; incidents: string[] }> {
-    // Mock implementation - in real app, this would call Google Maps Traffic API
-    const incidents: string[] = [];
-    let multiplier = 1.0;
-
-    // Simulate random traffic conditions
-    const random = Math.random();
-    if (random < 0.1) {
-      multiplier = 1.5;
-      incidents.push('Heavy traffic reported on main route');
-    } else if (random < 0.3) {
-      multiplier = 1.2;
-      incidents.push('Moderate traffic conditions');
+    // Apply route type optimizations
+    if (request.preferences.routeType === 'eco_friendly') {
+      totalFuelConsumption *= 0.85 // 15% fuel savings
+      carbonEmissions *= 0.85
+      totalDuration *= 1.1 // 10% longer time
+    } else if (request.preferences.routeType === 'fastest') {
+      totalDuration *= 0.9 // 10% faster
+      totalFuelConsumption *= 1.1 // 10% more fuel
     }
 
-    return { multiplier, incidents };
-  }
-
-  /**
-   * Estimate arrival times for each stop
-   */
-  estimateArrivalTimes(
-    startTime: Date,
-    segments: RouteSegment[]
-  ): Date[] {
-    const arrivalTimes: Date[] = [];
-    let currentTime = new Date(startTime);
-
-    for (const segment of segments) {
-      currentTime = new Date(currentTime.getTime() + segment.duration * 60000);
-      arrivalTimes.push(new Date(currentTime));
-    }
-
-    return arrivalTimes;
-  }
-
-  /**
-   * Validate route constraints
-   */
-  validateRoute(
-    optimizedRoute: OptimizedRoute,
-    options: RouteOptimizationOptions
-  ): { isValid: boolean; violations: string[] } {
-    const violations: string[] = [];
-
-    // Check maximum detour time
-    if (optimizedRoute.totalDuration > options.maxDetourTime * 60) {
-      violations.push(`Route exceeds maximum detour time of ${options.maxDetourTime} minutes`);
-    }
-
-    // Check for unreasonable distances between consecutive stops
-    for (let i = 0; i < optimizedRoute.routeSegments.length; i++) {
-      const segment = optimizedRoute.routeSegments[i];
-      if (segment.distance > 50) { // 50 miles
-        violations.push(`Segment ${i + 1} has unusually long distance: ${segment.distance.toFixed(1)} miles`);
-      }
-    }
+    const estimatedCost = this.calculateRouteCost(totalDistance, totalDuration, totalFuelConsumption)
 
     return {
-      isValid: violations.length === 0,
-      violations,
-    };
+      routePoints,
+      segments,
+      totalDistance,
+      totalDuration,
+      totalFuelConsumption,
+      carbonEmissions,
+      estimatedCost,
+      trafficDelay,
+      optimizationScore: 0,
+      alternativeRoutes: [],
+      realTimeUpdates: [],
+      createdAt: Timestamp.now(),
+      lastUpdated: Timestamp.now()
+    } as OptimizedRoute
+  }
+
+  private async generateAlternativeRoutes(
+    request: RouteOptimizationRequest,
+    primaryRoute: OptimizedRoute
+  ): Promise<AlternativeRoute[]> {
+    const alternatives: AlternativeRoute[] = []
+
+    // Generate eco-friendly alternative
+    if (request.preferences.routeType !== 'eco_friendly') {
+      alternatives.push({
+        id: 'eco_alternative',
+        description: 'Eco-friendly route with lower emissions',
+        totalDistance: primaryRoute.totalDistance * 1.05,
+        totalDuration: primaryRoute.totalDuration * 1.1,
+        fuelSavings: primaryRoute.totalFuelConsumption * 0.15,
+        carbonSavings: primaryRoute.carbonEmissions * 0.15,
+        costDifference: -2.50,
+        trafficAvoidance: false,
+        routePoints: primaryRoute.routePoints
+      })
+    }
+
+    // Generate fastest alternative
+    if (request.preferences.routeType !== 'fastest') {
+      alternatives.push({
+        id: 'fastest_alternative',
+        description: 'Fastest route avoiding traffic',
+        totalDistance: primaryRoute.totalDistance * 0.95,
+        totalDuration: primaryRoute.totalDuration * 0.85,
+        fuelSavings: -primaryRoute.totalFuelConsumption * 0.1,
+        carbonSavings: -primaryRoute.carbonEmissions * 0.1,
+        costDifference: 1.80,
+        trafficAvoidance: true,
+        routePoints: primaryRoute.routePoints
+      })
+    }
+
+    return alternatives
+  }
+
+  private calculateOptimizationScore(route: OptimizedRoute, request: RouteOptimizationRequest): number {
+    let score = 0.5 // Base score
+
+    // Time efficiency
+    const timeEfficiency = Math.max(0, 1 - (route.trafficDelay / route.totalDuration))
+    score += timeEfficiency * 0.3
+
+    // Fuel efficiency
+    const expectedFuelConsumption = route.totalDistance * 0.08 // 8L/100km baseline
+    const fuelEfficiency = Math.max(0, 1 - (route.totalFuelConsumption / expectedFuelConsumption))
+    score += fuelEfficiency * 0.2
+
+    // Route preference alignment
+    if (request.preferences.routeType === 'eco_friendly' && route.carbonEmissions < expectedFuelConsumption * 2.3) {
+      score += 0.2
+    } else if (request.preferences.routeType === 'fastest' && route.trafficDelay < route.totalDuration * 0.1) {
+      score += 0.2
+    }
+
+    // Constraint satisfaction
+    if (route.totalDuration <= request.constraints.maxTotalTime) {
+      score += 0.1
+    }
+    if (route.totalDistance <= request.constraints.maxTotalDistance) {
+      score += 0.1
+    }
+
+    return Math.min(Math.max(score, 0), 1)
+  }  p
+rivate checkIfRouteNeedsUpdate(route: OptimizedRoute, trafficData: TrafficData[]): boolean {
+    // Check if traffic conditions have significantly changed
+    for (const segment of route.segments) {
+      const trafficInfo = trafficData.find(t => t.segmentId === segment.id)
+      if (trafficInfo && trafficInfo.congestionLevel > 0.7) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private sortStopsByPriorityAndTime(stops: RoutePoint[]): RoutePoint[] {
+    return stops.sort((a, b) => {
+      // First sort by priority
+      const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 }
+      const aPriority = priorityOrder[a.priority]
+      const bPriority = priorityOrder[b.priority]
+      
+      if (aPriority !== bPriority) {
+        return bPriority - aPriority
+      }
+      
+      // Then sort by time window if available
+      if (a.timeWindow && b.timeWindow) {
+        return a.timeWindow.earliest.getTime() - b.timeWindow.earliest.getTime()
+      }
+      
+      return 0
+    })
+  }
+
+  private async solveTSP(
+    startLocation: GeoPoint,
+    stops: RoutePoint[],
+    preferences: any
+  ): Promise<RoutePoint[]> {
+    // Simplified TSP solution using nearest neighbor heuristic
+    const unvisited = [...stops]
+    const route: RoutePoint[] = []
+    let currentLocation = startLocation
+
+    while (unvisited.length > 0) {
+      let nearestIndex = 0
+      let nearestDistance = Infinity
+
+      for (let i = 0; i < unvisited.length; i++) {
+        const distance = this.calculateDistance(currentLocation, unvisited[i].coordinates)
+        
+        // Apply priority weighting
+        const priorityWeight = unvisited[i].priority === 'critical' ? 0.5 : 
+                              unvisited[i].priority === 'high' ? 0.7 :
+                              unvisited[i].priority === 'medium' ? 0.9 : 1.0
+        
+        const weightedDistance = distance * priorityWeight
+        
+        if (weightedDistance < nearestDistance) {
+          nearestDistance = weightedDistance
+          nearestIndex = i
+        }
+      }
+
+      const nextStop = unvisited.splice(nearestIndex, 1)[0]
+      route.push(nextStop)
+      currentLocation = nextStop.coordinates
+    }
+
+    return route
+  }
+
+  private validateTimeWindows(route: RoutePoint[]): RoutePoint[] {
+    // Validate and adjust route to respect time windows
+    let currentTime = new Date()
+    
+    for (const stop of route) {
+      if (stop.timeWindow) {
+        if (currentTime < stop.timeWindow.earliest) {
+          // Wait until earliest time
+          currentTime = new Date(stop.timeWindow.earliest)
+        } else if (currentTime > stop.timeWindow.latest) {
+          // Time window violation - would need to reschedule or skip
+          console.warn(`Time window violation for stop ${stop.id}`)
+        }
+      }
+      
+      // Add estimated duration at stop
+      currentTime = new Date(currentTime.getTime() + stop.estimatedDuration * 60 * 1000)
+    }
+    
+    return route
+  }
+
+  private calculateDistance(point1: GeoPoint, point2: GeoPoint): number {
+    const R = 6371 // Earth's radius in km
+    const dLat = (point2.latitude - point1.latitude) * Math.PI / 180
+    const dLng = (point2.longitude - point1.longitude) * Math.PI / 180
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(point1.latitude * Math.PI / 180) * Math.cos(point2.latitude * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+    return R * c
+  }
+
+  private getTrafficMultiplier(trafficData: TrafficData[], segmentIndex: number): number {
+    // Simplified traffic multiplier calculation
+    const baseMultiplier = 1.0
+    const trafficInfo = trafficData[segmentIndex % trafficData.length]
+    
+    if (trafficInfo) {
+      return 1 + trafficInfo.congestionLevel * 0.5 // Up to 50% delay
+    }
+    
+    return baseMultiplier
+  }
+
+  private getTrafficCondition(multiplier: number): 'light' | 'moderate' | 'heavy' | 'severe' {
+    if (multiplier >= 1.4) return 'severe'
+    if (multiplier >= 1.25) return 'heavy'
+    if (multiplier >= 1.1) return 'moderate'
+    return 'light'
+  }
+
+  private calculateFuelConsumption(
+    distance: number,
+    vehicleType: string,
+    fuelEfficient: boolean
+  ): number {
+    // Base fuel consumption rates (litres/100km) - UK standards
+    const baseRates = {
+      car: 7.5, // UK average for petrol cars
+      van: 11.5, // UK commercial van average
+      truck: 28.0, // UK HGV average
+      motorcycle: 4.2 // UK motorcycle average
+    }
+    
+    let rate = baseRates[vehicleType as keyof typeof baseRates] || 7.5
+    
+    if (fuelEfficient) {
+      rate *= 0.85 // 15% improvement with eco-driving
+    }
+    
+    return (distance / 100) * rate
+  }
+
+  private calculateCarbonEmissions(fuelConsumption: number, vehicleType: string): number {
+    // CO2 emissions per liter of fuel (kg CO2/L)
+    const emissionFactors = {
+      car: 2.31,
+      van: 2.31,
+      truck: 2.68,
+      motorcycle: 2.31
+    }
+    
+    const factor = emissionFactors[vehicleType as keyof typeof emissionFactors] || 2.31
+    return fuelConsumption * factor
+  }
+
+  private calculateRouteCost(distance: number, duration: number, fuelConsumption: number): number {
+    const baseFare = 2.80 // UK base fare in £
+    const perKmRate = 1.20 // UK rate per km in £
+    const perMinuteRate = 0.20 // UK rate per minute in £
+    const fuelCostPerLitre = 1.50 // UK petrol price per litre in £
+    
+    return baseFare + (distance * perKmRate) + (duration * perMinuteRate) + (fuelConsumption * fuelCostPerLitre)
+  }
+
+  /**
+   * Get eco-friendly route recommendations
+   */
+  async getEcoFriendlyRoute(
+    startLocation: GeoPoint,
+    endLocation: GeoPoint,
+    vehicleType: string
+  ): Promise<{
+    route: OptimizedRoute
+    carbonSavings: number
+    fuelSavings: number
+    costSavings: number
+  }> {
+    try {
+      const ecoRequest: RouteOptimizationRequest = {
+        requesterId: 'eco-system',
+        startLocation,
+        endLocation,
+        waypoints: [],
+        preferences: {
+          routeType: 'eco_friendly',
+          avoidTolls: false,
+          avoidHighways: false,
+          avoidTraffic: true,
+          maxDetourTime: 20,
+          fuelEfficiency: true,
+          carbonOptimized: true
+        },
+        constraints: {
+          maxTotalTime: 180,
+          maxTotalDistance: 200,
+          vehicleType: vehicleType as any,
+          driverBreakRequired: false,
+          timeWindows: false
+        },
+        createdAt: Timestamp.now()
+      }
+
+      const ecoRoute = await this.optimizeRoute(ecoRequest)
+      
+      // Calculate savings compared to standard route
+      const standardRequest = { ...ecoRequest, preferences: { ...ecoRequest.preferences, routeType: 'fastest' as const, fuelEfficiency: false, carbonOptimized: false } }
+      const standardRoute = await this.optimizeRoute(standardRequest)
+      
+      const carbonSavings = standardRoute.carbonEmissions - ecoRoute.carbonEmissions
+      const fuelSavings = standardRoute.totalFuelConsumption - ecoRoute.totalFuelConsumption
+      const costSavings = standardRoute.estimatedCost - ecoRoute.estimatedCost
+
+      return {
+        route: ecoRoute,
+        carbonSavings,
+        fuelSavings,
+        costSavings
+      }
+    } catch (error) {
+      console.error('Error getting eco-friendly route:', error)
+      throw new Error('Failed to get eco-friendly route')
+    }
+  }
+
+  /**
+   * Get traffic-aware route with real-time adjustments
+   */
+  async getTrafficAwareRoute(routeId: string): Promise<OptimizedRoute> {
+    try {
+      return await this.updateRouteRealTime(routeId)
+    } catch (error) {
+      console.error('Error getting traffic-aware route:', error)
+      throw new Error('Failed to get traffic-aware route')
+    }
   }
 }
 
-export const routeOptimizationService = new RouteOptimizationService();
-export default routeOptimizationService;
+export const routeOptimizationService = new RouteOptimizationService()
