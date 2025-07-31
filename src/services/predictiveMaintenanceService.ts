@@ -117,13 +117,13 @@ class PredictiveMaintenanceService {
     try {
       // Load historical maintenance data
       await this.loadMaintenanceHistory();
-      
+
       // Initialize ML models
       await this.initializePredictionModels();
-      
+
       // Start continuous monitoring
       this.startContinuousMonitoring();
-      
+
       console.log('Predictive maintenance service initialized successfully');
     } catch (error) {
       console.error('Error initializing predictive maintenance service:', error);
@@ -140,7 +140,7 @@ class PredictiveMaintenanceService {
 
       // Predict for each major component
       const components = ['engine', 'brakes', 'tires', 'battery', 'transmission', 'suspension'];
-      
+
       for (const component of components) {
         const prediction = await this.predictComponentFailure(vehicleId, component as any, vehicleData);
         if (prediction.failureProbability > 0.1) { // Only include significant predictions
@@ -222,7 +222,7 @@ class PredictiveMaintenanceService {
   ): Promise<MaintenanceSchedule> {
     try {
       const vehicleRecommendations = this.recommendations.get(vehicleId) || [];
-      const selectedRecommendations = vehicleRecommendations.filter(r => 
+      const selectedRecommendations = vehicleRecommendations.filter(r =>
         recommendationIds.includes(r.id)
       );
 
@@ -299,12 +299,12 @@ class PredictiveMaintenanceService {
           if (notes) {
             schedule.notes = notes;
           }
-          
+
           if (status === 'completed') {
             // Update maintenance history
             await this.updateMaintenanceHistory(vehicleId, schedule);
           }
-          
+
           scheduleFound = true;
           break;
         }
@@ -421,15 +421,15 @@ class PredictiveMaintenanceService {
 
   private calculateHistoryImpact(history: any[], component: string): number {
     if (!history || history.length === 0) return 0.1;
-    
+
     const componentHistory = history.filter(h => h.component === component);
     if (componentHistory.length === 0) return 0.05;
-    
+
     // More recent issues increase failure probability
-    const recentIssues = componentHistory.filter(h => 
+    const recentIssues = componentHistory.filter(h =>
       new Date(h.date) > new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
     );
-    
+
     return Math.min(recentIssues.length * 0.1, 0.3);
   }
 
@@ -449,7 +449,7 @@ class PredictiveMaintenanceService {
       transmission: 2500,
       suspension: 1200
     };
-    
+
     const baseCost = baseCosts[component] || 500;
     return baseCost * (1 + probability); // Higher probability = higher cost
   }
@@ -651,8 +651,8 @@ class PredictiveMaintenanceService {
     for (const schedule of schedules) {
       if (processed.has(schedule.id)) continue;
 
-      const compatible = schedules.filter(s => 
-        !processed.has(s.id) && 
+      const compatible = schedules.filter(s =>
+        !processed.has(s.id) &&
         s.id !== schedule.id &&
         Math.abs(s.scheduledDate.getTime() - schedule.scheduledDate.getTime()) < 7 * 24 * 60 * 60 * 1000 // Within 1 week
       );
@@ -664,7 +664,7 @@ class PredictiveMaintenanceService {
           id: `optimized_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           vehicleId: schedule.vehicleId,
           scheduledDate: schedule.scheduledDate,
-          estimatedCompletion: new Date(schedule.scheduledDate.getTime() + 
+          estimatedCompletion: new Date(schedule.scheduledDate.getTime() +
             Math.max(...combinedRecommendations.map(r => r.estimatedDuration)) * 60 * 60 * 1000),
           type: 'preventive',
           status: 'planned',
@@ -736,7 +736,7 @@ class PredictiveMaintenanceService {
 
   private async updateMaintenanceHistory(vehicleId: string, schedule: MaintenanceSchedule): Promise<void> {
     const history = this.maintenanceHistory.get(vehicleId) || [];
-    
+
     schedule.recommendations.forEach(rec => {
       history.push({
         date: new Date(),
@@ -748,7 +748,7 @@ class PredictiveMaintenanceService {
     });
 
     this.maintenanceHistory.set(vehicleId, history);
-    
+
     // Persist to storage
     const allHistory = Object.fromEntries(this.maintenanceHistory);
     localStorage.setItem('maintenance_history', JSON.stringify(allHistory));
