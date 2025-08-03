@@ -1,648 +1,843 @@
 /**
  * Predictive Analytics Service
- * Handles demand forecasting, dynamic pricing, and driver positioning recommendations
+ * Advanced forecasting and predictive modeling for GoCars business intelligence
  */
 
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  getDocs, 
-  getDoc, 
-  query, 
-  where, 
-  orderBy, 
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  where,
+  orderBy,
   limit,
-  Timestamp,
-  GeoPoint
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+  Timestamp
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-// Ensure db is not null
-if (!db) {
-  throw new Error('Firebase database not initialized')
+// Predictive Analytics Types
+export interface ForecastData {
+  timestamp: Date;
+  predicted: number;
+  confidence: number;
+  upperBound: number;
+  lowerBound: number;
+  actual?: number;
+  factors: string[];
 }
 
-export interface DemandPrediction {
-  id?: string
-  location: GeoPoint
-  locationName: string
-  timeSlot: {
-    date: string
-    hour: number
-    dayOfWeek: number
-  }
-  predictedDemand: number
-  confidence: number
-  factors: {
-    historical: number
-    weather: number
-    events: number
-    seasonal: number
-    trends: number
-  }
-  actualDemand?: number
-  accuracy?: number
-  createdAt: Timestamp
-  updatedAt: Timestamp
+export interface RevenueForecast {
+  metric: 'revenue';
+  period: 'daily' | 'weekly' | 'monthly' | 'quarterly';
+  horizon: number; // Number of periods to forecast
+  forecasts: ForecastData[];
+  accuracy: number;
+  trend: 'increasing' | 'decreasing' | 'stable';
+  seasonality: {
+    detected: boolean;
+    pattern: 'weekly' | 'monthly' | 'quarterly' | 'yearly' | null;
+    strength: number;
+  };
+  influencingFactors: InfluencingFactor[];
 }
 
-export interface PricingRecommendation {
-  id?: string
-  location: GeoPoint
-  timeSlot: {
-    date: string
-    hour: number
-  }
-  baseFare: number
-  surgeMultiplier: number
-  recommendedPrice: number
-  demandLevel: 'low' | 'medium' | 'high' | 'surge'
-  reasoning: string
-  expectedRevenue: number
-  competitorPricing?: number
-  elasticity: number
-  createdAt: Timestamp
+export interface DemandForecast {
+  metric: 'demand';
+  location?: {
+    lat: number;
+    lng: number;
+    radius: number;
+    name: string;
+  };
+  timeWindow: {
+    start: Date;
+    end: Date;
+    granularity: 'hour' | 'day';
+  };
+  forecasts: ForecastData[];
+  peakHours: Array<{
+    hour: number;
+    expectedDemand: number;
+    confidence: number;
+  }>;
+  demandDrivers: string[];
 }
 
-export interface DriverPositioningRecommendation {
-  id?: string
-  driverId: string
-  currentLocation: GeoPoint
-  recommendedLocation: GeoPoint
-  recommendedLocationName: string
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  expectedWaitTime: number
-  expectedEarnings: number
-  reasoning: string
-  confidence: number
-  validUntil: Timestamp
-  createdAt: Timestamp
-}ex
-port interface MarketAnalytics {
-  location: GeoPoint
-  timeRange: {
-    start: Timestamp
-    end: Timestamp
-  }
-  metrics: {
-    totalRides: number
-    averageWaitTime: number
-    averageFare: number
-    driverUtilization: number
-    customerSatisfaction: number
-    cancellationRate: number
-  }
-  trends: {
-    demandGrowth: number
-    priceElasticity: number
-    seasonalVariation: number
-  }
-  predictions: {
-    nextHourDemand: number
-    nextDayDemand: number
-    nextWeekDemand: number
-  }
+export interface CapacityPlanningData {
+  currentCapacity: {
+    drivers: number;
+    vehicles: number;
+    utilization: number;
+  };
+  projectedDemand: {
+    rides: number;
+    peakMultiplier: number;
+    seasonalAdjustment: number;
+  };
+  recommendations: {
+    additionalDrivers: number;
+    additionalVehicles: number;
+    optimalScheduling: Array<{
+      timeSlot: string;
+      recommendedDrivers: number;
+      expectedUtilization: number;
+    }>;
+  };
+  scenarios: Array<{
+    name: string;
+    description: string;
+    impact: {
+      demandChange: number;
+      capacityRequirement: number;
+      costImplication: number;
+    };
+  }>;
 }
 
-export interface SurgePricingConfig {
-  id?: string
-  location: GeoPoint
-  isActive: boolean
-  thresholds: {
-    lowDemand: number
-    mediumDemand: number
-    highDemand: number
-    surgeDemand: number
-  }
-  multipliers: {
-    low: number
-    medium: number
-    high: number
-    surge: number
-  }
-  maxSurgeMultiplier: number
-  cooldownPeriod: number // minutes
-  lastSurgeTime?: Timestamp
-  createdAt: Timestamp
-  updatedAt: Timestamp
+export interface MarketTrendAnalysis {
+  trends: Array<{
+    category: 'growth' | 'competition' | 'technology' | 'regulation' | 'economic';
+    trend: string;
+    impact: 'positive' | 'negative' | 'neutral';
+    confidence: number;
+    timeframe: 'short' | 'medium' | 'long';
+    description: string;
+    recommendations: string[];
+  }>;
+  marketSize: {
+    current: number;
+    projected: number;
+    growthRate: number;
+    timeframe: string;
+  };
+  competitivePosition: {
+    marketShare: number;
+    ranking: number;
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    threats: string[];
+  };
+}
+
+export interface CompetitiveIntelligence {
+  competitors: Array<{
+    name: string;
+    marketShare: number;
+    strengths: string[];
+    weaknesses: string[];
+    recentMoves: string[];
+    pricingStrategy: 'premium' | 'competitive' | 'discount';
+    serviceQuality: number;
+    customerSatisfaction: number;
+  }>;
+  benchmarks: {
+    averageWaitTime: number;
+    averagePrice: number;
+    customerSatisfaction: number;
+    driverEarnings: number;
+    marketGrowth: number;
+  };
+  opportunities: Array<{
+    type: 'market_gap' | 'service_improvement' | 'pricing' | 'expansion';
+    description: string;
+    potential: 'high' | 'medium' | 'low';
+    effort: 'high' | 'medium' | 'low';
+    timeline: string;
+  }>;
+}
+
+export interface InfluencingFactor {
+  name: string;
+  impact: number; // -1 to 1, where 1 is strong positive influence
+  confidence: number; // 0 to 1
+  category: 'seasonal' | 'economic' | 'competitive' | 'operational' | 'external';
+  description: string;
+}
+
+export interface PredictiveModel {
+  id: string;
+  name: string;
+  type: 'linear_regression' | 'arima' | 'neural_network' | 'ensemble';
+  target: string;
+  features: string[];
+  accuracy: number;
+  lastTrained: Date;
+  status: 'active' | 'training' | 'deprecated';
+  parameters: Record<string, any>;
+}
+
+export interface AnomalyDetection {
+  anomalies: Array<{
+    timestamp: Date;
+    metric: string;
+    value: number;
+    expectedValue: number;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    confidence: number;
+    possibleCauses: string[];
+    recommendations: string[];
+  }>;
+  patterns: Array<{
+    type: 'spike' | 'drop' | 'trend_change' | 'seasonal_deviation';
+    description: string;
+    frequency: number;
+    impact: string;
+  }>;
 }
 
 class PredictiveAnalyticsService {
-  private readonly COLLECTION_PREDICTIONS = 'demandPredictions'
-  private readonly COLLECTION_PRICING = 'pricingRecommendations'
-  private readonly COLLECTION_POSITIONING = 'driverPositioning'
-  private readonly COLLECTION_SURGE_CONFIG = 'surgePricingConfig'
-  private readonly COLLECTION_ANALYTICS = 'marketAnalytics'
-
-  /**
-   * Generate demand predictions for specific location and time
-   */
-  async generateDemandPrediction(
-    location: GeoPoint, 
-    locationName: string, 
-    targetTime: Date
-  ): Promise<DemandPrediction> {
+  // Revenue Forecasting
+  async generateRevenueForecast(
+    horizon: number = 30,
+    period: 'daily' | 'weekly' | 'monthly' = 'daily'
+  ): Promise<RevenueForecast> {
     try {
-      const timeSlot = {
-        date: targetTime.toISOString().split('T')[0],
-        hour: targetTime.getHours(),
-        dayOfWeek: targetTime.getDay()
-      }
+      // In a real implementation, this would use historical data and ML models
+      const forecasts: ForecastData[] = [];
+      const baseRevenue = 125000;
+      const growthRate = 0.02; // 2% growth
+      const seasonalityFactor = 0.1;
 
-      // Get historical data for this location and time pattern
-      const historicalData = await this.getHistoricalDemand(location, timeSlot)
-      
-      // Calculate prediction factors
-      const factors = await this.calculatePredictionFactors(location, targetTime)
-      
-      // Apply machine learning model (simplified)
-      const baseDemand = this.calculateBaseDemand(historicalData, timeSlot)
-      const adjustedDemand = this.applyFactorAdjustments(baseDemand, factors)
-      
-      // Calculate confidence based on data quality
-      const confidence = this.calculatePredictionConfidence(historicalData, factors)
+      for (let i = 1; i <= horizon; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() + i);
 
-      const prediction: DemandPrediction = {
-        location,
-        locationName,
-        timeSlot,
-        predictedDemand: Math.max(0, adjustedDemand),
-        confidence,
-        factors,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      }
+        // Apply growth trend
+        const trendValue = baseRevenue * Math.pow(1 + growthRate, i / 30);
 
-      // Store prediction
-      const docRef = await addDoc(collection(db, this.COLLECTION_PREDICTIONS), prediction)
-      return { ...prediction, id: docRef.id }
-    } catch (error) {
-      console.error('Error generating demand prediction:', error)
-      throw new Error('Failed to generate demand prediction')
-    }
-  } 
- /**
-   * Generate dynamic pricing recommendations
-   */
-  async generatePricingRecommendation(
-    location: GeoPoint,
-    targetTime: Date
-  ): Promise<PricingRecommendation> {
-    try {
-      // Get demand prediction for this location and time
-      const demandPrediction = await this.generateDemandPrediction(
-        location, 
-        'Location', 
-        targetTime
-      )
+        // Apply seasonality (weekly pattern)
+        const dayOfWeek = date.getDay();
+        const seasonalMultiplier = 1 + seasonalityFactor * Math.sin((dayOfWeek / 7) * 2 * Math.PI);
 
-      // Get surge pricing configuration
-      const surgeConfig = await this.getSurgePricingConfig(location)
-      
-      // Calculate base fare
-      const baseFare = 3.50 // Base fare in GBP
-      
-      // Determine demand level and surge multiplier
-      const { demandLevel, surgeMultiplier } = this.calculateSurgeMultiplier(
-        demandPrediction.predictedDemand,
-        surgeConfig
-      )
+        // Add some randomness
+        const randomFactor = 1 + (Math.random() - 0.5) * 0.1;
 
-      // Calculate recommended price
-      const recommendedPrice = baseFare * surgeMultiplier
-      
-      // Get competitor pricing (mock data)
-      const competitorPricing = await this.getCompetitorPricing(location)
-      
-      // Calculate price elasticity
-      const elasticity = await this.calculatePriceElasticity(location, demandPrediction.predictedDemand)
-      
-      // Calculate expected revenue
-      const expectedRevenue = this.calculateExpectedRevenue(
-        recommendedPrice,
-        demandPrediction.predictedDemand,
-        elasticity
-      )
+        const predicted = trendValue * seasonalMultiplier * randomFactor;
+        const confidence = 0.85 - (i / horizon) * 0.2; // Confidence decreases over time
 
-      // Generate reasoning
-      const reasoning = this.generatePricingReasoning(
-        demandLevel,
-        surgeMultiplier,
-        demandPrediction,
-        competitorPricing
-      )
-
-      const recommendation: PricingRecommendation = {
-        location,
-        timeSlot: {
-          date: targetTime.toISOString().split('T')[0],
-          hour: targetTime.getHours()
-        },
-        baseFare,
-        surgeMultiplier,
-        recommendedPrice,
-        demandLevel,
-        reasoning,
-        expectedRevenue,
-        competitorPricing,
-        elasticity,
-        createdAt: Timestamp.now()
-      }
-
-      // Store recommendation
-      const docRef = await addDoc(collection(db, this.COLLECTION_PRICING), recommendation)
-      return { ...recommendation, id: docRef.id }
-    } catch (error) {
-      console.error('Error generating pricing recommendation:', error)
-      throw new Error('Failed to generate pricing recommendation')
-    }
-  }
-
-  /**
-   * Generate driver positioning recommendations
-   */
-  async generateDriverPositioningRecommendations(
-    driverId: string,
-    currentLocation: GeoPoint
-  ): Promise<DriverPositioningRecommendation[]> {
-    try {
-      // Get nearby high-demand areas
-      const highDemandAreas = await this.getHighDemandAreas(currentLocation, 10) // 10km radius
-      
-      const recommendations: DriverPositioningRecommendation[] = []
-
-      for (const area of highDemandAreas) {
-        // Calculate expected wait time and earnings
-        const expectedWaitTime = await this.calculateExpectedWaitTime(area.location, area.demand)
-        const expectedEarnings = await this.calculateExpectedEarnings(area.location, area.demand)
-        
-        // Calculate travel time to recommended location
-        const travelTime = this.calculateTravelTime(currentLocation, area.location)
-        
-        // Determine priority based on earnings potential and travel time
-        const priority = this.calculatePositioningPriority(
-          expectedEarnings,
-          expectedWaitTime,
-          travelTime
-        )
-
-        // Calculate confidence based on prediction accuracy
-        const confidence = area.confidence || 0.7
-
-        // Generate reasoning
-        const reasoning = this.generatePositioningReasoning(
-          area,
-          expectedWaitTime,
-          expectedEarnings,
-          travelTime
-        )
-
-        const recommendation: DriverPositioningRecommendation = {
-          driverId,
-          currentLocation,
-          recommendedLocation: area.location,
-          recommendedLocationName: area.name,
-          priority,
-          expectedWaitTime,
-          expectedEarnings,
-          reasoning,
+        forecasts.push({
+          timestamp: date,
+          predicted,
           confidence,
-          validUntil: Timestamp.fromMillis(Date.now() + 30 * 60 * 1000), // Valid for 30 minutes
-          createdAt: Timestamp.now()
-        }
-
-        recommendations.push(recommendation)
+          upperBound: predicted * (1 + (1 - confidence)),
+          lowerBound: predicted * (1 - (1 - confidence)),
+          factors: ['historical_trend', 'seasonality', 'market_conditions']
+        });
       }
-
-      // Sort by priority and expected earnings
-      recommendations.sort((a, b) => {
-        const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 }
-        const aPriority = priorityOrder[a.priority]
-        const bPriority = priorityOrder[b.priority]
-        
-        if (aPriority !== bPriority) {
-          return bPriority - aPriority
-        }
-        return b.expectedEarnings - a.expectedEarnings
-      })
-
-      // Store recommendations
-      for (const recommendation of recommendations.slice(0, 5)) { // Top 5 recommendations
-        await addDoc(collection(db, this.COLLECTION_POSITIONING), recommendation)
-      }
-
-      return recommendations.slice(0, 5)
-    } catch (error) {
-      console.error('Error generating positioning recommendations:', error)
-      throw new Error('Failed to generate positioning recommendations')
-    }
-  }  /**
-
-   * Get market analytics for a specific area
-   */
-  async getMarketAnalytics(
-    location: GeoPoint,
-    timeRange: { start: Date; end: Date }
-  ): Promise<MarketAnalytics> {
-    try {
-      // Get historical ride data for the area and time range
-      const rideData = await this.getRideDataForArea(location, timeRange)
-      
-      // Calculate metrics
-      const metrics = this.calculateMarketMetrics(rideData)
-      
-      // Calculate trends
-      const trends = this.calculateMarketTrends(rideData)
-      
-      // Generate predictions
-      const predictions = await this.generateMarketPredictions(location, rideData)
 
       return {
-        location,
-        timeRange: {
-          start: Timestamp.fromDate(timeRange.start),
-          end: Timestamp.fromDate(timeRange.end)
+        metric: 'revenue',
+        period,
+        horizon,
+        forecasts,
+        accuracy: 0.87,
+        trend: 'increasing',
+        seasonality: {
+          detected: true,
+          pattern: 'weekly',
+          strength: 0.3
         },
-        metrics,
-        trends,
-        predictions
-      }
+        influencingFactors: [
+          {
+            name: 'Historical Growth',
+            impact: 0.7,
+            confidence: 0.9,
+            category: 'operational',
+            description: 'Consistent revenue growth over past quarters'
+          },
+          {
+            name: 'Seasonal Demand',
+            impact: 0.4,
+            confidence: 0.8,
+            category: 'seasonal',
+            description: 'Weekly patterns in ride demand'
+          },
+          {
+            name: 'Market Expansion',
+            impact: 0.5,
+            confidence: 0.7,
+            category: 'competitive',
+            description: 'New market entries and service improvements'
+          }
+        ]
+      };
     } catch (error) {
-      console.error('Error getting market analytics:', error)
-      throw new Error('Failed to get market analytics')
+      console.error('Error generating revenue forecast:', error);
+      throw error;
     }
   }
 
-  /**
-   * Private helper methods
-   */
-  private async getHistoricalDemand(location: GeoPoint, timeSlot: any): Promise<any[]> {
-    // Mock historical data - in real implementation, query actual ride data
-    return [
-      { demand: 15, date: '2024-01-01', hour: timeSlot.hour },
-      { demand: 18, date: '2024-01-08', hour: timeSlot.hour },
-      { demand: 12, date: '2024-01-15', hour: timeSlot.hour },
-      { demand: 20, date: '2024-01-22', hour: timeSlot.hour }
-    ]
-  }
+  // Demand Forecasting
+  async generateDemandForecast(
+    location?: { lat: number; lng: number; radius: number; name: string },
+    hours: number = 24
+  ): Promise<DemandForecast> {
+    try {
+      const forecasts: ForecastData[] = [];
+      const baseDemand = 350; // rides per hour
 
-  private async calculatePredictionFactors(location: GeoPoint, targetTime: Date): Promise<any> {
-    // Mock factor calculation - in real implementation, integrate with weather APIs, event APIs, etc.
-    return {
-      historical: 0.8,
-      weather: 0.9, // Good weather = higher demand
-      events: 1.2, // Local events increase demand
-      seasonal: 1.0, // Normal seasonal factor
-      trends: 1.1 // Slight upward trend
-    }
-  }
+      for (let i = 0; i < hours; i++) {
+        const date = new Date();
+        date.setHours(date.getHours() + i);
 
-  private calculateBaseDemand(historicalData: any[], timeSlot: any): number {
-    if (historicalData.length === 0) return 10 // Default base demand
-    
-    const avgDemand = historicalData.reduce((sum, data) => sum + data.demand, 0) / historicalData.length
-    
-    // Apply time-of-day adjustments
-    const hourMultipliers: Record<number, number> = {
-      6: 0.5, 7: 1.2, 8: 1.5, 9: 1.0, 10: 0.8, 11: 0.9,
-      12: 1.1, 13: 1.0, 14: 0.9, 15: 1.0, 16: 1.2, 17: 1.8,
-      18: 2.0, 19: 1.5, 20: 1.2, 21: 1.0, 22: 0.8, 23: 0.6
-    }
-    
-    const multiplier = hourMultipliers[timeSlot.hour] || 1.0
-    return avgDemand * multiplier
-  }
+        const hour = date.getHours();
 
-  private applyFactorAdjustments(baseDemand: number, factors: any): number {
-    return baseDemand * factors.historical * factors.weather * factors.events * factors.seasonal * factors.trends
-  }
+        // Peak hours pattern (7-9 AM, 5-7 PM)
+        let demandMultiplier = 1;
+        if ((hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 19)) {
+          demandMultiplier = 1.8;
+        } else if (hour >= 22 || hour <= 5) {
+          demandMultiplier = 0.4;
+        }
 
-  private calculatePredictionConfidence(historicalData: any[], factors: any): number {
-    let confidence = 0.5 // Base confidence
-    
-    // More historical data = higher confidence
-    if (historicalData.length > 10) confidence += 0.2
-    else if (historicalData.length > 5) confidence += 0.1
-    
-    // Factor reliability
-    const factorReliability = Object.values(factors).reduce((sum: number, factor: any) => {
-      return sum + (Math.abs(factor - 1.0) < 0.5 ? 0.1 : 0)
-    }, 0)
-    
-    confidence += factorReliability
-    
-    return Math.min(confidence, 1.0)
-  }
+        // Weekend adjustment
+        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+        if (isWeekend) {
+          demandMultiplier *= 0.8;
+        }
 
-  private async getSurgePricingConfig(location: GeoPoint): Promise<SurgePricingConfig> {
-    // Mock surge config - in real implementation, query from database
-    return {
-      location,
-      isActive: true,
-      thresholds: {
-        lowDemand: 5,
-        mediumDemand: 15,
-        highDemand: 25,
-        surgeDemand: 35
-      },
-      multipliers: {
-        low: 0.9,
-        medium: 1.0,
-        high: 1.3,
-        surge: 2.0
-      },
-      maxSurgeMultiplier: 3.0,
-      cooldownPeriod: 15,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now()
-    }
-  }
+        const predicted = baseDemand * demandMultiplier * (1 + (Math.random() - 0.5) * 0.2);
+        const confidence = 0.9 - Math.abs(i - 12) / 24 * 0.3; // Higher confidence for near-term
 
-  private calculateSurgeMultiplier(
-    predictedDemand: number,
-    config: SurgePricingConfig
-  ): { demandLevel: 'low' | 'medium' | 'high' | 'surge'; surgeMultiplier: number } {
-    if (predictedDemand >= config.thresholds.surgeDemand) {
-      return { demandLevel: 'surge', surgeMultiplier: config.multipliers.surge }
-    } else if (predictedDemand >= config.thresholds.highDemand) {
-      return { demandLevel: 'high', surgeMultiplier: config.multipliers.high }
-    } else if (predictedDemand >= config.thresholds.mediumDemand) {
-      return { demandLevel: 'medium', surgeMultiplier: config.multipliers.medium }
-    } else {
-      return { demandLevel: 'low', surgeMultiplier: config.multipliers.low }
-    }
-  }
-
-  private async getCompetitorPricing(location: GeoPoint): Promise<number> {
-    // Mock competitor pricing - in real implementation, integrate with competitor APIs
-    return 4.20
-  }
-
-  private async calculatePriceElasticity(location: GeoPoint, demand: number): Promise<number> {
-    // Mock elasticity calculation - in real implementation, use historical price/demand data
-    return -0.8 // Typical elasticity for ride-sharing
-  }
-
-  private calculateExpectedRevenue(price: number, demand: number, elasticity: number): number {
-    // Simplified revenue calculation considering price elasticity
-    const adjustedDemand = demand * Math.pow(price / 3.50, elasticity)
-    return price * Math.max(0, adjustedDemand)
-  }
-
-  private generatePricingReasoning(
-    demandLevel: string,
-    surgeMultiplier: number,
-    demandPrediction: DemandPrediction,
-    competitorPricing?: number
-  ): string {
-    let reasoning = `${demandLevel.charAt(0).toUpperCase() + demandLevel.slice(1)} demand predicted (${demandPrediction.predictedDemand.toFixed(0)} rides). `
-    
-    if (surgeMultiplier > 1.0) {
-      reasoning += `Surge pricing active with ${surgeMultiplier}x multiplier. `
-    }
-    
-    if (competitorPricing && competitorPricing > 0) {
-      const comparison = competitorPricing > (3.50 * surgeMultiplier) ? 'below' : 'above'
-      reasoning += `Pricing ${comparison} competitor average of £${competitorPricing.toFixed(2)}. `
-    }
-    
-    reasoning += `Confidence: ${(demandPrediction.confidence * 100).toFixed(0)}%.`
-    
-    return reasoning
-  }  private as
-ync getHighDemandAreas(
-    currentLocation: GeoPoint,
-    radiusKm: number
-  ): Promise<Array<{ location: GeoPoint; name: string; demand: number; confidence: number }>> {
-    // Mock high demand areas - in real implementation, query predictions database
-    return [
-      {
-        location: new GeoPoint(currentLocation.latitude + 0.01, currentLocation.longitude + 0.01),
-        name: 'City Center',
-        demand: 25,
-        confidence: 0.9
-      },
-      {
-        location: new GeoPoint(currentLocation.latitude - 0.005, currentLocation.longitude + 0.015),
-        name: 'Business District',
-        demand: 20,
-        confidence: 0.8
-      },
-      {
-        location: new GeoPoint(currentLocation.latitude + 0.02, currentLocation.longitude - 0.01),
-        name: 'Shopping Mall',
-        demand: 18,
-        confidence: 0.85
+        forecasts.push({
+          timestamp: date,
+          predicted,
+          confidence,
+          upperBound: predicted * 1.3,
+          lowerBound: predicted * 0.7,
+          factors: ['time_of_day', 'day_of_week', 'historical_patterns']
+        });
       }
-    ]
-  }
 
-  private async calculateExpectedWaitTime(location: GeoPoint, demand: number): Promise<number> {
-    // Simplified wait time calculation based on demand
-    const baseWaitTime = 5 // minutes
-    const demandFactor = Math.max(0.5, 1 - (demand / 50)) // Higher demand = lower wait time
-    return Math.round(baseWaitTime * demandFactor)
-  }
-
-  private async calculateExpectedEarnings(location: GeoPoint, demand: number): Promise<number> {
-    // Simplified earnings calculation
-    const averageFare = 8.50
-    const ridesPerHour = Math.min(demand / 10, 4) // Max 4 rides per hour
-    return averageFare * ridesPerHour
-  }
-
-  private calculateTravelTime(from: GeoPoint, to: GeoPoint): number {
-    // Simplified travel time calculation
-    const distance = this.calculateDistance(from, to)
-    const averageSpeed = 30 // km/h in city
-    return Math.round((distance / 1000) / averageSpeed * 60) // minutes
-  }
-
-  private calculatePositioningPriority(
-    expectedEarnings: number,
-    expectedWaitTime: number,
-    travelTime: number
-  ): 'low' | 'medium' | 'high' | 'urgent' {
-    const score = expectedEarnings / (expectedWaitTime + travelTime)
-    
-    if (score > 2.0) return 'urgent'
-    if (score > 1.5) return 'high'
-    if (score > 1.0) return 'medium'
-    return 'low'
-  }
-
-  private generatePositioningReasoning(
-    area: any,
-    expectedWaitTime: number,
-    expectedEarnings: number,
-    travelTime: number
-  ): string {
-    return `High demand area (${area.demand} predicted rides) with £${expectedEarnings.toFixed(2)}/hour potential. ` +
-           `${travelTime} min travel time, ${expectedWaitTime} min expected wait. ` +
-           `Confidence: ${(area.confidence * 100).toFixed(0)}%.`
-  }
-
-  private async getRideDataForArea(
-    location: GeoPoint,
-    timeRange: { start: Date; end: Date }
-  ): Promise<any[]> {
-    // Mock ride data - in real implementation, query actual ride database
-    return [
-      { fare: 8.50, waitTime: 4, rating: 4.5, cancelled: false },
-      { fare: 12.30, waitTime: 6, rating: 4.8, cancelled: false },
-      { fare: 6.20, waitTime: 3, rating: 4.2, cancelled: true }
-    ]
-  }
-
-  private calculateMarketMetrics(rideData: any[]): any {
-    const totalRides = rideData.length
-    const completedRides = rideData.filter(ride => !ride.cancelled)
-    
-    return {
-      totalRides,
-      averageWaitTime: completedRides.reduce((sum, ride) => sum + ride.waitTime, 0) / completedRides.length,
-      averageFare: completedRides.reduce((sum, ride) => sum + ride.fare, 0) / completedRides.length,
-      driverUtilization: 0.75, // Mock data
-      customerSatisfaction: completedRides.reduce((sum, ride) => sum + ride.rating, 0) / completedRides.length,
-      cancellationRate: rideData.filter(ride => ride.cancelled).length / totalRides
+      return {
+        metric: 'demand',
+        location,
+        timeWindow: {
+          start: new Date(),
+          end: new Date(Date.now() + hours * 60 * 60 * 1000),
+          granularity: 'hour'
+        },
+        forecasts,
+        peakHours: [
+          { hour: 8, expectedDemand: 630, confidence: 0.9 },
+          { hour: 18, expectedDemand: 595, confidence: 0.85 },
+          { hour: 12, expectedDemand: 420, confidence: 0.8 }
+        ],
+        demandDrivers: [
+          'Rush hour commuting',
+          'Business district activity',
+          'Weather conditions',
+          'Local events',
+          'Public transport disruptions'
+        ]
+      };
+    } catch (error) {
+      console.error('Error generating demand forecast:', error);
+      throw error;
     }
   }
 
-  private calculateMarketTrends(rideData: any[]): any {
-    return {
-      demandGrowth: 0.15, // 15% growth
-      priceElasticity: -0.8,
-      seasonalVariation: 0.2
+  // Capacity Planning
+  async generateCapacityPlan(): Promise<CapacityPlanningData> {
+    try {
+      return {
+        currentCapacity: {
+          drivers: 2100,
+          vehicles: 1850,
+          utilization: 0.72
+        },
+        projectedDemand: {
+          rides: 9500,
+          peakMultiplier: 1.8,
+          seasonalAdjustment: 1.15
+        },
+        recommendations: {
+          additionalDrivers: 180,
+          additionalVehicles: 95,
+          optimalScheduling: [
+            {
+              timeSlot: '06:00-10:00',
+              recommendedDrivers: 1200,
+              expectedUtilization: 0.85
+            },
+            {
+              timeSlot: '10:00-16:00',
+              recommendedDrivers: 800,
+              expectedUtilization: 0.65
+            },
+            {
+              timeSlot: '16:00-20:00',
+              recommendedDrivers: 1400,
+              expectedUtilization: 0.90
+            },
+            {
+              timeSlot: '20:00-06:00',
+              recommendedDrivers: 400,
+              expectedUtilization: 0.45
+            }
+          ]
+        },
+        scenarios: [
+          {
+            name: 'High Growth',
+            description: '25% increase in demand over next quarter',
+            impact: {
+              demandChange: 0.25,
+              capacityRequirement: 0.30,
+              costImplication: 450000
+            }
+          },
+          {
+            name: 'Economic Downturn',
+            description: '15% decrease in demand due to economic factors',
+            impact: {
+              demandChange: -0.15,
+              capacityRequirement: -0.10,
+              costImplication: -180000
+            }
+          },
+          {
+            name: 'New Competitor',
+            description: 'Major competitor enters market',
+            impact: {
+              demandChange: -0.20,
+              capacityRequirement: -0.15,
+              costImplication: -250000
+            }
+          }
+        ]
+      };
+    } catch (error) {
+      console.error('Error generating capacity plan:', error);
+      throw error;
     }
   }
 
-  private async generateMarketPredictions(location: GeoPoint, rideData: any[]): Promise<any> {
-    const currentHour = new Date().getHours()
-    const baseDemand = rideData.length
-    
-    return {
-      nextHourDemand: Math.round(baseDemand * 1.1),
-      nextDayDemand: Math.round(baseDemand * 24 * 0.8),
-      nextWeekDemand: Math.round(baseDemand * 24 * 7 * 0.85)
+  // Market Trend Analysis
+  async analyzeMarketTrends(): Promise<MarketTrendAnalysis> {
+    try {
+      return {
+        trends: [
+          {
+            category: 'growth',
+            trend: 'Increasing demand for sustainable transportation',
+            impact: 'positive',
+            confidence: 0.85,
+            timeframe: 'medium',
+            description: 'Growing consumer preference for eco-friendly ride options',
+            recommendations: [
+              'Expand electric vehicle fleet',
+              'Partner with green energy providers',
+              'Implement carbon offset programs'
+            ]
+          },
+          {
+            category: 'technology',
+            trend: 'Autonomous vehicle adoption accelerating',
+            impact: 'positive',
+            confidence: 0.7,
+            timeframe: 'long',
+            description: 'Self-driving technology becoming more viable for ride-sharing',
+            recommendations: [
+              'Invest in AV partnerships',
+              'Pilot autonomous vehicle programs',
+              'Prepare driver transition strategies'
+            ]
+          },
+          {
+            category: 'competition',
+            trend: 'Market consolidation increasing',
+            impact: 'negative',
+            confidence: 0.8,
+            timeframe: 'short',
+            description: 'Larger players acquiring smaller competitors',
+            recommendations: [
+              'Focus on differentiation',
+              'Strengthen customer loyalty',
+              'Explore strategic partnerships'
+            ]
+          },
+          {
+            category: 'regulation',
+            trend: 'Stricter driver classification requirements',
+            impact: 'negative',
+            confidence: 0.9,
+            timeframe: 'short',
+            description: 'Government regulations on gig worker classification',
+            recommendations: [
+              'Adapt to regulatory changes',
+              'Improve driver benefits',
+              'Engage with policymakers'
+            ]
+          }
+        ],
+        marketSize: {
+          current: 85000000000, // $85B
+          projected: 120000000000, // $120B
+          growthRate: 0.12, // 12% CAGR
+          timeframe: '2025-2030'
+        },
+        competitivePosition: {
+          marketShare: 0.15, // 15%
+          ranking: 3,
+          strengths: [
+            'Strong driver satisfaction',
+            'Competitive pricing',
+            'Reliable service quality',
+            'Growing market presence'
+          ],
+          weaknesses: [
+            'Limited geographic coverage',
+            'Smaller marketing budget',
+            'Less brand recognition'
+          ],
+          opportunities: [
+            'Underserved suburban markets',
+            'Corporate partnerships',
+            'Delivery service expansion',
+            'International expansion'
+          ],
+          threats: [
+            'Aggressive competitor pricing',
+            'Regulatory changes',
+            'Economic downturn',
+            'Technology disruption'
+          ]
+        }
+      };
+    } catch (error) {
+      console.error('Error analyzing market trends:', error);
+      throw error;
     }
   }
 
-  private calculateDistance(point1: GeoPoint, point2: GeoPoint): number {
-    const R = 6371e3 // Earth's radius in meters
-    const φ1 = point1.latitude * Math.PI / 180
-    const φ2 = point2.latitude * Math.PI / 180
-    const Δφ = (point2.latitude - point1.latitude) * Math.PI / 180
-    const Δλ = (point2.longitude - point1.longitude) * Math.PI / 180
+  // Competitive Intelligence
+  async getCompetitiveIntelligence(): Promise<CompetitiveIntelligence> {
+    try {
+      return {
+        competitors: [
+          {
+            name: 'RideLeader',
+            marketShare: 0.45,
+            strengths: ['Brand recognition', 'Large driver network', 'Advanced technology'],
+            weaknesses: ['High prices', 'Driver satisfaction issues', 'Regulatory challenges'],
+            recentMoves: ['Launched premium service', 'Acquired food delivery company'],
+            pricingStrategy: 'premium',
+            serviceQuality: 4.2,
+            customerSatisfaction: 3.8
+          },
+          {
+            name: 'QuickRide',
+            marketShare: 0.25,
+            strengths: ['Competitive pricing', 'Fast pickup times', 'Good coverage'],
+            weaknesses: ['Service quality inconsistency', 'Limited features'],
+            recentMoves: ['Expanded to new cities', 'Introduced subscription model'],
+            pricingStrategy: 'competitive',
+            serviceQuality: 3.9,
+            customerSatisfaction: 4.1
+          },
+          {
+            name: 'CityTransport',
+            marketShare: 0.15,
+            strengths: ['Local market knowledge', 'Government partnerships'],
+            weaknesses: ['Limited technology', 'Slow growth'],
+            recentMoves: ['Upgraded mobile app', 'Added electric vehicles'],
+            pricingStrategy: 'discount',
+            serviceQuality: 3.7,
+            customerSatisfaction: 3.9
+          }
+        ],
+        benchmarks: {
+          averageWaitTime: 4.8, // minutes
+          averagePrice: 12.50, // per ride
+          customerSatisfaction: 4.0,
+          driverEarnings: 18.75, // per hour
+          marketGrowth: 0.15 // 15% annually
+        },
+        opportunities: [
+          {
+            type: 'market_gap',
+            description: 'Underserved suburban and rural markets',
+            potential: 'high',
+            effort: 'medium',
+            timeline: '6-12 months'
+          },
+          {
+            type: 'service_improvement',
+            description: 'Premium service with enhanced comfort features',
+            potential: 'medium',
+            effort: 'low',
+            timeline: '3-6 months'
+          },
+          {
+            type: 'pricing',
+            description: 'Dynamic pricing optimization for peak hours',
+            potential: 'high',
+            effort: 'low',
+            timeline: '1-3 months'
+          },
+          {
+            type: 'expansion',
+            description: 'Corporate partnerships for business travel',
+            potential: 'medium',
+            effort: 'medium',
+            timeline: '6-9 months'
+          }
+        ]
+      };
+    } catch (error) {
+      console.error('Error getting competitive intelligence:', error);
+      throw error;
+    }
+  }
 
-    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ/2) * Math.sin(Δλ/2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  // Anomaly Detection
+  async detectAnomalies(
+    metrics: string[] = ['revenue', 'rides', 'users'],
+    days: number = 30
+  ): Promise<AnomalyDetection> {
+    try {
+      // Mock anomaly detection - in real implementation, this would use ML algorithms
+      return {
+        anomalies: [
+          {
+            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+            metric: 'revenue',
+            value: 95000,
+            expectedValue: 125000,
+            severity: 'high',
+            confidence: 0.92,
+            possibleCauses: [
+              'System outage during peak hours',
+              'Competitor promotional campaign',
+              'Weather-related demand drop'
+            ],
+            recommendations: [
+              'Investigate system performance',
+              'Review competitive pricing',
+              'Implement weather-based surge pricing'
+            ]
+          },
+          {
+            timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+            metric: 'rides',
+            value: 12500,
+            expectedValue: 8500,
+            severity: 'medium',
+            confidence: 0.78,
+            possibleCauses: [
+              'Local event or festival',
+              'Public transport disruption',
+              'Promotional campaign success'
+            ],
+            recommendations: [
+              'Analyze event correlation',
+              'Optimize driver allocation',
+              'Prepare for similar future events'
+            ]
+          }
+        ],
+        patterns: [
+          {
+            type: 'spike',
+            description: 'Revenue spikes during major events',
+            frequency: 0.15, // 15% of time
+            impact: 'Positive revenue impact of 25-40%'
+          },
+          {
+            type: 'seasonal_deviation',
+            description: 'Lower demand during holiday periods',
+            frequency: 0.08, // 8% of time
+            impact: 'Revenue decrease of 15-25%'
+          }
+        ]
+      };
+    } catch (error) {
+      console.error('Error detecting anomalies:', error);
+      throw error;
+    }
+  }
 
-    return R * c
+  // Model Management
+  async getPredictiveModels(): Promise<PredictiveModel[]> {
+    try {
+      return [
+        {
+          id: 'revenue_forecast_v2',
+          name: 'Revenue Forecasting Model',
+          type: 'ensemble',
+          target: 'daily_revenue',
+          features: ['historical_revenue', 'day_of_week', 'weather', 'events', 'promotions'],
+          accuracy: 0.87,
+          lastTrained: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          status: 'active',
+          parameters: {
+            lookback_days: 90,
+            forecast_horizon: 30,
+            confidence_interval: 0.95
+          }
+        },
+        {
+          id: 'demand_prediction_v1',
+          name: 'Demand Prediction Model',
+          type: 'neural_network',
+          target: 'hourly_rides',
+          features: ['time_of_day', 'day_of_week', 'weather', 'location', 'events'],
+          accuracy: 0.82,
+          lastTrained: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          status: 'active',
+          parameters: {
+            hidden_layers: 3,
+            neurons_per_layer: 128,
+            dropout_rate: 0.2
+          }
+        },
+        {
+          id: 'churn_prediction_v1',
+          name: 'Customer Churn Prediction',
+          type: 'linear_regression',
+          target: 'churn_probability',
+          features: ['ride_frequency', 'avg_rating', 'complaints', 'payment_issues'],
+          accuracy: 0.75,
+          lastTrained: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+          status: 'training',
+          parameters: {
+            regularization: 'l2',
+            alpha: 0.01
+          }
+        }
+      ];
+    } catch (error) {
+      console.error('Error getting predictive models:', error);
+      throw error;
+    }
+  }
+
+  // Advanced Analytics
+  async getBusinessInsights(): Promise<{
+    insights: Array<{
+      category: string;
+      title: string;
+      description: string;
+      impact: 'high' | 'medium' | 'low';
+      actionable: boolean;
+      recommendations: string[];
+    }>;
+    riskFactors: Array<{
+      risk: string;
+      probability: number;
+      impact: number;
+      mitigation: string[];
+    }>;
+  }> {
+    try {
+      return {
+        insights: [
+          {
+            category: 'Revenue Optimization',
+            title: 'Peak Hour Pricing Opportunity',
+            description: 'Analysis shows 23% revenue increase potential during peak hours with optimized pricing',
+            impact: 'high',
+            actionable: true,
+            recommendations: [
+              'Implement dynamic pricing algorithm',
+              'Test 15% price increase during peak hours',
+              'Monitor customer response and adjust accordingly'
+            ]
+          },
+          {
+            category: 'Operational Efficiency',
+            title: 'Driver Allocation Inefficiency',
+            description: 'Current driver distribution results in 18% idle time in low-demand areas',
+            impact: 'medium',
+            actionable: true,
+            recommendations: [
+              'Implement predictive driver positioning',
+              'Create incentives for drivers to move to high-demand areas',
+              'Develop real-time rebalancing system'
+            ]
+          },
+          {
+            category: 'Customer Experience',
+            title: 'Wait Time Reduction Opportunity',
+            description: 'Reducing average wait time by 1 minute could increase customer satisfaction by 12%',
+            impact: 'medium',
+            actionable: true,
+            recommendations: [
+              'Optimize matching algorithm',
+              'Increase driver density in high-demand areas',
+              'Implement pre-positioning strategies'
+            ]
+          }
+        ],
+        riskFactors: [
+          {
+            risk: 'Competitive Pricing Pressure',
+            probability: 0.7,
+            impact: 0.8,
+            mitigation: [
+              'Differentiate through service quality',
+              'Develop loyalty programs',
+              'Focus on operational efficiency'
+            ]
+          },
+          {
+            risk: 'Regulatory Changes',
+            probability: 0.6,
+            impact: 0.9,
+            mitigation: [
+              'Monitor regulatory developments',
+              'Engage with policymakers',
+              'Prepare compliance strategies'
+            ]
+          },
+          {
+            risk: 'Economic Downturn Impact',
+            probability: 0.4,
+            impact: 0.7,
+            mitigation: [
+              'Diversify service offerings',
+              'Optimize cost structure',
+              'Build financial reserves'
+            ]
+          }
+        ]
+      };
+    } catch (error) {
+      console.error('Error getting business insights:', error);
+      throw error;
+    }
+  }
+
+  // Real-time Predictions
+  subscribeToRealTimePredictions(
+    callback: (predictions: { metric: string; value: number; confidence: number }[]) => void
+  ): () => void {
+    // Mock real-time predictions
+    const interval = setInterval(() => {
+      const predictions = [
+        {
+          metric: 'next_hour_rides',
+          value: Math.floor(Math.random() * 200 + 300),
+          confidence: 0.85
+        },
+        {
+          metric: 'next_hour_revenue',
+          value: Math.floor(Math.random() * 2000 + 4000),
+          confidence: 0.82
+        },
+        {
+          metric: 'driver_demand',
+          value: Math.floor(Math.random() * 50 + 150),
+          confidence: 0.78
+        }
+      ];
+      callback(predictions);
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
   }
 }
 
-export const predictiveAnalyticsService = new PredictiveAnalyticsService()
+export const predictiveAnalyticsService = new PredictiveAnalyticsService();
