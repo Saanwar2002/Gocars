@@ -112,7 +112,7 @@ export default function PassengerDashboardPage() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="text-3xl font-headline">Welcome, {user?.name || 'Passenger'}!</CardTitle>
-          <CardDescription>Manage your rides and explore MyBase features.</CardDescription> 
+          <CardDescription>Manage your rides and explore GoCars features.</CardDescription> 
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6">
           <div className="w-full space-y-4">

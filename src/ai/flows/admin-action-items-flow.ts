@@ -45,7 +45,7 @@ const prompt = ai.definePrompt({
   input: { schema: AdminActionItemsInputSchema },
   output: { schema: AdminActionItemsOutputSchema },
   prompt: `
-    You are an AI assistant for the TaxiNow platform administrator. Your role is to suggest a short list of 2 to 4 actionable operational to-do items based on the current platform status.
+    You are an AI assistant for the GoCars platform administrator. Your role is to suggest a short list of 2 to 4 actionable operational to-do items based on the current platform status.
     Prioritize tasks that seem most urgent or impactful.
 
     Current Platform Status:

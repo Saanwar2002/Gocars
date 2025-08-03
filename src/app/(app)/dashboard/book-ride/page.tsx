@@ -394,11 +394,11 @@ export default function BookRidePage() {
 
   // Move this block to the top of the component, before any useEffect that uses drivers, loadingDrivers, or errorDrivers
   const operatorCode = operatorPreference || 'OP001';
-  const isMyBaseApp = !operatorPreference || operatorPreference === 'OP001';
+  const isGoCarsApp = !operatorPreference || operatorPreference === 'OP001';
   const { drivers, loading: loadingDrivers, error: errorDrivers, usedFallback } = useNearbyDrivers(
     pickupCoords ?? undefined,
     operatorCode,
-    isMyBaseApp
+    isGoCarsApp
   );
 
  useEffect(() => {

@@ -10,9 +10,9 @@ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compa
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAEnaOlXAGlkox-wpOOER7RUPhd8iWKhg4",
-  authDomain: "taxinow-vvp38.firebaseapp.com",
-  projectId: "taxinow-vvp38",
-  storageBucket: "taxinow-vvp38.firebasestorage.app",
+  authDomain: "gocars-platform.firebaseapp.com",
+  projectId: "gocars-platform",
+  storageBucket: "gocars-platform.firebasestorage.app",
   messagingSenderId: "679652213262",
   appId: "1:679652213262:web:0217c9706165949cd5f25f"
 }

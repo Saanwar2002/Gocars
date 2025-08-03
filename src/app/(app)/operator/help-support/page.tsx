@@ -109,7 +109,7 @@ export default function OperatorHelpSupportPage() {
             <HelpCircle className="w-8 h-8 text-primary" /> Operator Support & Platform Feedback
           </CardTitle>
           <CardDescription>
-            Find answers to common questions or submit feedback/issues related to the MyBase platform itself.
+            Find answers to common questions or submit feedback/issues related to the GoCars platform itself.
           </CardDescription>
         </CardHeader>
       </Card>

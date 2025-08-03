@@ -1,5 +1,6 @@
 
 import type { Config } from 'tailwindcss';
+import { brandColors, typography, spacing, borderRadius, boxShadow, animation } from './src/config/brand';
 
 const config: Config = {
   darkMode: ["class"],
@@ -19,32 +20,16 @@ const config: Config = {
     extend: {
       // GoCars Typography System
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+        ...typography.fontFamily,
+        heading: typography.fontFamily.display,
+        display: typography.fontFamily.display,
       },
-      fontSize: {
-        'xs': ['0.75rem', { lineHeight: '1rem' }],
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'base': ['1rem', { lineHeight: '1.5rem' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-        '5xl': ['3rem', { lineHeight: '1' }],
-        '6xl': ['3.75rem', { lineHeight: '1' }],
-        '7xl': ['4.5rem', { lineHeight: '1' }],
-        '8xl': ['6rem', { lineHeight: '1' }],
-        '9xl': ['8rem', { lineHeight: '1' }],
-      },
+      fontSize: typography.fontSize,
+      fontWeight: typography.fontWeight,
       // GoCars Spacing System
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
-        '144': '36rem',
-        // Touch-friendly spacing
+        ...spacing,
+        // Additional touch-friendly spacing
         'touch-sm': '2.75rem', // 44px - minimum touch target
         'touch': '3rem', // 48px - comfortable touch target
         'touch-lg': '3.5rem', // 56px - large touch target
@@ -97,93 +82,47 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        // GoCars Brand Colors
-        gocars: {
-          blue: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            200: '#bfdbfe',
-            300: '#93c5fd',
-            400: '#60a5fa',
-            500: '#3b82f6', // Primary blue
-            600: '#2563eb', // Main brand blue
-            700: '#1d4ed8',
-            800: '#1e40af',
-            900: '#1e3a8a',
-            950: '#172554',
-          },
-          purple: {
-            50: '#faf5ff',
-            100: '#f3e8ff',
-            200: '#e9d5ff',
-            300: '#d8b4fe',
-            400: '#c084fc',
-            500: '#a855f7',
-            600: '#9333ea',
-            700: '#7c3aed', // Secondary purple
-            800: '#6b21a8',
-            900: '#581c87',
-            950: '#3b0764',
-          },
-          green: {
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            200: '#bbf7d0',
-            300: '#86efac',
-            400: '#4ade80',
-            500: '#22c55e',
-            600: '#16a34a',
-            700: '#15803d',
-            800: '#166534',
-            900: '#14532d',
-            950: '#052e16',
-          },
-          orange: {
-            50: '#fff7ed',
-            100: '#ffedd5',
-            200: '#fed7aa',
-            300: '#fdba74',
-            400: '#fb923c',
-            500: '#f97316',
-            600: '#ea580c',
-            700: '#c2410c', // Warning orange
-            800: '#9a3412',
-            900: '#7c2d12',
-            950: '#431407',
-          },
-          red: {
-            50: '#fef2f2',
-            100: '#fee2e2',
-            200: '#fecaca',
-            300: '#fca5a5',
-            400: '#f87171',
-            500: '#ef4444',
-            600: '#dc2626', // Danger red
-            700: '#b91c1c',
-            800: '#991b1b',
-            900: '#7f1d1d',
-            950: '#450a0a',
-          },
+        // GoCars Brand Colors from brand system
+        brand: {
+          primary: brandColors.primary,
+          secondary: brandColors.secondary,
+          accent: brandColors.accent,
+          neutral: brandColors.neutral,
         },
+        // Semantic color aliases
+        success: brandColors.accent.green,
+        warning: brandColors.accent.yellow,
+        error: brandColors.accent.red,
+        info: brandColors.primary,
+        // Background colors
+        'bg-primary': '#ffffff',
+        'bg-secondary': brandColors.neutral[50],
+        'bg-tertiary': brandColors.neutral[100],
+        // Text colors
+        'text-primary': brandColors.secondary[900],
+        'text-secondary': brandColors.secondary[700],
+        'text-tertiary': brandColors.secondary[500],
+        'text-inverse': '#ffffff',
+        // Border colors
+        'border-primary': brandColors.neutral[200],
+        'border-secondary': brandColors.neutral[300],
+        'border-focus': brandColors.primary[500],
       },
       // GoCars Border Radius System
       borderRadius: {
+        ...borderRadius,
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        'xl': '1rem',
-        '2xl': '1.5rem',
-        '3xl': '2rem',
       },
       // GoCars Box Shadow System
       boxShadow: {
-        'gocars-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'gocars': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        'gocars-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'gocars-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'gocars-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        'gocars-2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        'gocars-inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+        ...boxShadow,
+        // Brand-specific shadows
+        'brand-sm': '0 2px 4px 0 rgba(14, 165, 233, 0.1)',
+        'brand-md': '0 4px 8px 0 rgba(14, 165, 233, 0.15)',
+        'brand-lg': '0 8px 16px 0 rgba(14, 165, 233, 0.2)',
+        'brand-xl': '0 12px 24px 0 rgba(14, 165, 233, 0.25)',
       },
       // GoCars Animation System
       keyframes: {
@@ -208,7 +147,7 @@ const config: Config = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: ".5" }
         },
-        // New GoCars animations
+        // GoCars Brand Animations
         "fade-in": {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
@@ -245,6 +184,34 @@ const config: Config = {
           "0%, 80%, 100%": { transform: "scale(0)" },
           "40%": { transform: "scale(1)" },
         },
+        "pulse-brand": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.8" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "wiggle": {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-down": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "fade-out": {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.95)" },
+        },
+        "shrink-width": {
+          "0%": { width: "100%" },
+          "100%": { width: "0%" },
+        },
       },
       animation: {
         // Existing animations
@@ -253,7 +220,7 @@ const config: Config = {
         "flash-yellow-border": "flash-yellow-border 2s ease-in-out infinite",
         "flash-red-border": "flash-red-border 1.5s ease-in-out infinite",
         "slow-pulse": "slow-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        // New GoCars animations
+        // GoCars Brand Animations
         "fade-in": "fade-in 0.3s ease-out",
         "fade-in-up": "fade-in-up 0.4s ease-out",
         "fade-in-down": "fade-in-down 0.4s ease-out",
@@ -263,17 +230,47 @@ const config: Config = {
         "bounce-gentle": "bounce-gentle 2s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
         "loading-dots": "loading-dots 1.4s ease-in-out infinite both",
+        "pulse-brand": "pulse-brand 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 3s ease-in-out infinite",
+        "wiggle": "wiggle 1s ease-in-out infinite",
+        "slide-up": "slide-up 0.3s ease-out",
+        "slide-down": "slide-down 0.3s ease-out",
+        "fade-out": "fade-out 0.3s ease-out",
+        "shrink-width": "shrink-width linear",
       },
       // GoCars Transition System
       transitionDuration: {
+        ...animation.duration,
         '400': '400ms',
         '600': '600ms',
         '800': '800ms',
         '900': '900ms',
       },
       transitionTimingFunction: {
+        ...animation.timing,
         'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
+      // Z-index scale
+      zIndex: {
+        'hide': '-1',
+        'auto': 'auto',
+        'base': '0',
+        'docked': '10',
+        'dropdown': '1000',
+        'sticky': '1100',
+        'banner': '1200',
+        'overlay': '1300',
+        'modal': '1400',
+        'popover': '1500',
+        'skipLink': '1600',
+        'toast': '1700',
+        'tooltip': '1800',
+      },
+      // Backdrop blur
+      backdropBlur: {
+        'xs': '2px',
+        'brand': '8px',
       },
       // Responsive breakpoints
       screens: {
@@ -314,7 +311,164 @@ const config: Config = {
     },
   },
   plugins: [
-    require("tailwindcss-animate")
+    require("tailwindcss-animate"),
+    // GoCars Custom Utilities Plugin
+    function ({ addUtilities, theme }: any) {
+      const newUtilities = {
+        // Brand button styles
+        '.btn-brand': {
+          backgroundColor: theme('colors.brand.primary.500'),
+          color: theme('colors.white'),
+          padding: `${theme('spacing.3')} ${theme('spacing.6')}`,
+          borderRadius: theme('borderRadius.lg'),
+          fontWeight: theme('fontWeight.medium'),
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: theme('colors.brand.primary.600'),
+            transform: 'translateY(-1px)',
+            boxShadow: theme('boxShadow.brand-md'),
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+          },
+        },
+        '.btn-brand-secondary': {
+          backgroundColor: theme('colors.brand.secondary.100'),
+          color: theme('colors.brand.secondary.900'),
+          padding: `${theme('spacing.3')} ${theme('spacing.6')}`,
+          borderRadius: theme('borderRadius.lg'),
+          fontWeight: theme('fontWeight.medium'),
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: theme('colors.brand.secondary.200'),
+            transform: 'translateY(-1px)',
+            boxShadow: theme('boxShadow.md'),
+          },
+        },
+        '.btn-brand-accent': {
+          backgroundColor: theme('colors.brand.accent.yellow.500'),
+          color: theme('colors.brand.secondary.900'),
+          padding: `${theme('spacing.3')} ${theme('spacing.6')}`,
+          borderRadius: theme('borderRadius.lg'),
+          fontWeight: theme('fontWeight.medium'),
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: theme('colors.brand.accent.yellow.600'),
+            transform: 'translateY(-1px)',
+            boxShadow: theme('boxShadow.brand-md'),
+          },
+        },
+        // Brand card styles
+        '.card-brand': {
+          backgroundColor: theme('colors.white'),
+          borderRadius: theme('borderRadius.xl'),
+          boxShadow: theme('boxShadow.sm'),
+          border: `1px solid ${theme('colors.border-primary')}`,
+          padding: theme('spacing.6'),
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            boxShadow: theme('boxShadow.brand-lg'),
+            transform: 'translateY(-2px)',
+          },
+        },
+        '.card-brand-elevated': {
+          backgroundColor: theme('colors.white'),
+          borderRadius: theme('borderRadius.2xl'),
+          boxShadow: theme('boxShadow.brand-lg'),
+          padding: theme('spacing.8'),
+          border: 'none',
+        },
+        // Text utilities
+        '.text-brand': {
+          color: theme('colors.brand.primary.500'),
+        },
+        '.text-brand-gradient': {
+          background: `linear-gradient(135deg, ${theme('colors.brand.primary.500')} 0%, ${theme('colors.brand.primary.600')} 100%)`,
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+          'background-clip': 'text',
+        },
+        // Focus utilities
+        '.focus-brand': {
+          '&:focus': {
+            outline: 'none',
+            boxShadow: `0 0 0 3px ${theme('colors.brand.primary.500')}40`,
+            borderColor: theme('colors.brand.primary.500'),
+          },
+        },
+        // Loading states
+        '.loading-brand': {
+          position: 'relative',
+          overflow: 'hidden',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: '0',
+            left: '-100%',
+            width: '100%',
+            height: '100%',
+            background: `linear-gradient(90deg, transparent, ${theme('colors.brand.primary.500')}40, transparent)`,
+            animation: 'shimmer 1.5s infinite',
+          },
+        },
+        // Touch-friendly utilities
+        '.touch-target': {
+          minHeight: theme('spacing.touch'),
+          minWidth: theme('spacing.touch'),
+        },
+        '.touch-target-sm': {
+          minHeight: theme('spacing.touch-sm'),
+          minWidth: theme('spacing.touch-sm'),
+        },
+        '.touch-target-lg': {
+          minHeight: theme('spacing.touch-lg'),
+          minWidth: theme('spacing.touch-lg'),
+        },
+        // Safe area utilities
+        '.safe-top': {
+          paddingTop: theme('spacing.safe'),
+        },
+        '.safe-bottom': {
+          paddingBottom: theme('spacing.safe-bottom'),
+        },
+        '.safe-left': {
+          paddingLeft: theme('spacing.safe-left'),
+        },
+        '.safe-right': {
+          paddingRight: theme('spacing.safe-right'),
+        },
+        // Gradient utilities
+        '.bg-gradient-brand': {
+          background: `linear-gradient(135deg, ${theme('colors.brand.primary.500')} 0%, ${theme('colors.brand.primary.600')} 100%)`,
+        },
+        '.bg-gradient-brand-light': {
+          background: `linear-gradient(135deg, ${theme('colors.brand.primary.50')} 0%, ${theme('colors.brand.primary.100')} 100%)`,
+        },
+        '.bg-gradient-accent': {
+          background: `linear-gradient(135deg, ${theme('colors.brand.accent.yellow.400')} 0%, ${theme('colors.brand.accent.yellow.500')} 100%)`,
+        },
+        // Scrollbar utilities
+        '.scrollbar-brand': {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: theme('colors.brand.neutral.100'),
+            borderRadius: theme('borderRadius.full'),
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: theme('colors.brand.primary.300'),
+            borderRadius: theme('borderRadius.full'),
+            '&:hover': {
+              backgroundColor: theme('colors.brand.primary.400'),
+            },
+          },
+        },
+      };
+
+      addUtilities(newUtilities);
+    },
   ],
 };
 export default config;

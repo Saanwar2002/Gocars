@@ -1,4 +1,4 @@
-// Global type declarations for TaxiNow application
+// Global type declarations for GoCars application
 import { Timestamp } from 'firebase/firestore';
 import { RecaptchaVerifier } from 'firebase/auth';
 

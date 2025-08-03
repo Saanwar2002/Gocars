@@ -218,7 +218,7 @@ export default function SettingsPage() {
           <CardTitle className="text-3xl font-headline flex items-center gap-2">
             <Settings className="w-8 h-8 text-primary" /> App Settings
           </CardTitle>
-          <CardDescription>Customize your MyBase experience.</CardDescription>
+          <CardDescription>Customize your GoCars experience.</CardDescription>
         </CardHeader>
       </Card>
 
@@ -238,8 +238,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="space-y-0.5">
-                <Label htmlFor="platform-jobs-switch" className="text-base">Accept Jobs from MyBase Platform Pool?</Label>
-                <p className="text-xs text-muted-foreground">ON: Get jobs from your operator AND the general MyBase platform.<br/>OFF: Only jobs from your affiliated operator.</p>
+                <Label htmlFor="platform-jobs-switch" className="text-base">Accept Jobs from GoCars Platform Pool?</Label>
+                <p className="text-xs text-muted-foreground">ON: Get jobs from your operator AND the general GoCars platform.<br/>OFF: Only jobs from your affiliated operator.</p>
               </div>
               <Switch id="platform-jobs-switch" checked={driverAcceptsPlatformJobs} onCheckedChange={isPlatformDriver ? undefined : (val) => { setDriverAcceptsPlatformJobs(val); persistDriverSetting({ acceptsPlatformJobs: val }); }} disabled={isPlatformDriver} className={cn(isPlatformDriver && "cursor-not-allowed opacity-70")}/>
             </div>
@@ -247,7 +247,7 @@ export default function SettingsPage() {
               <Alert variant="default" className="mt-2 bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700">
                   <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   <AlertTitle className="font-semibold text-blue-700 dark:text-blue-300">Platform Driver Note</AlertTitle>
-                  <AlertDescription className="text-sm text-blue-600 dark:text-blue-400">As a MyBase direct driver ({PLATFORM_OPERATOR_CODE}), you automatically receive all jobs from the platform pool. This setting is fixed for you.</AlertDescription>
+                  <AlertDescription className="text-sm text-blue-600 dark:text-blue-400">As a GoCars direct driver ({PLATFORM_OPERATOR_CODE}), you automatically receive all jobs from the platform pool. This setting is fixed for you.</AlertDescription>
               </Alert>
             )}
             

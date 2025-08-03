@@ -207,7 +207,7 @@ export default function OperatorOperationalSettingsPage() {
                 {isSavingToggle === 'dispatchMode' && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
               </div>
               <p className="text-sm text-muted-foreground">
-                Automatic: MyBase system auto-assigns relevant rides. Manual: All rides for your base require manual assignment via 'Manage Rides'.
+                Automatic: GoCars system auto-assigns relevant rides. Manual: All rides for your base require manual assignment via 'Manage Rides'.
               </p>
             </div>
           </CardContent>

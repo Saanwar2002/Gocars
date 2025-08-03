@@ -1,0 +1,41 @@
+<svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Car Icon -->
+  <g transform="translate(10, 15)">
+    <!-- Car Body -->
+    <path d="M5 20 L7.5 12.5 L12.5 10 L27.5 10 L32.5 12.5 L35 20 L32.5 25 L7.5 25 Z" fill="#0ea5e9" stroke="#38bdf8" stroke-width="1"/>
+    
+    <!-- Car Windows -->
+    <path d="M10 12.5 L12.5 11 L27.5 11 L30 12.5 L29 17.5 L11 17.5 Z" fill="#38bdf8" opacity="0.8"/>
+    
+    <!-- Front Wheel -->
+    <circle cx="12" cy="22.5" r="3" fill="#0f172a" stroke="#0ea5e9" stroke-width="1"/>
+    
+    <!-- Rear Wheel -->
+    <circle cx="28" cy="22.5" r="3" fill="#0f172a" stroke="#0ea5e9" stroke-width="1"/>
+    
+    <!-- Front Light -->
+    <circle cx="33.5" cy="17.5" r="1.5" fill="#38bdf8"/>
+    
+    <!-- Door Handle -->
+    <rect x="18" y="15" width="1.5" height="3" rx="0.75" fill="#0f172a"/>
+    
+    <!-- Speed Lines -->
+    <g opacity="0.6">
+      <line x1="0" y1="15" x2="4" y2="15" stroke="#0ea5e9" stroke-width="1" stroke-linecap="round"/>
+      <line x1="-1" y1="17.5" x2="3" y2="17.5" stroke="#0ea5e9" stroke-width="1" stroke-linecap="round"/>
+      <line x1="1" y1="20" x2="5" y2="20" stroke="#0ea5e9" stroke-width="1" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- GoCars Text -->
+  <g transform="translate(60, 15)">
+    <!-- "Go" text -->
+    <text x="0" y="20" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700" fill="#0f172a">Go</text>
+    
+    <!-- "Cars" text -->
+    <text x="35" y="20" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700" fill="#0ea5e9">Cars</text>
+    
+    <!-- Tagline -->
+    <text x="0" y="35" font-family="Inter, system-ui, sans-serif" font-size="8" font-weight="500" fill="#64748b" letter-spacing="0.5px">RIDE WITH CONFIDENCE</text>
+  </g>
+</svg>

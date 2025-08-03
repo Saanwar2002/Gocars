@@ -1,0 +1,186 @@
+/* GoCars Brand CSS Variables */
+:root {
+  /* Brand Colors */
+  --brand-primary-50: #f0f9ff;
+  --brand-primary-100: #e0f2fe;
+  --brand-primary-200: #bae6fd;
+  --brand-primary-300: #7dd3fc;
+  --brand-primary-400: #38bdf8;
+  --brand-primary-500: #0ea5e9;
+  --brand-primary-600: #0284c7;
+  --brand-primary-700: #0369a1;
+  --brand-primary-800: #075985;
+  --brand-primary-900: #0c4a6e;
+  --brand-primary-950: #082f49;
+
+  --brand-secondary-50: #f8fafc;
+  --brand-secondary-100: #f1f5f9;
+  --brand-secondary-200: #e2e8f0;
+  --brand-secondary-300: #cbd5e1;
+  --brand-secondary-400: #94a3b8;
+  --brand-secondary-500: #64748b;
+  --brand-secondary-600: #475569;
+  --brand-secondary-700: #334155;
+  --brand-secondary-800: #1e293b;
+  --brand-secondary-900: #0f172a;
+  --brand-secondary-950: #020617;
+
+  --brand-accent-yellow-500: #eab308;
+  --brand-accent-green-500: #22c55e;
+  --brand-accent-red-500: #ef4444;
+
+  /* Typography */
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-display: 'Poppins', 'Inter', system-ui, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-brand-sm: 0 2px 4px 0 rgba(14, 165, 233, 0.1);
+  --shadow-brand-md: 0 4px 8px 0 rgba(14, 165, 233, 0.15);
+  --shadow-brand-lg: 0 8px 16px 0 rgba(14, 165, 233, 0.2);
+
+  /* Animation Durations */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* Animation Timing Functions */
+  --timing-linear: linear;
+  --timing-in: cubic-bezier(0.4, 0, 1, 1);
+  --timing-out: cubic-bezier(0, 0, 0.2, 1);
+  --timing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Z-Index Scale */
+  --z-hide: -1;
+  --z-auto: auto;
+  --z-base: 0;
+  --z-docked: 10;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-banner: 1200;
+  --z-overlay: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-skip-link: 1600;
+  --z-toast: 1700;
+  --z-tooltip: 1800;
+
+  /* Breakpoints (for JS usage) */
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Dark mode variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-bg-primary: var(--brand-secondary-900);
+    --brand-bg-secondary: var(--brand-secondary-800);
+    --brand-bg-tertiary: var(--brand-secondary-700);
+    --brand-text-primary: var(--brand-secondary-50);
+    --brand-text-secondary: var(--brand-secondary-200);
+    --brand-text-tertiary: var(--brand-secondary-400);
+  }
+}
+
+/* Light mode variables */
+@media (prefers-color-scheme: light) {
+  :root {
+    --brand-bg-primary: #ffffff;
+    --brand-bg-secondary: var(--brand-secondary-50);
+    --brand-bg-tertiary: var(--brand-secondary-100);
+    --brand-text-primary: var(--brand-secondary-900);
+    --brand-text-secondary: var(--brand-secondary-700);
+    --brand-text-tertiary: var(--brand-secondary-500);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.2);
+    --shadow-md: 0 6px 12px -2px rgb(0 0 0 / 0.2), 0 4px 8px -2px rgb(0 0 0 / 0.2);
+    --shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.2), 0 6px 12px -6px rgb(0 0 0 / 0.2);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-75: 0ms;
+    --duration-100: 0ms;
+    --duration-150: 0ms;
+    --duration-200: 0ms;
+    --duration-300: 0ms;
+    --duration-500: 0ms;
+    --duration-700: 0ms;
+    --duration-1000: 0ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible support */
+.focus-visible {
+  outline: 2px solid var(--brand-primary-500);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  :root {
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+    --shadow-brand-sm: none;
+    --shadow-brand-md: none;
+    --shadow-brand-lg: none;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+}

@@ -254,7 +254,7 @@ export default function PassengerHelpSupportPage() {
         <CardContent>
             <p className="text-muted-foreground">
                 If this is an emergency or a safety-critical issue, please contact local emergency services immediately.
-                For urgent MyBase platform issues, call our (mock) support line: <strong className="text-destructive">0800 123 4567</strong> (UK).
+                For urgent GoCars platform issues, call our (mock) support line: <strong className="text-destructive">0800 123 4567</strong> (UK).
             </p>
         </CardContent>
       </Card>

@@ -333,7 +333,7 @@ export function RegisterForm() {
             userProfile.operatorCode,
             userProfile.driverIdentifier
           );
-          toast({ title: "Registration Successful!", description: `Welcome, ${values.name}! Your MyBase account as a ${values.role} has been created. ${values.role === 'driver' ? `Your assigned driver suffix (mock) is ${userProfile.driverIdentifier}.` : ''} ${values.role === 'admin' || values.role === 'operator' ? 'Your account is pending approval. You will be notified once approved.' : ''}` });
+          toast({ title: "Registration Successful!", description: `Welcome, ${values.name}! Your GoCars account as a ${values.role} has been created. ${values.role === 'driver' ? `Your assigned driver suffix (mock) is ${userProfile.driverIdentifier}.` : ''} ${values.role === 'admin' || values.role === 'operator' ? 'Your account is pending approval. You will be notified once approved.' : ''}` });
           setIsSubmitting(false);
         }
       } catch (error: unknown) {

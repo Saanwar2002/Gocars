@@ -20,11 +20,11 @@ interface CarouselSlide {
 
 const slidesData: CarouselSlide[] = [
   {
-    id: 'welcome-mybase-main',
-    title: "Welcome to MyBase!",
-    description: "Your premier taxi service for Huddersfield and beyond. Book easily, ride comfortably.",
+    id: 'welcome-gocars-main',
+    title: "Welcome to GoCars!",
+    description: "Your premier ride service for Huddersfield and beyond. Book easily, ride comfortably.",
     icon: Car,
-    imageUrl: "/carousel/mybase-taxi.svg",
+    imageUrl: "/carousel/gocars-taxi.svg",
     imageHint: "taxi car street"
   },
   {
@@ -37,16 +37,16 @@ const slidesData: CarouselSlide[] = [
   },
   {
     id: 'community-focus',
-    title: "Your Huddersfield, Your MyBase",
-    description: "Deeply rooted in Huddersfield, MyBase is committed to supporting our local community and providing top-notch service to its residents.",
+    title: "Your Huddersfield, Your GoCars",
+    description: "Deeply rooted in Huddersfield, GoCars is committed to supporting our local community and providing top-notch service to its residents.",
     icon: Users,
     imageUrl: "/carousel/huddersfield-community.svg",
     imageHint: "Huddersfield landmark community"
   },
   {
     id: 'smart-technology',
-    title: "Smart Rides with MyBase",
-    description: "Experience seamless booking and efficient journeys with MyBase's advanced technology platform, designed for your convenience.",
+    title: "Smart Rides with GoCars",
+    description: "Experience seamless booking and efficient journeys with GoCars' advanced technology platform, designed for your convenience.",
     icon: Smartphone,
     imageUrl: "/carousel/smart-technology.svg",
     imageHint: "smartphone app interface"
@@ -83,7 +83,7 @@ export function CompanyCarousel() {
       <Card className="w-full max-w-3xl mx-auto shadow-xl overflow-hidden border-2 border-primary/20">
         <CardHeader className="text-center pb-3 pt-4 bg-primary/5">
           <CardTitle className="text-xl md:text-2xl font-bold text-primary">
-            Discover MyBase
+            Discover GoCars
           </CardTitle>
         </CardHeader>
         <CardContent className="relative p-0">
@@ -100,7 +100,7 @@ export function CompanyCarousel() {
     <Card className="w-full max-w-3xl mx-auto shadow-xl overflow-hidden border-2 border-primary/20">
       <CardHeader className="text-center pb-3 pt-4 bg-primary/5">
         <CardTitle className="text-xl md:text-2xl font-bold text-primary">
-          Discover MyBase
+          Discover GoCars
         </CardTitle>
       </CardHeader>
       <CardContent className="relative p-0">

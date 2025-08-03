@@ -281,8 +281,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         guestUser = { ...baseGuestData, name: 'Guest Passenger', role: 'passenger', preferredPaymentMethod: 'card' };
         break;
       case 'driver':
-        const isMyBaseDriver = Math.random() < 0.3;
-        const guestOperatorCode = isMyBaseDriver ? PLATFORM_OPERATOR_CODE : `OP-GUEST-${Math.floor(Math.random()*900)+100}`;
+        const isGoCarsDriver = Math.random() < 0.3;
+        const guestOperatorCode = isGoCarsDriver ? PLATFORM_OPERATOR_CODE : `OP-GUEST-${Math.floor(Math.random()*900)+100}`;
         guestUser = {
           ...baseGuestData,
           name: `Guest Driver (${guestOperatorCode})`,

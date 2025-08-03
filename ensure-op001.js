@@ -19,8 +19,8 @@ async function ensurePlatformOperator() {
     const doc = snapshot.docs[0];
     await doc.ref.update({
       status: 'Active',
-      name: 'MyBase App',
-      email: 'platform@mybase.com', // update or set a default email
+      name: 'GoCars App',
+      email: 'platform@gocars.com', // update or set a default email
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     console.log('Updated existing OP001 operator to Active.');
@@ -30,8 +30,8 @@ async function ensurePlatformOperator() {
       role: 'operator',
       operatorCode: 'OP001',
       status: 'Active',
-      name: 'MyBase App',
-      email: 'platform@mybase.com',
+      name: 'GoCars App',
+      email: 'platform@gocars.com',
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     console.log('Created new OP001 operator.');

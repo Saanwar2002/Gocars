@@ -5,9 +5,9 @@ import { FirebaseError } from '../types';
 
 // Fallback Firebase configuration (using user-confirmed working key for Maps as API key fallback)
 const FALLBACK_API_KEY = "AIzaSyAEnaOlXAGlkox-wpOOER7RUPhd8iWKhg4";
-const FALLBACK_AUTH_DOMAIN = "taxinow-vvp38.firebaseapp.com";
-const FALLBACK_PROJECT_ID = "taxinow-vvp38";
-const FALLBACK_STORAGE_BUCKET = "taxinow-vvp38.firebasestorage.app";
+const FALLBACK_AUTH_DOMAIN = "gocars-platform.firebaseapp.com";
+const FALLBACK_PROJECT_ID = "gocars-platform";
+const FALLBACK_STORAGE_BUCKET = "gocars-platform.firebasestorage.app";
 const FALLBACK_MESSAGING_SENDER_ID = "679652213262";
 const FALLBACK_APP_ID = "1:679652213262:web:0217c9706165949cd5f25f";
 
