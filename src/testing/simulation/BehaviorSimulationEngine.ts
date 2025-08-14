@@ -977,6 +977,317 @@ export class BehaviorSimulationEngine {
   }
 
   /**
+   * Get scenario by ID
+   */
+  public getScenario(id: string): BookingScenario | undefined {
+    return this.scenarios.get(id)
+  }
+
+  /**
+   * Remove scenario
+   */
+  public removeScenario(id: string): boolean {
+    return this.scenarios.delete(id)
+  }
+
+  /**
+   * Get active simulations count
+   */
+  public getActiveSimulationsCount(): number {
+    return this.activeSimulations.size
+  }
+
+  /**
+   * Get concurrent users count
+   */
+  public getConcurrentUsersCount(): number {
+    return this.concurrentUsers.size
+  }
+
+  /**
+   * Check if simulation is running
+   */
+  public isSimulationRunning(): boolean {
+    return this.isRunning
+  }
+
+  /**
+   * Get simulation result by user ID
+   */
+  public getSimulationResult(userId: string): SimulationResult | undefined {
+    return this.activeSimulations.get(userId)
+  }
+
+  /**
+   * Create custom scenario for specific user journey
+   */
+  public createCustomScenario(
+    id: string,
+    name: string,
+    description: string,
+    steps: ScenarioStep[]
+  ): BookingScenario {
+    const scenario: BookingScenario = {
+      id,
+      name,
+      description,
+      steps,
+      expectedDuration: steps.reduce((total, step) => total + step.expectedDelay, 0),
+      successCriteria: steps.map(step => `Complete step: ${step.name}`),
+      failureConditions: [
+        'Critical step failure',
+        'Maximum retries exceeded',
+        'Timeout exceeded'
+      ]
+    }
+
+    this.scenarios.set(id, scenario)
+    return scenario
+  }
+
+  /**
+   * Generate realistic user journey based on user profile
+   */
+  public generateUserJourney(user: VirtualUser): BookingScenario {
+    const journeySteps: ScenarioStep[] = []
+    const userExperience = user.profile.demographics.experience
+
+    // Customize journey based on user experience
+    if (userExperience === 'new') {
+      // New users need more guidance and take longer
+      journeySteps.push(
+        {
+          id: 'explore_homepage',
+          name: 'Explore Homepage',
+          action: 'wait',
+          target: 'homepage',
+          expectedDelay: 5000,
+          maxRetries: 1,
+          optional: true
+        },
+        {
+          id: 'view_how_it_works',
+          name: 'View How It Works',
+          action: 'click',
+          target: '[data-testid="how-it-works"]',
+          expectedDelay: 3000,
+          maxRetries: 2,
+          optional: true
+        }
+      )
+    }
+
+    // Common booking flow
+    journeySteps.push(
+      {
+        id: 'start_booking',
+        name: 'Start Booking Process',
+        action: 'click',
+        target: '[data-testid="book-ride-button"]',
+        expectedDelay: userExperience === 'new' ? 2000 : 1000,
+        maxRetries: 2,
+        optional: false
+      },
+      {
+        id: 'set_pickup',
+        name: 'Set Pickup Location',
+        action: 'input',
+        target: '[data-testid="pickup-input"]',
+        data: { value: 'Current Location' },
+        expectedDelay: userExperience === 'new' ? 4000 : 2000,
+        maxRetries: 2,
+        optional: false
+      },
+      {
+        id: 'set_destination',
+        name: 'Set Destination',
+        action: 'input',
+        target: '[data-testid="destination-input"]',
+        data: { value: this.generateDestination(user) },
+        expectedDelay: userExperience === 'new' ? 5000 : 3000,
+        maxRetries: 2,
+        optional: false
+      }
+    )
+
+    // Power users might use advanced features
+    if (userExperience === 'power') {
+      journeySteps.push(
+        {
+          id: 'select_preferences',
+          name: 'Select Ride Preferences',
+          action: 'click',
+          target: '[data-testid="ride-preferences"]',
+          expectedDelay: 1000,
+          maxRetries: 2,
+          optional: true
+        },
+        {
+          id: 'schedule_ride',
+          name: 'Schedule for Later',
+          action: 'click',
+          target: '[data-testid="schedule-ride"]',
+          expectedDelay: 2000,
+          maxRetries: 2,
+          optional: true
+        }
+      )
+    }
+
+    // Final booking steps
+    journeySteps.push(
+      {
+        id: 'confirm_booking',
+        name: 'Confirm Booking',
+        action: 'click',
+        target: '[data-testid="confirm-booking"]',
+        expectedDelay: 2000,
+        maxRetries: 3,
+        optional: false
+      },
+      {
+        id: 'verify_booking',
+        name: 'Verify Booking Success',
+        action: 'verify',
+        target: '[data-testid="booking-confirmation"]',
+        expectedDelay: 3000,
+        maxRetries: 3,
+        optional: false
+      }
+    )
+
+    const scenarioId = `custom_journey_${user.id}`
+    return this.createCustomScenario(
+      scenarioId,
+      `Custom Journey for ${user.profile.demographics.experience} User`,
+      `Personalized booking journey based on user profile and behavior patterns`,
+      journeySteps
+    )
+  }
+
+  /**
+   * Generate realistic destination based on user profile
+   */
+  private generateDestination(user: VirtualUser): string {
+    const destinations = {
+      new: ['Airport', 'Train Station', 'Shopping Center'],
+      regular: ['Office', 'Home', 'Restaurant', 'Gym', 'Airport'],
+      power: ['Business District', 'Conference Center', 'Hotel', 'Airport', 'Meeting Location']
+    }
+
+    const userDestinations = destinations[user.profile.demographics.experience]
+    return userDestinations[Math.floor(Math.random() * userDestinations.length)]
+  }
+
+  /**
+   * Simulate interaction timing based on user behavior patterns
+   */
+  public simulateInteractionTiming(user: VirtualUser, actionType: string): number {
+    const baseTimings = {
+      click: 300,
+      input: 150, // per character
+      navigation: 1000,
+      wait: 2000,
+      verify: 500
+    }
+
+    const experienceMultipliers = {
+      new: 2.5,
+      regular: 1.0,
+      power: 0.6
+    }
+
+    const deviceMultipliers = {
+      mobile: 1.2,
+      tablet: 1.0,
+      desktop: 0.8
+    }
+
+    const baseTiming = baseTimings[actionType as keyof typeof baseTimings] || 1000
+    const experienceMultiplier = experienceMultipliers[user.profile.demographics.experience]
+    const deviceMultiplier = deviceMultipliers[user.profile.demographics.deviceType]
+
+    // Add realistic variance
+    const variance = 0.3 + Math.random() * 0.4 // 30-70% variance
+    
+    return Math.floor(baseTiming * experienceMultiplier * deviceMultiplier * variance)
+  }
+
+  /**
+   * Handle concurrent user scenario management
+   */
+  public async handleConcurrentUserScenarios(
+    users: VirtualUser[],
+    scenarioDistribution: { [scenarioId: string]: number }
+  ): Promise<SimulationResult[]> {
+    const results: SimulationResult[] = []
+    const promises: Promise<SimulationResult>[] = []
+
+    for (const user of users) {
+      const selectedScenario = this.selectScenarioByDistribution(scenarioDistribution)
+      if (selectedScenario) {
+        const promise = this.runScenarioSimulation(selectedScenario, user)
+        promises.push(promise)
+      }
+    }
+
+    const settledResults = await Promise.allSettled(promises)
+    
+    settledResults.forEach(result => {
+      if (result.status === 'fulfilled') {
+        results.push(result.value)
+      } else {
+        console.error('Concurrent scenario failed:', result.reason)
+      }
+    })
+
+    return results
+  }
+
+  /**
+   * Select scenario based on distribution weights
+   */
+  private selectScenarioByDistribution(distribution: { [scenarioId: string]: number }): string | null {
+    const totalWeight = Object.values(distribution).reduce((sum, weight) => sum + weight, 0)
+    if (totalWeight === 0) return null
+
+    let random = Math.random() * totalWeight
+    
+    for (const [scenarioId, weight] of Object.entries(distribution)) {
+      random -= weight
+      if (random <= 0) {
+        return scenarioId
+      }
+    }
+
+    return Object.keys(distribution)[0] // Fallback
+  }
+
+  /**
+   * Create interaction pattern simulation
+   */
+  public createInteractionPattern(
+    patternName: string,
+    actions: Array<{
+      type: 'click' | 'input' | 'navigation' | 'wait'
+      target: string
+      data?: any
+      timing: number
+    }>
+  ): ScenarioStep[] {
+    return actions.map((action, index) => ({
+      id: `${patternName}_step_${index}`,
+      name: `${patternName} - ${action.type} ${action.target}`,
+      action: action.type,
+      target: action.target,
+      data: action.data,
+      expectedDelay: action.timing,
+      maxRetries: 2,
+      optional: false
+    }))
+  }
+
+  /**
    * Stop all running simulations
    */
   public stopAllSimulations(): void {
