@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import mobile-specific styles */
+@import '../styles/mobile.css';
+
 @layer base {
   :root {
     /* GoCars Light Theme - Modern and Professional */
