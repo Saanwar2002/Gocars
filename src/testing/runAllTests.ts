@@ -29,6 +29,8 @@ class ComprehensiveTestRunner {
     integration?: boolean;
     e2e?: boolean;
     performance?: boolean;
+    predictiveAnalytics?: boolean;
+    errorAnalysis?: boolean;
     coverage?: boolean;
     parallel?: boolean;
     bail?: boolean;
@@ -42,6 +44,8 @@ class ComprehensiveTestRunner {
       integration: true,
       e2e: true,
       performance: false, // Performance tests are opt-in
+      predictiveAnalytics: false, // Predictive analytics tests are opt-in
+      errorAnalysis: false, // Error analysis tests are opt-in
       coverage: true,
       parallel: false,
       bail: false,
@@ -67,6 +71,14 @@ class ComprehensiveTestRunner {
 
       if (config.performance) {
         await this.runPerformanceTests(config);
+      }
+
+      if (config.predictiveAnalytics) {
+        await this.runPredictiveAnalyticsTests(config);
+      }
+
+      if (config.errorAnalysis) {
+        await this.runErrorAnalysisTests(config);
       }
 
       // Generate comprehensive report
@@ -276,6 +288,114 @@ class ComprehensiveTestRunner {
     }
   }
 
+  private async runPredictiveAnalyticsTests(config: any): Promise<void> {
+    console.log('\\n🔮 Running predictive analytics tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run predictive analytics tests
+      const { runPredictiveAnalyticsTests } = await import('./runPredictiveAnalyticsTests');
+      
+      const results = await runPredictiveAnalyticsTests();
+      
+      // Check if any tests failed
+      const failedTests = results.filter(r => r.status === 'failed' || r.status === 'error');
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Predictive Analytics Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.status === 'passed').length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Predictive analytics tests failed (${failedTests.length}/${results.length} tests failed)`);
+        
+        if (config.bail) {
+          throw new Error(`Predictive analytics tests failed: ${failedTests.map(t => t.name).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Predictive analytics tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Predictive Analytics Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Predictive analytics tests failed');
+      
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
+  private async runErrorAnalysisTests(config: any): Promise<void> {
+    console.log('\\n🔍 Running error analysis tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run error analysis tests
+      const { runErrorAnalysisTests } = await import('./runErrorAnalysisTests');
+      
+      const results = await runErrorAnalysisTests();
+      
+      // Check if any tests failed
+      const failedTests = results.filter(r => r.status === 'failed' || r.status === 'error');
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Error Analysis Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.status === 'passed').length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Error analysis tests failed (${failedTests.length}/${results.length} tests failed)`);
+        
+        if (config.bail) {
+          throw new Error(`Error analysis tests failed: ${failedTests.map(t => t.name).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Error analysis tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Error Analysis Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Error analysis tests failed');
+      
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
   private generateSummary(): TestRunSummary {
     const endTime = performance.now();
     const totalDuration = endTime - this.startTime;
@@ -478,6 +598,28 @@ async function main() {
         break;
       case '--with-performance':
         options.performance = true;
+        break;
+      case '--with-predictive-analytics':
+        options.predictiveAnalytics = true;
+        break;
+      case '--predictive-analytics-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = true;
+        options.errorAnalysis = false;
+        break;
+      case '--with-error-analysis':
+        options.errorAnalysis = true;
+        break;
+      case '--error-analysis-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = false;
+        options.errorAnalysis = true;
         break;
       case '--no-coverage':
         options.coverage = false;

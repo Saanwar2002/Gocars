@@ -9,6 +9,7 @@
 
 import { TestResult, TestConfiguration } from '../core/types';
 import { runAiSystemDiagnostic } from '@/ai/flows/system-diagnostic-flow';
+import { predictiveAnalyticsService } from '@/services/predictiveAnalyticsService';
 
 interface PredictiveTestScenario {
   id: string;
@@ -201,6 +202,94 @@ export class PredictiveAnalyticsTester {
         dataQualityChecks: ['completeness', 'consistency', 'trend_validity']
       }
     });
+
+    // Additional comprehensive test scenarios
+    this.testScenarios.push({
+      id: 'revenue-forecast-accuracy',
+      name: 'Revenue Forecasting Accuracy Validation',
+      testType: 'demand_forecasting',
+      inputData: {
+        historicalRevenue: this.generateMockRevenueData(),
+        timeHorizon: 30,
+        granularity: 'daily',
+        includeSeasonality: true
+      },
+      expectedOutcome: {
+        accuracyThreshold: 0.8,
+        responseTimeMax: 2500,
+        dataQualityMin: 0.95,
+        confidenceMin: 0.75
+      },
+      validationCriteria: {
+        metricsToValidate: ['accuracy', 'responseTime', 'confidence'],
+        performanceThresholds: {
+          accuracy: 0.8,
+          responseTime: 2500,
+          confidence: 0.75
+        },
+        dataQualityChecks: ['completeness', 'consistency', 'timeliness', 'accuracy']
+      }
+    });
+
+    this.testScenarios.push({
+      id: 'model-performance-validation',
+      name: 'Predictive Model Performance Validation',
+      testType: 'performance_prediction',
+      inputData: {
+        modelMetrics: {
+          trainingAccuracy: 0.85,
+          validationAccuracy: 0.82,
+          testAccuracy: 0.80,
+          lastTrainingDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        },
+        performanceThresholds: {
+          minAccuracy: 0.75,
+          maxResponseTime: 2000,
+          maxMemoryUsage: 512 // MB
+        }
+      },
+      expectedOutcome: {
+        accuracyThreshold: 0.8,
+        responseTimeMax: 2000,
+        dataQualityMin: 0.9
+      },
+      validationCriteria: {
+        metricsToValidate: ['accuracy', 'responseTime', 'precision', 'recall'],
+        performanceThresholds: {
+          accuracy: 0.8,
+          responseTime: 2000,
+          precision: 0.75,
+          recall: 0.75
+        },
+        dataQualityChecks: ['model_freshness', 'performance_consistency', 'resource_efficiency']
+      }
+    });
+
+    this.testScenarios.push({
+      id: 'real-time-prediction-stress',
+      name: 'Real-time Prediction Stress Test',
+      testType: 'performance_prediction',
+      inputData: {
+        concurrentRequests: 50,
+        requestInterval: 100, // ms
+        testDuration: 30000, // 30 seconds
+        predictionTypes: ['demand', 'revenue', 'capacity']
+      },
+      expectedOutcome: {
+        accuracyThreshold: 0.75,
+        responseTimeMax: 1500,
+        dataQualityMin: 0.85
+      },
+      validationCriteria: {
+        metricsToValidate: ['accuracy', 'responseTime', 'throughput'],
+        performanceThresholds: {
+          accuracy: 0.75,
+          responseTime: 1500,
+          throughput: 30 // requests per second
+        },
+        dataQualityChecks: ['consistency_under_load', 'error_rate', 'resource_stability']
+      }
+    });
   }
 
   async runTests(): Promise<TestResult[]> {
@@ -282,29 +371,350 @@ export class PredictiveAnalyticsTester {
   }
 
   private async runPredictiveAnalysis(scenario: PredictiveTestScenario): Promise<any> {
-    // For this implementation, we'll use the system diagnostic flow as a proxy
-    // for predictive analytics capabilities. In a real system, this would
-    // connect to actual ML models and forecasting services.
-    
-    const diagnosticResult = await runAiSystemDiagnostic({ checkLevel: 'deep_simulated' });
-    
-    // Transform diagnostic result into predictive analysis format
+    // Use actual predictive analytics service for real testing
     switch (scenario.testType) {
       case 'demand_forecasting':
-        return this.simulateDemandForecast(scenario.inputData, diagnosticResult);
+        return await this.testDemandForecasting(scenario.inputData);
       
       case 'performance_prediction':
-        return this.simulatePerformancePrediction(scenario.inputData, diagnosticResult);
+        return await this.testPerformancePrediction(scenario.inputData);
       
       case 'anomaly_detection':
-        return this.simulateAnomalyDetection(scenario.inputData, diagnosticResult);
+        return await this.testAnomalyDetection(scenario.inputData);
       
       case 'trend_analysis':
-        return this.simulateTrendAnalysis(scenario.inputData, diagnosticResult);
+        return await this.testTrendAnalysis(scenario.inputData);
       
       default:
         throw new Error(`Unknown predictive test type: ${scenario.testType}`);
     }
+  }
+
+  private async testDemandForecasting(inputData: any): Promise<any> {
+    const startTime = Date.now();
+    
+    try {
+      // Test revenue forecasting
+      const revenueForecast = await predictiveAnalyticsService.generateRevenueForecast(7, 'daily');
+      
+      // Test demand forecasting
+      const demandForecast = await predictiveAnalyticsService.generateDemandForecast(
+        inputData.location,
+        24
+      );
+      
+      const responseTime = Date.now() - startTime;
+      
+      // Validate forecasting accuracy
+      const accuracy = this.validateForecastAccuracy(revenueForecast, demandForecast);
+      
+      return {
+        revenueForecast,
+        demandForecast,
+        responseTime,
+        accuracy,
+        confidence: Math.min(revenueForecast.accuracy, 0.9),
+        dataQuality: this.assessDataQuality(inputData),
+        validationResults: {
+          revenueForecasts: revenueForecast.forecasts.length,
+          demandForecasts: demandForecast.forecasts.length,
+          seasonalityDetected: revenueForecast.seasonality.detected,
+          trendDirection: revenueForecast.trend
+        }
+      };
+    } catch (error) {
+      throw new Error(`Demand forecasting test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async testPerformancePrediction(inputData: any): Promise<any> {
+    const startTime = Date.now();
+    
+    try {
+      // Test capacity planning
+      const capacityPlan = await predictiveAnalyticsService.generateCapacityPlan();
+      
+      // Test business insights
+      const businessInsights = await predictiveAnalyticsService.getBusinessInsights();
+      
+      const responseTime = Date.now() - startTime;
+      
+      // Calculate performance prediction accuracy
+      const accuracy = this.validatePerformancePrediction(capacityPlan, businessInsights);
+      
+      return {
+        capacityPlan,
+        businessInsights,
+        responseTime,
+        accuracy,
+        confidence: 0.85,
+        dataQuality: this.assessDataQuality(inputData),
+        validationResults: {
+          capacityRecommendations: capacityPlan.recommendations,
+          riskFactors: businessInsights.riskFactors.length,
+          insights: businessInsights.insights.length,
+          scenarios: capacityPlan.scenarios.length
+        }
+      };
+    } catch (error) {
+      throw new Error(`Performance prediction test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async testAnomalyDetection(inputData: any): Promise<any> {
+    const startTime = Date.now();
+    
+    try {
+      // Test anomaly detection
+      const anomalies = await predictiveAnalyticsService.detectAnomalies(
+        ['revenue', 'rides', 'users'],
+        30
+      );
+      
+      const responseTime = Date.now() - startTime;
+      
+      // Validate anomaly detection accuracy
+      const accuracy = this.validateAnomalyDetection(anomalies, inputData);
+      
+      return {
+        anomalies,
+        responseTime,
+        accuracy,
+        confidence: 0.88,
+        dataQuality: this.assessDataQuality(inputData),
+        validationResults: {
+          anomaliesDetected: anomalies.anomalies.length,
+          patterns: anomalies.patterns.length,
+          severityDistribution: this.analyzeSeverityDistribution(anomalies.anomalies)
+        }
+      };
+    } catch (error) {
+      throw new Error(`Anomaly detection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private async testTrendAnalysis(inputData: any): Promise<any> {
+    const startTime = Date.now();
+    
+    try {
+      // Test market trend analysis
+      const marketTrends = await predictiveAnalyticsService.analyzeMarketTrends();
+      
+      // Test competitive intelligence
+      const competitiveIntel = await predictiveAnalyticsService.getCompetitiveIntelligence();
+      
+      const responseTime = Date.now() - startTime;
+      
+      // Validate trend analysis accuracy
+      const accuracy = this.validateTrendAnalysis(marketTrends, competitiveIntel);
+      
+      return {
+        marketTrends,
+        competitiveIntel,
+        responseTime,
+        accuracy,
+        confidence: 0.82,
+        dataQuality: this.assessDataQuality(inputData),
+        validationResults: {
+          trendsAnalyzed: marketTrends.trends.length,
+          competitorsAnalyzed: competitiveIntel.competitors.length,
+          opportunities: competitiveIntel.opportunities.length,
+          marketGrowthRate: marketTrends.marketSize.growthRate
+        }
+      };
+    } catch (error) {
+      throw new Error(`Trend analysis test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  private validateForecastAccuracy(revenueForecast: any, demandForecast: any): number {
+    // Validate forecast structure and data quality
+    let accuracyScore = 0;
+    let totalChecks = 0;
+
+    // Check revenue forecast structure
+    totalChecks++;
+    if (revenueForecast.forecasts && revenueForecast.forecasts.length > 0) {
+      accuracyScore++;
+    }
+
+    // Check demand forecast structure
+    totalChecks++;
+    if (demandForecast.forecasts && demandForecast.forecasts.length > 0) {
+      accuracyScore++;
+    }
+
+    // Check confidence levels
+    totalChecks++;
+    if (revenueForecast.accuracy && revenueForecast.accuracy > 0.7) {
+      accuracyScore++;
+    }
+
+    // Check seasonality detection
+    totalChecks++;
+    if (revenueForecast.seasonality && typeof revenueForecast.seasonality.detected === 'boolean') {
+      accuracyScore++;
+    }
+
+    // Check forecast bounds
+    totalChecks++;
+    const hasValidBounds = revenueForecast.forecasts.every((f: any) => 
+      f.upperBound > f.predicted && f.lowerBound < f.predicted
+    );
+    if (hasValidBounds) {
+      accuracyScore++;
+    }
+
+    return totalChecks > 0 ? accuracyScore / totalChecks : 0;
+  }
+
+  private validatePerformancePrediction(capacityPlan: any, businessInsights: any): number {
+    let accuracyScore = 0;
+    let totalChecks = 0;
+
+    // Check capacity plan structure
+    totalChecks++;
+    if (capacityPlan.recommendations && capacityPlan.scenarios) {
+      accuracyScore++;
+    }
+
+    // Check business insights structure
+    totalChecks++;
+    if (businessInsights.insights && businessInsights.riskFactors) {
+      accuracyScore++;
+    }
+
+    // Check recommendation quality
+    totalChecks++;
+    if (capacityPlan.recommendations.additionalDrivers >= 0 && 
+        capacityPlan.recommendations.additionalVehicles >= 0) {
+      accuracyScore++;
+    }
+
+    // Check risk assessment
+    totalChecks++;
+    const validRisks = businessInsights.riskFactors.every((risk: any) => 
+      risk.probability >= 0 && risk.probability <= 1 && 
+      risk.impact >= 0 && risk.impact <= 1
+    );
+    if (validRisks) {
+      accuracyScore++;
+    }
+
+    return totalChecks > 0 ? accuracyScore / totalChecks : 0;
+  }
+
+  private validateAnomalyDetection(anomalies: any, inputData: any): number {
+    let accuracyScore = 0;
+    let totalChecks = 0;
+
+    // Check anomaly structure
+    totalChecks++;
+    if (anomalies.anomalies && Array.isArray(anomalies.anomalies)) {
+      accuracyScore++;
+    }
+
+    // Check pattern detection
+    totalChecks++;
+    if (anomalies.patterns && Array.isArray(anomalies.patterns)) {
+      accuracyScore++;
+    }
+
+    // Check severity classification
+    totalChecks++;
+    const validSeverities = anomalies.anomalies.every((anomaly: any) => 
+      ['low', 'medium', 'high', 'critical'].includes(anomaly.severity)
+    );
+    if (validSeverities) {
+      accuracyScore++;
+    }
+
+    // Check confidence levels
+    totalChecks++;
+    const validConfidence = anomalies.anomalies.every((anomaly: any) => 
+      anomaly.confidence >= 0 && anomaly.confidence <= 1
+    );
+    if (validConfidence) {
+      accuracyScore++;
+    }
+
+    return totalChecks > 0 ? accuracyScore / totalChecks : 0;
+  }
+
+  private validateTrendAnalysis(marketTrends: any, competitiveIntel: any): number {
+    let accuracyScore = 0;
+    let totalChecks = 0;
+
+    // Check market trends structure
+    totalChecks++;
+    if (marketTrends.trends && Array.isArray(marketTrends.trends)) {
+      accuracyScore++;
+    }
+
+    // Check competitive analysis
+    totalChecks++;
+    if (competitiveIntel.competitors && Array.isArray(competitiveIntel.competitors)) {
+      accuracyScore++;
+    }
+
+    // Check trend categorization
+    totalChecks++;
+    const validCategories = marketTrends.trends.every((trend: any) => 
+      ['growth', 'competition', 'technology', 'regulation', 'economic'].includes(trend.category)
+    );
+    if (validCategories) {
+      accuracyScore++;
+    }
+
+    // Check market size projections
+    totalChecks++;
+    if (marketTrends.marketSize && 
+        marketTrends.marketSize.projected > marketTrends.marketSize.current) {
+      accuracyScore++;
+    }
+
+    return totalChecks > 0 ? accuracyScore / totalChecks : 0;
+  }
+
+  private assessDataQuality(inputData: any): number {
+    let qualityScore = 0;
+    let totalChecks = 0;
+
+    // Check data completeness
+    totalChecks++;
+    if (inputData && Object.keys(inputData).length > 0) {
+      qualityScore++;
+    }
+
+    // Check data consistency
+    totalChecks++;
+    const hasConsistentTypes = Object.values(inputData).every(value => 
+      value !== null && value !== undefined
+    );
+    if (hasConsistentTypes) {
+      qualityScore++;
+    }
+
+    // Check data freshness (if timestamp available)
+    totalChecks++;
+    if (!inputData.timestamp || 
+        (inputData.timestamp && Date.now() - new Date(inputData.timestamp).getTime() < 24 * 60 * 60 * 1000)) {
+      qualityScore++;
+    }
+
+    return totalChecks > 0 ? qualityScore / totalChecks : 0;
+  }
+
+  private analyzeSeverityDistribution(anomalies: any[]): any {
+    const distribution = { low: 0, medium: 0, high: 0, critical: 0 };
+    
+    anomalies.forEach(anomaly => {
+      if (distribution.hasOwnProperty(anomaly.severity)) {
+        distribution[anomaly.severity as keyof typeof distribution]++;
+      }
+    });
+
+    return distribution;
   }
 
   private simulateDemandForecast(inputData: any, diagnosticResult: any): any {
@@ -532,7 +942,204 @@ export class PredictiveAnalyticsTester {
     // Benchmark resource usage
     results.push(await this.benchmarkResourceUsage());
     
+    // Benchmark concurrent prediction handling
+    results.push(await this.benchmarkConcurrentPredictions());
+    
+    // Benchmark data quality validation
+    results.push(await this.benchmarkDataQualityValidation());
+    
+    // Benchmark model accuracy over time
+    results.push(await this.benchmarkModelAccuracyConsistency());
+    
     return results;
+  }
+
+  private async benchmarkConcurrentPredictions(): Promise<TestResult> {
+    const startTime = Date.now();
+    
+    try {
+      console.log('🔄 Benchmarking concurrent prediction handling...');
+      
+      const concurrentRequests = 10;
+      const promises: Promise<any>[] = [];
+      
+      // Create concurrent prediction requests
+      for (let i = 0; i < concurrentRequests; i++) {
+        promises.push(
+          predictiveAnalyticsService.generateDemandForecast(undefined, 12)
+        );
+      }
+      
+      const results = await Promise.all(promises);
+      const duration = Date.now() - startTime;
+      
+      // Validate all requests completed successfully
+      const successfulRequests = results.filter(r => r && r.forecasts && r.forecasts.length > 0).length;
+      const successRate = successfulRequests / concurrentRequests;
+      
+      // Calculate average response time per request
+      const avgResponseTimePerRequest = duration / concurrentRequests;
+      
+      const isAcceptable = successRate >= 0.9 && avgResponseTimePerRequest < 3000;
+      
+      return {
+        id: 'predictive-concurrent-benchmark',
+        name: 'Concurrent Predictions Benchmark',
+        status: isAcceptable ? 'passed' : 'failed',
+        duration,
+        message: isAcceptable 
+          ? `Concurrent predictions handled successfully (${successRate * 100}% success rate)`
+          : `Concurrent predictions performance issues (${successRate * 100}% success rate)`,
+        details: {
+          concurrentRequests,
+          successfulRequests,
+          successRate,
+          avgResponseTimePerRequest,
+          totalDuration: duration
+        }
+      };
+
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      return {
+        id: 'predictive-concurrent-benchmark',
+        name: 'Concurrent Predictions Benchmark',
+        status: 'error',
+        duration,
+        message: `Concurrent predictions benchmark error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        details: { error: error instanceof Error ? error.stack : error }
+      };
+    }
+  }
+
+  private async benchmarkDataQualityValidation(): Promise<TestResult> {
+    const startTime = Date.now();
+    
+    try {
+      console.log('🔍 Benchmarking data quality validation...');
+      
+      // Test with various data quality scenarios
+      const testCases = [
+        { name: 'complete_data', data: { timeOfDay: 'morning', weather: 'clear', events: ['rush_hour'] } },
+        { name: 'incomplete_data', data: { timeOfDay: 'morning' } },
+        { name: 'invalid_data', data: { timeOfDay: null, weather: '', events: undefined } },
+        { name: 'mixed_quality', data: { timeOfDay: 'evening', weather: null, events: ['concert'] } }
+      ];
+      
+      const qualityScores: number[] = [];
+      
+      for (const testCase of testCases) {
+        const qualityScore = this.assessDataQuality(testCase.data);
+        qualityScores.push(qualityScore);
+      }
+      
+      const avgQualityScore = qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length;
+      const duration = Date.now() - startTime;
+      
+      // Expect quality assessment to properly differentiate between good and bad data
+      const hasProperDifferentiation = qualityScores[0] > qualityScores[2]; // complete > invalid
+      const isAcceptable = hasProperDifferentiation && avgQualityScore > 0.5;
+      
+      return {
+        id: 'predictive-data-quality-benchmark',
+        name: 'Data Quality Validation Benchmark',
+        status: isAcceptable ? 'passed' : 'failed',
+        duration,
+        message: isAcceptable 
+          ? `Data quality validation working correctly (avg score: ${avgQualityScore.toFixed(2)})`
+          : `Data quality validation issues detected (avg score: ${avgQualityScore.toFixed(2)})`,
+        details: {
+          testCases: testCases.map((tc, i) => ({ ...tc, qualityScore: qualityScores[i] })),
+          avgQualityScore,
+          hasProperDifferentiation
+        }
+      };
+
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      return {
+        id: 'predictive-data-quality-benchmark',
+        name: 'Data Quality Validation Benchmark',
+        status: 'error',
+        duration,
+        message: `Data quality benchmark error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        details: { error: error instanceof Error ? error.stack : error }
+      };
+    }
+  }
+
+  private async benchmarkModelAccuracyConsistency(): Promise<TestResult> {
+    const startTime = Date.now();
+    
+    try {
+      console.log('📈 Benchmarking model accuracy consistency...');
+      
+      // Get predictive models information
+      const models = await predictiveAnalyticsService.getPredictiveModels();
+      
+      // Test multiple predictions to check consistency
+      const predictions: any[] = [];
+      const iterations = 5;
+      
+      for (let i = 0; i < iterations; i++) {
+        const revenueForecast = await predictiveAnalyticsService.generateRevenueForecast(7, 'daily');
+        predictions.push({
+          iteration: i,
+          accuracy: revenueForecast.accuracy,
+          forecasts: revenueForecast.forecasts.length,
+          trend: revenueForecast.trend
+        });
+        
+        // Small delay between iterations
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      
+      // Analyze consistency
+      const accuracies = predictions.map(p => p.accuracy);
+      const avgAccuracy = accuracies.reduce((a, b) => a + b, 0) / accuracies.length;
+      const accuracyVariance = accuracies.reduce((acc, acc_val) => acc + Math.pow(acc_val - avgAccuracy, 2), 0) / accuracies.length;
+      const accuracyStdDev = Math.sqrt(accuracyVariance);
+      
+      const duration = Date.now() - startTime;
+      
+      // Consider consistent if standard deviation is less than 5% of average
+      const isConsistent = accuracyStdDev < (avgAccuracy * 0.05);
+      const hasActiveModels = models.filter(m => m.status === 'active').length > 0;
+      
+      const isAcceptable = isConsistent && hasActiveModels && avgAccuracy > 0.7;
+      
+      return {
+        id: 'predictive-accuracy-consistency-benchmark',
+        name: 'Model Accuracy Consistency Benchmark',
+        status: isAcceptable ? 'passed' : 'failed',
+        duration,
+        message: isAcceptable 
+          ? `Model accuracy is consistent (avg: ${avgAccuracy.toFixed(3)}, std: ${accuracyStdDev.toFixed(3)})`
+          : `Model accuracy inconsistency detected (avg: ${avgAccuracy.toFixed(3)}, std: ${accuracyStdDev.toFixed(3)})`,
+        details: {
+          models: models.length,
+          activeModels: models.filter(m => m.status === 'active').length,
+          predictions,
+          avgAccuracy,
+          accuracyStdDev,
+          accuracyVariance,
+          iterations,
+          isConsistent,
+          hasActiveModels
+        }
+      };
+
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      return {
+        id: 'predictive-accuracy-consistency-benchmark',
+        name: 'Model Accuracy Consistency Benchmark',
+        status: 'error',
+        duration,
+        message: `Model accuracy benchmark error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        details: { error: error instanceof Error ? error.stack : error }
+      };
+    }
   }
 
   private async benchmarkResponseTimeConsistency(): Promise<TestResult> {
@@ -673,6 +1280,36 @@ export class PredictiveAnalyticsTester {
       data.push({
         date: new Date(Date.now() - (30 - i) * 24 * 60 * 60 * 1000),
         value: Math.max(0, baseValue + Math.random() * 10 - 5)
+      });
+    }
+    
+    return data;
+  }
+
+  private generateMockRevenueData(): any[] {
+    const data = [];
+    let baseRevenue = 100000; // $100k base daily revenue
+    
+    for (let i = 0; i < 90; i++) { // 90 days of historical data
+      const date = new Date(Date.now() - (90 - i) * 24 * 60 * 60 * 1000);
+      const dayOfWeek = date.getDay();
+      
+      // Weekend adjustment
+      const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.8 : 1.0;
+      
+      // Seasonal trend (slight growth over time)
+      const trendMultiplier = 1 + (i / 90) * 0.1; // 10% growth over 90 days
+      
+      // Random variation
+      const randomMultiplier = 1 + (Math.random() - 0.5) * 0.2; // ±10% random variation
+      
+      const revenue = baseRevenue * weekendMultiplier * trendMultiplier * randomMultiplier;
+      
+      data.push({
+        date,
+        revenue: Math.round(revenue),
+        dayOfWeek,
+        isWeekend: dayOfWeek === 0 || dayOfWeek === 6
       });
     }
     

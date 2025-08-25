@@ -3,151 +3,151 @@ const fs = require('fs');
 const path = require('path');
 
 class CustomTestReporter {
-  constructor(globalConfig, options) {
-    this.globalConfig = globalConfig;
-    this.options = options;
-  }
-
-  onRunComplete(contexts, results) {
-    const {
-      numTotalTests,
-      numPassedTests,
-      numFailedTests,
-      numPendingTests,
-      testResults,
-      startTime,
-      success,
-    } = results;
-
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-
-    // Generate comprehensive test report
-    const report = {
-      summary: {
-        total: numTotalTests,
-        passed: numPassedTests,
-        failed: numFailedTests,
-        pending: numPendingTests,
-        success,
-        duration,
-        timestamp: new Date().toISOString(),
-      },
-      testSuites: testResults.map(testResult => ({
-        name: testResult.testFilePath.replace(process.cwd(), ''),
-        status: testResult.numFailingTests > 0 ? 'failed' : 'passed',
-        duration: testResult.perfStats.end - testResult.perfStats.start,
-        tests: {
-          total: testResult.numTotalTests,
-          passed: testResult.numPassingTests,
-          failed: testResult.numFailingTests,
-          pending: testResult.numPendingTests,
-        },
-        coverage: testResult.coverage ? {
-          lines: testResult.coverage.lines,
-          functions: testResult.coverage.functions,
-          branches: testResult.coverage.branches,
-          statements: testResult.coverage.statements,
-        } : null,
-        failureMessages: testResult.failureMessage ? [testResult.failureMessage] : [],
-      })),
-      performance: {
-        slowestTests: this.getSlowTests(testResults, 10),
-        averageTestDuration: this.getAverageTestDuration(testResults),
-        memoryUsage: process.memoryUsage(),
-      },
-      environment: {
-        node: process.version,
-        platform: process.platform,
-        arch: process.arch,
-        ci: !!process.env.CI,
-        timestamp: new Date().toISOString(),
-      },
-    };
-
-    // Write detailed JSON report
-    this.writeJsonReport(report);
-
-    // Write HTML report
-    this.writeHtmlReport(report);
-
-    // Write JUnit XML report
-    this.writeJunitReport(report);
-
-    // Log summary to console
-    this.logSummary(report);
-
-    return results;
-  }
-
-  getSlowTests(testResults, limit = 10) {
-    const allTests = [];
-    
-    testResults.forEach(testResult => {
-      testResult.testResults.forEach(test => {
-        allTests.push({
-          name: test.fullName,
-          file: testResult.testFilePath.replace(process.cwd(), ''),
-          duration: test.duration || 0,
-        });
-      });
-    });
-
-    return allTests
-      .sort((a, b) => b.duration - a.duration)
-      .slice(0, limit);
-  }
-
-  getAverageTestDuration(testResults) {
-    let totalDuration = 0;
-    let totalTests = 0;
-
-    testResults.forEach(testResult => {
-      testResult.testResults.forEach(test => {
-        if (test.duration) {
-          totalDuration += test.duration;
-          totalTests++;
-        }
-      });
-    });
-
-    return totalTests > 0 ? totalDuration / totalTests : 0;
-  }
-
-  writeJsonReport(report) {
-    const reportPath = path.join('test-results', 'detailed-report.json');
-    
-    // Ensure directory exists
-    const dir = path.dirname(reportPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    constructor(globalConfig, options) {
+        this.globalConfig = globalConfig;
+        this.options = options;
     }
 
-    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(`📊 Detailed JSON report written to: ${reportPath}`);
-  }
+    onRunComplete(contexts, results) {
+        const {
+            numTotalTests,
+            numPassedTests,
+            numFailedTests,
+            numPendingTests,
+            testResults,
+            startTime,
+            success,
+        } = results;
 
-  writeHtmlReport(report) {
-    const htmlContent = this.generateHtmlReport(report);
-    const reportPath = path.join('test-results', 'test-report.html');
-    
-    fs.writeFileSync(reportPath, htmlContent);
-    console.log(`📄 HTML report written to: ${reportPath}`);
-  }
+        const endTime = Date.now();
+        const duration = endTime - startTime;
 
-  writeJunitReport(report) {
-    const xmlContent = this.generateJunitXml(report);
-    const reportPath = path.join('test-results', 'junit-report.xml');
-    
-    fs.writeFileSync(reportPath, xmlContent);
-    console.log(`📋 JUnit XML report written to: ${reportPath}`);
-  }
+        // Generate comprehensive test report
+        const report = {
+            summary: {
+                total: numTotalTests,
+                passed: numPassedTests,
+                failed: numFailedTests,
+                pending: numPendingTests,
+                success,
+                duration,
+                timestamp: new Date().toISOString(),
+            },
+            testSuites: testResults.map(testResult => ({
+                name: testResult.testFilePath.replace(process.cwd(), ''),
+                status: testResult.numFailingTests > 0 ? 'failed' : 'passed',
+                duration: testResult.perfStats.end - testResult.perfStats.start,
+                tests: {
+                    total: testResult.numTotalTests,
+                    passed: testResult.numPassingTests,
+                    failed: testResult.numFailingTests,
+                    pending: testResult.numPendingTests,
+                },
+                coverage: testResult.coverage ? {
+                    lines: testResult.coverage.lines,
+                    functions: testResult.coverage.functions,
+                    branches: testResult.coverage.branches,
+                    statements: testResult.coverage.statements,
+                } : null,
+                failureMessages: testResult.failureMessage ? [testResult.failureMessage] : [],
+            })),
+            performance: {
+                slowestTests: this.getSlowTests(testResults, 10),
+                averageTestDuration: this.getAverageTestDuration(testResults),
+                memoryUsage: process.memoryUsage(),
+            },
+            environment: {
+                node: process.version,
+                platform: process.platform,
+                arch: process.arch,
+                ci: !!process.env.CI,
+                timestamp: new Date().toISOString(),
+            },
+        };
 
-  generateHtmlReport(report) {
-    const { summary, testSuites, performance } = report;
-    const successRate = summary.total > 0 ? (summary.passed / summary.total * 100).toFixed(2) : 0;
+        // Write detailed JSON report
+        this.writeJsonReport(report);
 
-    return `
+        // Write HTML report
+        this.writeHtmlReport(report);
+
+        // Write JUnit XML report
+        this.writeJunitReport(report);
+
+        // Log summary to console
+        this.logSummary(report);
+
+        return results;
+    }
+
+    getSlowTests(testResults, limit = 10) {
+        const allTests = [];
+
+        testResults.forEach(testResult => {
+            testResult.testResults.forEach(test => {
+                allTests.push({
+                    name: test.fullName,
+                    file: testResult.testFilePath.replace(process.cwd(), ''),
+                    duration: test.duration || 0,
+                });
+            });
+        });
+
+        return allTests
+            .sort((a, b) => b.duration - a.duration)
+            .slice(0, limit);
+    }
+
+    getAverageTestDuration(testResults) {
+        let totalDuration = 0;
+        let totalTests = 0;
+
+        testResults.forEach(testResult => {
+            testResult.testResults.forEach(test => {
+                if (test.duration) {
+                    totalDuration += test.duration;
+                    totalTests++;
+                }
+            });
+        });
+
+        return totalTests > 0 ? totalDuration / totalTests : 0;
+    }
+
+    writeJsonReport(report) {
+        const reportPath = path.join('test-results', 'detailed-report.json');
+
+        // Ensure directory exists
+        const dir = path.dirname(reportPath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+
+        fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+        console.log(`📊 Detailed JSON report written to: ${reportPath}`);
+    }
+
+    writeHtmlReport(report) {
+        const htmlContent = this.generateHtmlReport(report);
+        const reportPath = path.join('test-results', 'test-report.html');
+
+        fs.writeFileSync(reportPath, htmlContent);
+        console.log(`📄 HTML report written to: ${reportPath}`);
+    }
+
+    writeJunitReport(report) {
+        const xmlContent = this.generateJunitXml(report);
+        const reportPath = path.join('test-results', 'junit-report.xml');
+
+        fs.writeFileSync(reportPath, xmlContent);
+        console.log(`📋 JUnit XML report written to: ${reportPath}`);
+    }
+
+    generateHtmlReport(report) {
+        const { summary, testSuites, performance } = report;
+        const successRate = summary.total > 0 ? (summary.passed / summary.total * 100).toFixed(2) : 0;
+
+        return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -266,72 +266,72 @@ class CustomTestReporter {
     </div>
 </body>
 </html>`;
-  }
+    }
 
-  generateJunitXml(report) {
-    const { summary, testSuites } = report;
-    
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+    generateJunitXml(report) {
+        const { summary, testSuites } = report;
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="Jest Tests" tests="${summary.total}" failures="${summary.failed}" time="${(summary.duration / 1000).toFixed(3)}">`;
 
-    testSuites.forEach(suite => {
-      xml += `
+        testSuites.forEach(suite => {
+            xml += `
   <testsuite name="${this.escapeXml(suite.name)}" tests="${suite.tests.total}" failures="${suite.tests.failed}" time="${(suite.duration / 1000).toFixed(3)}">`;
-      
-      // Add individual test cases (simplified for this example)
-      for (let i = 0; i < suite.tests.passed; i++) {
-        xml += `
+
+            // Add individual test cases (simplified for this example)
+            for (let i = 0; i < suite.tests.passed; i++) {
+                xml += `
     <testcase name="Test ${i + 1}" classname="${this.escapeXml(suite.name)}" time="0"/>`;
-      }
-      
-      for (let i = 0; i < suite.tests.failed; i++) {
-        xml += `
+            }
+
+            for (let i = 0; i < suite.tests.failed; i++) {
+                xml += `
     <testcase name="Failed Test ${i + 1}" classname="${this.escapeXml(suite.name)}" time="0">
       <failure message="Test failed">${this.escapeXml(suite.failureMessages.join('\\n'))}</failure>
     </testcase>`;
-      }
-      
-      xml += `
-  </testsuite>`;
-    });
+            }
 
-    xml += `
+            xml += `
+  </testsuite>`;
+        });
+
+        xml += `
 </testsuites>`;
 
-    return xml;
-  }
+        return xml;
+    }
 
-  escapeXml(unsafe) {
-    return unsafe.replace(/[<>&'"]/g, function (c) {
-      switch (c) {
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case '&': return '&amp;';
-        case '\'': return '&apos;';
-        case '"': return '&quot;';
-      }
-    });
-  }
+    escapeXml(unsafe) {
+        return unsafe.replace(/[<>&'"]/g, function (c) {
+            switch (c) {
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '&': return '&amp;';
+                case '\'': return '&apos;';
+                case '"': return '&quot;';
+            }
+        });
+    }
 
-  logSummary(report) {
-    const { summary } = report;
-    const successRate = summary.total > 0 ? (summary.passed / summary.total * 100).toFixed(2) : 0;
-    
-    console.log('\\n' + '='.repeat(60));
-    console.log('📊 CUSTOM TEST REPORT SUMMARY');
-    console.log('='.repeat(60));
-    console.log(`Total Tests: ${summary.total}`);
-    console.log(`✅ Passed: ${summary.passed}`);
-    console.log(`❌ Failed: ${summary.failed}`);
-    console.log(`⏭️  Pending: ${summary.pending}`);
-    console.log(`🎯 Success Rate: ${successRate}%`);
-    console.log(`⏱️  Duration: ${(summary.duration / 1000).toFixed(2)}s`);
-    console.log(`📈 Reports generated in test-results/ directory`);
-    console.log('='.repeat(60));
-  }
+    logSummary(report) {
+        const { summary } = report;
+        const successRate = summary.total > 0 ? (summary.passed / summary.total * 100).toFixed(2) : 0;
+
+        console.log('\\n' + '='.repeat(60));
+        console.log('📊 CUSTOM TEST REPORT SUMMARY');
+        console.log('='.repeat(60));
+        console.log(`Total Tests: ${summary.total}`);
+        console.log(`✅ Passed: ${summary.passed}`);
+        console.log(`❌ Failed: ${summary.failed}`);
+        console.log(`⏭️  Pending: ${summary.pending}`);
+        console.log(`🎯 Success Rate: ${successRate}%`);
+        console.log(`⏱️  Duration: ${(summary.duration / 1000).toFixed(2)}s`);
+        console.log(`📈 Reports generated in test-results/ directory`);
+        console.log('='.repeat(60));
+    }
 }
 
 module.exports = (results) => {
-  const reporter = new CustomTestReporter();
-  return reporter.onRunComplete(null, results);
+    const reporter = new CustomTestReporter();
+    return reporter.onRunComplete(null, results);
 };

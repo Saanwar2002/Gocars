@@ -3,8 +3,8 @@
  * Analyzes test failures and applies automated fixes
  */
 
-import { TestResult, ErrorEntry } from './core/TestingAgentController'
-import { PassengerSimulator } from './simulation/PassengerSimulator'
+import { TestResult, ErrorEntry } from './core/types'
+import { errorAnalysisEngine, ErrorAnalysisResult } from './core/ErrorAnalysisEngine'
 
 export interface FixResult {
   errorId: string
@@ -212,7 +212,7 @@ export class AutoFixEngine {
   }
 
   /**
-   * Analyze test results and apply fixes
+   * Analyze test results and apply fixes with enhanced error analysis
    */
   public async analyzeAndFix(testResults: TestResult[]): Promise<FixResult[]> {
     console.log('🔍 Analyzing test results for auto-fixable issues...')
@@ -220,9 +220,34 @@ export class AutoFixEngine {
     const failedTests = testResults.filter(r => r.status === 'failed' || r.status === 'error')
     const fixResults: FixResult[] = []
     
-    for (const test of failedTests) {
+    // Convert test results to error entries for analysis
+    const errorEntries: ErrorEntry[] = failedTests.map(test => ({
+      id: test.id,
+      timestamp: new Date(),
+      severity: this.determineSeverity(test),
+      category: this.determineCategory(test),
+      component: this.extractComponent(test),
+      description: test.message || 'Unknown error',
+      stackTrace: test.details?.error || undefined,
+      context: test.details || {},
+      autoFixable: false
+    }))
+
+    // Perform comprehensive error analysis
+    const batchAnalysis = await errorAnalysisEngine.analyzeErrorBatch(errorEntries)
+    
+    console.log(`📊 Error Analysis Summary:`)
+    console.log(`  - Total errors: ${batchAnalysis.summary.totalErrors}`)
+    console.log(`  - Critical errors: ${batchAnalysis.summary.criticalErrors}`)
+    console.log(`  - Top patterns: ${batchAnalysis.summary.topPatterns.slice(0, 3).map(p => p.name).join(', ')}`)
+    
+    // Apply fixes based on analysis results
+    for (let i = 0; i < failedTests.length; i++) {
+      const test = failedTests[i]
+      const analysis = batchAnalysis.analyses[i]
+      
       if (test.message) {
-        const fixes = await this.findAndApplyFixes(test.message, test)
+        const fixes = await this.findAndApplyFixesWithAnalysis(test.message, test, analysis)
         fixResults.push(...fixes)
       }
     }
@@ -232,6 +257,165 @@ export class AutoFixEngine {
     console.log(`🔧 Applied ${fixResults.filter(f => f.fixApplied).length} fixes out of ${fixResults.length} attempts`)
     
     return fixResults
+  }
+
+  /**
+   * Enhanced fix finding with error analysis insights
+   */
+  private async findAndApplyFixesWithAnalysis(
+    errorMessage: string, 
+    context: any, 
+    analysis: ErrorAnalysisResult
+  ): Promise<FixResult[]> {
+    const fixes: FixResult[] = []
+    
+    // Use error analysis insights to prioritize fix strategies
+    const prioritizedStrategies = this.prioritizeFixStrategies(analysis)
+    
+    for (const strategy of prioritizedStrategies) {
+      if (strategy.pattern.test(errorMessage)) {
+        try {
+          console.log(`Applying fix strategy: ${strategy.name} (Priority: ${analysis.impactAssessment.overallSeverity})`)
+          const result = await strategy.fix(errorMessage, { ...context, analysis })
+          
+          // Enhance fix result with analysis insights
+          result.fixDescription += ` (Confidence: ${analysis.confidence.toFixed(2)}, Impact: ${analysis.impactAssessment.overallSeverity})`
+          
+          fixes.push(result)
+          
+          if (result.fixApplied) {
+            console.log(`✅ Fix applied successfully: ${result.fixDescription}`)
+          } else {
+            console.log(`⚠️  Fix not applied: ${result.fixDescription}`)
+          }
+        } catch (error) {
+          console.error(`❌ Fix strategy failed: ${strategy.name}`, error)
+          fixes.push({
+            errorId: `fix_error_${Date.now()}`,
+            fixApplied: false,
+            fixType: 'code',
+            fixDescription: `Fix strategy failed: ${error}`,
+            rollbackAvailable: false
+          })
+        }
+      }
+    }
+    
+    // If no pattern-based fixes found, use root cause analysis recommendations
+    if (fixes.length === 0 && analysis.rootCauseAnalysis.recommendedActions.length > 0) {
+      const topAction = analysis.rootCauseAnalysis.recommendedActions[0]
+      fixes.push({
+        errorId: `rca_fix_${Date.now()}`,
+        fixApplied: false, // Manual action required
+        fixType: 'code',
+        fixDescription: `Root cause analysis suggests: ${topAction.action} (Priority: ${topAction.priority})`,
+        rollbackAvailable: false
+      })
+    }
+    
+    return fixes
+  }
+
+  /**
+   * Prioritize fix strategies based on error analysis
+   */
+  private prioritizeFixStrategies(analysis: ErrorAnalysisResult): FixStrategy[] {
+    const strategies = [...this.fixStrategies]
+    
+    // Sort by severity and confidence
+    return strategies.sort((a, b) => {
+      const aRelevance = this.calculateStrategyRelevance(a, analysis)
+      const bRelevance = this.calculateStrategyRelevance(b, analysis)
+      return bRelevance - aRelevance
+    })
+  }
+
+  /**
+   * Calculate strategy relevance based on analysis
+   */
+  private calculateStrategyRelevance(strategy: FixStrategy, analysis: ErrorAnalysisResult): number {
+    let relevance = 0
+    
+    // Higher relevance for matching categories
+    if (strategy.category === analysis.errorEntry.category) {
+      relevance += 0.5
+    }
+    
+    // Higher relevance for high-impact errors
+    switch (analysis.impactAssessment.overallSeverity) {
+      case 'critical': relevance += 1.0; break
+      case 'high': relevance += 0.8; break
+      case 'medium': relevance += 0.5; break
+      case 'low': relevance += 0.2; break
+    }
+    
+    // Higher relevance for high-confidence analysis
+    relevance += analysis.confidence * 0.3
+    
+    return relevance
+  }
+
+  /**
+   * Helper methods for error categorization
+   */
+  private determineSeverity(test: TestResult): ErrorEntry['severity'] {
+    if (test.message?.toLowerCase().includes('critical') || test.message?.toLowerCase().includes('fatal')) {
+      return 'critical'
+    }
+    if (test.message?.toLowerCase().includes('error') || test.status === 'error') {
+      return 'high'
+    }
+    if (test.message?.toLowerCase().includes('warning') || test.status === 'failed') {
+      return 'medium'
+    }
+    return 'low'
+  }
+
+  private determineCategory(test: TestResult): ErrorEntry['category'] {
+    const message = test.message?.toLowerCase() || ''
+    
+    if (message.includes('auth') || message.includes('login') || message.includes('permission')) {
+      return 'security'
+    }
+    if (message.includes('timeout') || message.includes('slow') || message.includes('performance')) {
+      return 'performance'
+    }
+    if (message.includes('ui') || message.includes('render') || message.includes('display')) {
+      return 'usability'
+    }
+    if (message.includes('api') || message.includes('service') || message.includes('integration')) {
+      return 'integration'
+    }
+    if (message.includes('database') || message.includes('connection') || message.includes('server')) {
+      return 'infrastructure'
+    }
+    if (message.includes('validation') || message.includes('format') || message.includes('data')) {
+      return 'data_quality'
+    }
+    if (message.includes('payment') || message.includes('booking') || message.includes('business')) {
+      return 'business_logic'
+    }
+    
+    return 'functional'
+  }
+
+  private extractComponent(test: TestResult): string {
+    // Try to extract component from test name or details
+    if (test.name) {
+      const parts = test.name.toLowerCase().split(' ')
+      for (const part of parts) {
+        if (['auth', 'booking', 'payment', 'navigation', 'dashboard', 'ui', 'api'].includes(part)) {
+          return part
+        }
+      }
+    }
+    
+    // Extract from test ID
+    if (test.id.includes('-')) {
+      return test.id.split('-')[0]
+    }
+    
+    return 'unknown'
   }
 
   /**
