@@ -31,6 +31,10 @@ class ComprehensiveTestRunner {
     performance?: boolean;
     predictiveAnalytics?: boolean;
     errorAnalysis?: boolean;
+    autoFixEngine?: boolean;
+    monitoringDashboard?: boolean;
+    reportingSystem?: boolean;
+    configurationSystem?: boolean;
     coverage?: boolean;
     parallel?: boolean;
     bail?: boolean;
@@ -46,6 +50,10 @@ class ComprehensiveTestRunner {
       performance: false, // Performance tests are opt-in
       predictiveAnalytics: false, // Predictive analytics tests are opt-in
       errorAnalysis: false, // Error analysis tests are opt-in
+      autoFixEngine: false, // Auto-fix engine tests are opt-in
+      monitoringDashboard: false, // Monitoring dashboard tests are opt-in
+      reportingSystem: false, // Reporting system tests are opt-in
+      configurationSystem: false, // Configuration system tests are opt-in
       coverage: true,
       parallel: false,
       bail: false,
@@ -79,6 +87,22 @@ class ComprehensiveTestRunner {
 
       if (config.errorAnalysis) {
         await this.runErrorAnalysisTests(config);
+      }
+
+      if (config.autoFixEngine) {
+        await this.runAutoFixEngineTests(config);
+      }
+
+      if (config.monitoringDashboard) {
+        await this.runMonitoringDashboardTests(config);
+      }
+
+      if (config.reportingSystem) {
+        await this.runReportingSystemTests(config);
+      }
+
+      if (config.configurationSystem) {
+        await this.runConfigurationSystemTests(config);
       }
 
       // Generate comprehensive report
@@ -138,7 +162,7 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ Unit tests failed');
-      
+
       if (config.bail) {
         throw error;
       }
@@ -187,7 +211,7 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ Integration tests failed');
-      
+
       if (config.bail) {
         throw error;
       }
@@ -235,7 +259,7 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ End-to-end tests failed');
-      
+
       if (config.bail) {
         throw error;
       }
@@ -281,7 +305,7 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ Performance tests failed');
-      
+
       if (config.bail) {
         throw error;
       }
@@ -295,9 +319,9 @@ class ComprehensiveTestRunner {
     try {
       // Import and run predictive analytics tests
       const { runPredictiveAnalyticsTests } = await import('./runPredictiveAnalyticsTests');
-      
+
       const results = await runPredictiveAnalyticsTests();
-      
+
       // Check if any tests failed
       const failedTests = results.filter(r => r.status === 'failed' || r.status === 'error');
       const hasFailures = failedTests.length > 0;
@@ -317,7 +341,7 @@ class ComprehensiveTestRunner {
 
       if (hasFailures) {
         console.error(`❌ Predictive analytics tests failed (${failedTests.length}/${results.length} tests failed)`);
-        
+
         if (config.bail) {
           throw new Error(`Predictive analytics tests failed: ${failedTests.map(t => t.name).join(', ')}`);
         }
@@ -335,7 +359,7 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ Predictive analytics tests failed');
-      
+
       if (config.bail) {
         throw error;
       }
@@ -349,9 +373,9 @@ class ComprehensiveTestRunner {
     try {
       // Import and run error analysis tests
       const { runErrorAnalysisTests } = await import('./runErrorAnalysisTests');
-      
+
       const results = await runErrorAnalysisTests();
-      
+
       // Check if any tests failed
       const failedTests = results.filter(r => r.status === 'failed' || r.status === 'error');
       const hasFailures = failedTests.length > 0;
@@ -371,7 +395,7 @@ class ComprehensiveTestRunner {
 
       if (hasFailures) {
         console.error(`❌ Error analysis tests failed (${failedTests.length}/${results.length} tests failed)`);
-        
+
         if (config.bail) {
           throw new Error(`Error analysis tests failed: ${failedTests.map(t => t.name).join(', ')}`);
         }
@@ -389,7 +413,226 @@ class ComprehensiveTestRunner {
       });
 
       console.error('❌ Error analysis tests failed');
-      
+
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
+  private async runAutoFixEngineTests(config: any): Promise<void> {
+    console.log('\\n🔧 Running auto-fix engine tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run auto-fix engine tests
+      const { runAutoFixEngineTests } = await import('./runAutoFixEngineTests');
+
+      const results = await runAutoFixEngineTests();
+
+      // Check if any tests failed
+      const failedTests = results.filter(r => r.status === 'failed' || r.status === 'error');
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Auto-Fix Engine Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.status === 'passed').length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Auto-fix engine tests failed (${failedTests.length}/${results.length} tests failed)`);
+
+        if (config.bail) {
+          throw new Error(`Auto-fix engine tests failed: ${failedTests.map(t => t.name).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Auto-fix engine tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Auto-Fix Engine Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Auto-fix engine tests failed');
+
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
+  private async runMonitoringDashboardTests(config: any): Promise<void> {
+    console.log('\\n📊 Running monitoring dashboard tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run monitoring dashboard tests
+      const { MonitoringDashboardTester } = await import('./runMonitoringDashboardTests');
+
+      const tester = new MonitoringDashboardTester();
+      const results = await tester.runAllTests();
+
+      // Check if any tests failed
+      const failedTests = results.filter(r => !r.passed);
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Monitoring Dashboard Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.passed).length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Monitoring dashboard tests failed (${failedTests.length}/${results.length} tests failed)`);
+
+        if (config.bail) {
+          throw new Error(`Monitoring dashboard tests failed: ${failedTests.map(t => t.testName).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Monitoring dashboard tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Monitoring Dashboard Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Monitoring dashboard tests failed');
+
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
+  private async runReportingSystemTests(config: any): Promise<void> {
+    console.log('\\n📊 Running reporting system tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run reporting system tests
+      const { ReportingSystemTester } = await import('./runReportingSystemTests');
+
+      const tester = new ReportingSystemTester();
+      const results = await tester.runAllTests();
+
+      // Check if any tests failed
+      const failedTests = results.filter(r => !r.passed);
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Reporting System Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.passed).length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Reporting system tests failed (${failedTests.length}/${results.length} tests failed)`);
+
+        if (config.bail) {
+          throw new Error(`Reporting system tests failed: ${failedTests.map(t => t.testName).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Reporting system tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Reporting System Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Reporting system tests failed');
+
+      if (config.bail) {
+        throw error;
+      }
+    }
+  }
+
+  private async runConfigurationSystemTests(config: any): Promise<void> {
+    console.log('\\n⚙️ Running configuration system tests...');
+    const startTime = performance.now();
+
+    try {
+      // Import and run configuration system tests
+      const { ConfigurationSystemTester } = await import('./runConfigurationSystemTests');
+
+      const tester = new ConfigurationSystemTester();
+      const results = await tester.runAllTests();
+
+      // Check if any tests failed
+      const failedTests = results.filter(r => !r.passed);
+      const hasFailures = failedTests.length > 0;
+
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Configuration System Tests',
+        status: hasFailures ? 'failed' : 'passed',
+        duration: endTime - startTime,
+        details: {
+          totalTests: results.length,
+          passedTests: results.filter(r => r.passed).length,
+          failedTests: failedTests.length,
+          results: results
+        }
+      });
+
+      if (hasFailures) {
+        console.error(`❌ Configuration system tests failed (${failedTests.length}/${results.length} tests failed)`);
+
+        if (config.bail) {
+          throw new Error(`Configuration system tests failed: ${failedTests.map(t => t.testName).join(', ')}`);
+        }
+      } else {
+        console.log('✅ Configuration system tests completed successfully');
+      }
+
+    } catch (error) {
+      const endTime = performance.now();
+      this.results.push({
+        name: 'Configuration System Tests',
+        status: 'failed',
+        duration: endTime - startTime,
+        details: error,
+      });
+
+      console.error('❌ Configuration system tests failed');
+
       if (config.bail) {
         throw error;
       }
@@ -399,7 +642,7 @@ class ComprehensiveTestRunner {
   private generateSummary(): TestRunSummary {
     const endTime = performance.now();
     const totalDuration = endTime - this.startTime;
-    
+
     const failedSuites = this.results.filter(r => r.status === 'failed');
     const overallStatus = failedSuites.length > 0 ? 'failed' : 'passed';
 
@@ -620,6 +863,64 @@ async function main() {
         options.performance = false;
         options.predictiveAnalytics = false;
         options.errorAnalysis = true;
+        options.autoFixEngine = false;
+        break;
+      case '--with-auto-fix-engine':
+        options.autoFixEngine = true;
+        break;
+      case '--auto-fix-engine-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = false;
+        options.errorAnalysis = false;
+        options.autoFixEngine = true;
+        options.monitoringDashboard = false;
+        break;
+      case '--with-monitoring-dashboard':
+        options.monitoringDashboard = true;
+        break;
+      case '--monitoring-dashboard-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = false;
+        options.errorAnalysis = false;
+        options.autoFixEngine = false;
+        options.monitoringDashboard = true;
+        options.reportingSystem = false;
+        break;
+      case '--with-reporting-system':
+        options.reportingSystem = true;
+        break;
+      case '--reporting-system-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = false;
+        options.errorAnalysis = false;
+        options.autoFixEngine = false;
+        options.monitoringDashboard = false;
+        options.reportingSystem = true;
+        options.configurationSystem = false;
+        break;
+      case '--with-configuration-system':
+        options.configurationSystem = true;
+        break;
+      case '--configuration-system-only':
+        options.unit = false;
+        options.integration = false;
+        options.e2e = false;
+        options.performance = false;
+        options.predictiveAnalytics = false;
+        options.errorAnalysis = false;
+        options.autoFixEngine = false;
+        options.monitoringDashboard = false;
+        options.reportingSystem = false;
+        options.configurationSystem = true;
         break;
       case '--no-coverage':
         options.coverage = false;
@@ -634,10 +935,10 @@ async function main() {
   });
 
   const runner = new ComprehensiveTestRunner();
-  
+
   try {
     const summary = await runner.runAllTests(options);
-    
+
     if (summary.overallStatus === 'failed') {
       process.exit(1);
     } else {

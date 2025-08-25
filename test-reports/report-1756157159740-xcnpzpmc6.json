@@ -1,0 +1,4644 @@
+{
+  "metadata": {
+    "generatedAt": "2025-08-25T21:25:59.740Z",
+    "reportId": "report-1756157159740-xcnpzpmc6",
+    "version": "1.0.0",
+    "timeRange": {
+      "start": "2025-08-24T21:25:59.740Z",
+      "end": "2025-08-25T21:25:59.740Z"
+    },
+    "configuration": {
+      "includeExecutiveSummary": true,
+      "includeTechnicalDetails": true,
+      "includeTrendAnalysis": true,
+      "includeRecommendations": true,
+      "format": "json"
+    }
+  },
+  "executiveSummary": {
+    "overallHealthScore": 90,
+    "systemStatus": "healthy",
+    "totalTests": 4,
+    "passRate": 75,
+    "criticalIssues": 0,
+    "performanceTrends": {
+      "responseTime": "stable",
+      "errorRate": "degrading",
+      "throughput": "stable"
+    },
+    "topRecommendations": [
+      "Address 1 failing tests to improve system reliability"
+    ],
+    "keyMetrics": {
+      "meanTimeToDetection": 1755549.5366535306,
+      "meanTimeToResolution": 806314.0697716454,
+      "systemAvailability": 100,
+      "userExperienceScore": 77.5
+    }
+  },
+  "technicalReport": {
+    "testResults": {
+      "summary": {
+        "totalTests": 4,
+        "passedTests": 3,
+        "failedTests": 1,
+        "skippedTests": 0,
+        "passRate": 75,
+        "averageDuration": 1825,
+        "totalDuration": 7300
+      },
+      "suiteResults": [
+        {
+          "suiteName": "Default Suite",
+          "status": "partial",
+          "testsRun": 4,
+          "testsPassed": 3,
+          "testsFailed": 1,
+          "duration": 7300
+        }
+      ],
+      "failedTests": [
+        {
+          "id": "test-3",
+          "name": "UI Component Test",
+          "status": "failed",
+          "duration": 2000,
+          "message": "Component rendering failed"
+        }
+      ]
+    },
+    "errorAnalysis": {
+      "totalErrors": 2,
+      "errorsByCategory": {
+        "functional": 1,
+        "performance": 1
+      },
+      "errorsBySeverity": {
+        "medium": 1,
+        "low": 1
+      },
+      "topErrors": [
+        {
+          "id": "error-1",
+          "timestamp": "2025-08-25T21:24:59.740Z",
+          "severity": "medium",
+          "category": "functional",
+          "component": "UIComponent",
+          "description": "Component rendering issue",
+          "context": {},
+          "autoFixable": true
+        },
+        {
+          "id": "error-2",
+          "timestamp": "2025-08-25T21:23:59.740Z",
+          "severity": "low",
+          "category": "performance",
+          "component": "APIGateway",
+          "description": "Slow response time",
+          "context": {},
+          "autoFixable": false
+        }
+      ],
+      "errorTrends": [
+        {
+          "timestamp": "2025-08-25T20:25:59.740Z",
+          "errorCount": 0,
+          "severity": "medium",
+          "category": "functional"
+        },
+        {
+          "timestamp": "2025-08-25T20:25:59.740Z",
+          "errorCount": 0,
+          "severity": "medium",
+          "category": "performance"
+        },
+        {
+          "timestamp": "2025-08-25T20:25:59.740Z",
+          "errorCount": 0,
+          "severity": "low",
+          "category": "functional"
+        },
+        {
+          "timestamp": "2025-08-25T20:25:59.740Z",
+          "errorCount": 0,
+          "severity": "low",
+          "category": "performance"
+        }
+      ]
+    },
+    "performanceMetrics": {
+      "current": {
+        "timestamp": "2025-08-25T21:25:59.740Z",
+        "responseTime": 1200,
+        "throughput": 75.5,
+        "errorRate": 2.1,
+        "memoryUsage": 65.3,
+        "cpuUsage": 42.8
+      },
+      "trends": [
+        {
+          "metric": "responseTime",
+          "dataPoints": [
+            {
+              "timestamp": "2025-08-24T22:25:59.740Z",
+              "value": 1175.8922572416886,
+              "label": "responseTime at 23:00"
+            },
+            {
+              "timestamp": "2025-08-24T23:25:59.740Z",
+              "value": 1295.5282293660644,
+              "label": "responseTime at 0:00"
+            },
+            {
+              "timestamp": "2025-08-25T00:25:59.740Z",
+              "value": 1083.8855131937432,
+              "label": "responseTime at 1:00"
+            },
+            {
+              "timestamp": "2025-08-25T01:25:59.740Z",
+              "value": 1240.5348098634583,
+              "label": "responseTime at 2:00"
+            },
+            {
+              "timestamp": "2025-08-25T02:25:59.740Z",
+              "value": 1318.194646355798,
+              "label": "responseTime at 3:00"
+            },
+            {
+              "timestamp": "2025-08-25T03:25:59.740Z",
+              "value": 1269.3124755571482,
+              "label": "responseTime at 4:00"
+            },
+            {
+              "timestamp": "2025-08-25T04:25:59.740Z",
+              "value": 1246.098333169109,
+              "label": "responseTime at 5:00"
+            },
+            {
+              "timestamp": "2025-08-25T05:25:59.740Z",
+              "value": 1278.8084700098848,
+              "label": "responseTime at 6:00"
+            },
+            {
+              "timestamp": "2025-08-25T06:25:59.740Z",
+              "value": 1125.3697681337526,
+              "label": "responseTime at 7:00"
+            },
+            {
+              "timestamp": "2025-08-25T07:25:59.740Z",
+              "value": 1170.4945426721522,
+              "label": "responseTime at 8:00"
+            },
+            {
+              "timestamp": "2025-08-25T08:25:59.740Z",
+              "value": 1105.2975165204555,
+              "label": "responseTime at 9:00"
+            },
+            {
+              "timestamp": "2025-08-25T09:25:59.740Z",
+              "value": 1267.851782677238,
+              "label": "responseTime at 10:00"
+            },
+            {
+              "timestamp": "2025-08-25T10:25:59.740Z",
+              "value": 1280.8064752069195,
+              "label": "responseTime at 11:00"
+            },
+            {
+              "timestamp": "2025-08-25T11:25:59.740Z",
+              "value": 1171.6761445546158,
+              "label": "responseTime at 12:00"
+            },
+            {
+              "timestamp": "2025-08-25T12:25:59.740Z",
+              "value": 1156.289660475584,
+              "label": "responseTime at 13:00"
+            },
+            {
+              "timestamp": "2025-08-25T13:25:59.740Z",
+              "value": 1183.2317839606567,
+              "label": "responseTime at 14:00"
+            },
+            {
+              "timestamp": "2025-08-25T14:25:59.740Z",
+              "value": 1316.5307739966556,
+              "label": "responseTime at 15:00"
+            },
+            {
+              "timestamp": "2025-08-25T15:25:59.740Z",
+              "value": 1302.8047227830043,
+              "label": "responseTime at 16:00"
+            },
+            {
+              "timestamp": "2025-08-25T16:25:59.740Z",
+              "value": 1255.842151618214,
+              "label": "responseTime at 17:00"
+            },
+            {
+              "timestamp": "2025-08-25T17:25:59.740Z",
+              "value": 1319.36497567509,
+              "label": "responseTime at 18:00"
+            },
+            {
+              "timestamp": "2025-08-25T18:25:59.740Z",
+              "value": 1278.3248025209625,
+              "label": "responseTime at 19:00"
+            },
+            {
+              "timestamp": "2025-08-25T19:25:59.740Z",
+              "value": 1121.217213479569,
+              "label": "responseTime at 20:00"
+            },
+            {
+              "timestamp": "2025-08-25T20:25:59.740Z",
+              "value": 1084.2155738191104,
+              "label": "responseTime at 21:00"
+            },
+            {
+              "timestamp": "2025-08-25T21:25:59.740Z",
+              "value": 1262.3401144853708,
+              "label": "responseTime at 22:00"
+            }
+          ],
+          "trend": "stable",
+          "changePercentage": 0
+        },
+        {
+          "metric": "throughput",
+          "dataPoints": [
+            {
+              "timestamp": "2025-08-24T22:25:59.740Z",
+              "value": 74.11718772602525,
+              "label": "throughput at 23:00"
+            },
+            {
+              "timestamp": "2025-08-24T23:25:59.740Z",
+              "value": 76.88984136824969,
+              "label": "throughput at 0:00"
+            },
+            {
+              "timestamp": "2025-08-25T00:25:59.740Z",
+              "value": 74.66785474222702,
+              "label": "throughput at 1:00"
+            },
+            {
+              "timestamp": "2025-08-25T01:25:59.740Z",
+              "value": 82.66518693348216,
+              "label": "throughput at 2:00"
+            },
+            {
+              "timestamp": "2025-08-25T02:25:59.740Z",
+              "value": 75.30171967823605,
+              "label": "throughput at 3:00"
+            },
+            {
+              "timestamp": "2025-08-25T03:25:59.740Z",
+              "value": 68.75725238906418,
+              "label": "throughput at 4:00"
+            },
+            {
+              "timestamp": "2025-08-25T04:25:59.740Z",
+              "value": 81.788601657883,
+              "label": "throughput at 5:00"
+            },
+            {
+              "timestamp": "2025-08-25T05:25:59.740Z",
+              "value": 80.16075414085802,
+              "label": "throughput at 6:00"
+            },
+            {
+              "timestamp": "2025-08-25T06:25:59.740Z",
+              "value": 68.08484999518092,
+              "label": "throughput at 7:00"
+            },
+            {
+              "timestamp": "2025-08-25T07:25:59.740Z",
+              "value": 81.74286669007722,
+              "label": "throughput at 8:00"
+            },
+            {
+              "timestamp": "2025-08-25T08:25:59.740Z",
+              "value": 68.39485955539027,
+              "label": "throughput at 9:00"
+            },
+            {
+              "timestamp": "2025-08-25T09:25:59.740Z",
+              "value": 83.03952377266825,
+              "label": "throughput at 10:00"
+            },
+            {
+              "timestamp": "2025-08-25T10:25:59.740Z",
+              "value": 79.84472482749686,
+              "label": "throughput at 11:00"
+            },
+            {
+              "timestamp": "2025-08-25T11:25:59.740Z",
+              "value": 68.77399600865171,
+              "label": "throughput at 12:00"
+            },
+            {
+              "timestamp": "2025-08-25T12:25:59.740Z",
+              "value": 75.42173649422615,
+              "label": "throughput at 13:00"
+            },
+            {
+              "timestamp": "2025-08-25T13:25:59.740Z",
+              "value": 80.13751641450911,
+              "label": "throughput at 14:00"
+            },
+            {
+              "timestamp": "2025-08-25T14:25:59.740Z",
+              "value": 77.00786938142443,
+              "label": "throughput at 15:00"
+            },
+            {
+              "timestamp": "2025-08-25T15:25:59.740Z",
+              "value": 72.4416941883751,
+              "label": "throughput at 16:00"
+            },
+            {
+              "timestamp": "2025-08-25T16:25:59.740Z",
+              "value": 76.21090383444886,
+              "label": "throughput at 17:00"
+            },
+            {
+              "timestamp": "2025-08-25T17:25:59.740Z",
+              "value": 69.76768983033334,
+              "label": "throughput at 18:00"
+            },
+            {
+              "timestamp": "2025-08-25T18:25:59.740Z",
+              "value": 82.48061464179307,
+              "label": "throughput at 19:00"
+            },
+            {
+              "timestamp": "2025-08-25T19:25:59.740Z",
+              "value": 77.64210826548862,
+              "label": "throughput at 20:00"
+            },
+            {
+              "timestamp": "2025-08-25T20:25:59.740Z",
+              "value": 72.84640335577623,
+              "label": "throughput at 21:00"
+            },
+            {
+              "timestamp": "2025-08-25T21:25:59.740Z",
+              "value": 75.19874650942779,
+              "label": "throughput at 22:00"
+            }
+          ],
+          "trend": "stable",
+          "changePercentage": 0
+        },
+        {
+          "metric": "errorRate",
+          "dataPoints": [
+            {
+              "timestamp": "2025-08-24T22:25:59.740Z",
+              "value": 2.157370081919699,
+              "label": "errorRate at 23:00"
+            },
+            {
+              "timestamp": "2025-08-24T23:25:59.740Z",
+              "value": 2.150833553831201,
+              "label": "errorRate at 0:00"
+            },
+            {
+              "timestamp": "2025-08-25T00:25:59.740Z",
+              "value": 1.891777372388916,
+              "label": "errorRate at 1:00"
+            },
+            {
+              "timestamp": "2025-08-25T01:25:59.740Z",
+              "value": 2.234695738305207,
+              "label": "errorRate at 2:00"
+            },
+            {
+              "timestamp": "2025-08-25T02:25:59.740Z",
+              "value": 2.1468067944647586,
+              "label": "errorRate at 3:00"
+            },
+            {
+              "timestamp": "2025-08-25T03:25:59.740Z",
+              "value": 1.8951509007862952,
+              "label": "errorRate at 4:00"
+            },
+            {
+              "timestamp": "2025-08-25T04:25:59.740Z",
+              "value": 2.075835675229032,
+              "label": "errorRate at 5:00"
+            },
+            {
+              "timestamp": "2025-08-25T05:25:59.740Z",
+              "value": 2.138243560310516,
+              "label": "errorRate at 6:00"
+            },
+            {
+              "timestamp": "2025-08-25T06:25:59.740Z",
+              "value": 2.0902873082315696,
+              "label": "errorRate at 7:00"
+            },
+            {
+              "timestamp": "2025-08-25T07:25:59.740Z",
+              "value": 1.893418582988971,
+              "label": "errorRate at 8:00"
+            },
+            {
+              "timestamp": "2025-08-25T08:25:59.740Z",
+              "value": 2.21886959427597,
+              "label": "errorRate at 9:00"
+            },
+            {
+              "timestamp": "2025-08-25T09:25:59.740Z",
+              "value": 2.0766554269613056,
+              "label": "errorRate at 10:00"
+            },
+            {
+              "timestamp": "2025-08-25T10:25:59.740Z",
+              "value": 2.1679499063085896,
+              "label": "errorRate at 11:00"
+            },
+            {
+              "timestamp": "2025-08-25T11:25:59.740Z",
+              "value": 2.0345428527790053,
+              "label": "errorRate at 12:00"
+            },
+            {
+              "timestamp": "2025-08-25T12:25:59.740Z",
+              "value": 2.142508970690849,
+              "label": "errorRate at 13:00"
+            },
+            {
+              "timestamp": "2025-08-25T13:25:59.740Z",
+              "value": 1.9964498915376876,
+              "label": "errorRate at 14:00"
+            },
+            {
+              "timestamp": "2025-08-25T14:25:59.740Z",
+              "value": 2.2363232823123735,
+              "label": "errorRate at 15:00"
+            },
+            {
+              "timestamp": "2025-08-25T15:25:59.740Z",
+              "value": 2.03388502383393,
+              "label": "errorRate at 16:00"
+            },
+            {
+              "timestamp": "2025-08-25T16:25:59.740Z",
+              "value": 2.2003874557572907,
+              "label": "errorRate at 17:00"
+            },
+            {
+              "timestamp": "2025-08-25T17:25:59.740Z",
+              "value": 1.9915306369491577,
+              "label": "errorRate at 18:00"
+            },
+            {
+              "timestamp": "2025-08-25T18:25:59.740Z",
+              "value": 1.9790353846021744,
+              "label": "errorRate at 19:00"
+            },
+            {
+              "timestamp": "2025-08-25T19:25:59.740Z",
+              "value": 2.0183197395955945,
+              "label": "errorRate at 20:00"
+            },
+            {
+              "timestamp": "2025-08-25T20:25:59.740Z",
+              "value": 2.270354213945151,
+              "label": "errorRate at 21:00"
+            },
+            {
+              "timestamp": "2025-08-25T21:25:59.740Z",
+              "value": 2.2433345136570804,
+              "label": "errorRate at 22:00"
+            }
+          ],
+          "trend": "stable",
+          "changePercentage": 0
+        }
+      ],
+      "benchmarks": [
+        {
+          "metric": "responseTime",
+          "currentValue": 1200,
+          "benchmarkValue": 1000,
+          "status": "above",
+          "deviation": 200
+        },
+        {
+          "metric": "throughput",
+          "currentValue": 75.5,
+          "benchmarkValue": 100,
+          "status": "below",
+          "deviation": -24.5
+        },
+        {
+          "metric": "errorRate",
+          "currentValue": 2.1,
+          "benchmarkValue": 1,
+          "status": "above",
+          "deviation": 1.1
+        }
+      ]
+    },
+    "fixApplicationHistory": {
+      "totalFixes": 2,
+      "successRate": 50,
+      "fixesByType": {
+        "configuration": 1,
+        "code": 1
+      },
+      "recentFixes": [
+        {
+          "id": "fix-1",
+          "timestamp": "2025-08-25T21:20:59.740Z",
+          "errorId": "error-1",
+          "fixType": "configuration",
+          "success": true,
+          "description": "Fixed component configuration issue"
+        },
+        {
+          "id": "fix-2",
+          "timestamp": "2025-08-25T21:15:59.740Z",
+          "errorId": "error-2",
+          "fixType": "code",
+          "success": false,
+          "description": "Attempted to optimize API response"
+        }
+      ]
+    }
+  },
+  "trendAnalysis": {
+    "historicalData": {
+      "testPassRates": [
+        {
+          "timestamp": "2025-08-24T21:25:59.740Z",
+          "value": 91.81757889253035,
+          "label": "passRate at 2025-08-24T21:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:40:23.740Z",
+          "value": 86.56988260745469,
+          "label": "passRate at 2025-08-24T21:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:54:47.740Z",
+          "value": 85.42175354028012,
+          "label": "passRate at 2025-08-24T21:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:09:11.740Z",
+          "value": 92.56147805708926,
+          "label": "passRate at 2025-08-24T22:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:23:35.740Z",
+          "value": 91.24492189919476,
+          "label": "passRate at 2025-08-24T22:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:37:59.740Z",
+          "value": 89.1164285173617,
+          "label": "passRate at 2025-08-24T22:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:52:23.740Z",
+          "value": 104.78325035031946,
+          "label": "passRate at 2025-08-24T22:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:06:47.740Z",
+          "value": 107.42078612339492,
+          "label": "passRate at 2025-08-24T23:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:21:11.740Z",
+          "value": 103.44950826375515,
+          "label": "passRate at 2025-08-24T23:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:35:35.740Z",
+          "value": 90.36658664950758,
+          "label": "passRate at 2025-08-24T23:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.740Z",
+          "value": 97.54250648740522,
+          "label": "passRate at 2025-08-24T23:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:04:23.740Z",
+          "value": 100.44549078594201,
+          "label": "passRate at 2025-08-25T00:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:18:47.740Z",
+          "value": 104.08725118904665,
+          "label": "passRate at 2025-08-25T00:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:33:11.740Z",
+          "value": 101.02716308615646,
+          "label": "passRate at 2025-08-25T00:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:47:35.740Z",
+          "value": 95.99143095624889,
+          "label": "passRate at 2025-08-25T00:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:01:59.740Z",
+          "value": 87.49377390867664,
+          "label": "passRate at 2025-08-25T01:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:16:23.740Z",
+          "value": 89.38069854094917,
+          "label": "passRate at 2025-08-25T01:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:30:47.740Z",
+          "value": 90.95150002902642,
+          "label": "passRate at 2025-08-25T01:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:45:11.740Z",
+          "value": 98.53885207835842,
+          "label": "passRate at 2025-08-25T01:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:59:35.740Z",
+          "value": 88.99299882065294,
+          "label": "passRate at 2025-08-25T01:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:13:59.740Z",
+          "value": 88.69589058422815,
+          "label": "passRate at 2025-08-25T02:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:28:23.740Z",
+          "value": 95.53922364815719,
+          "label": "passRate at 2025-08-25T02:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:42:47.740Z",
+          "value": 91.11916645342733,
+          "label": "passRate at 2025-08-25T02:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:57:11.740Z",
+          "value": 100.48266353206935,
+          "label": "passRate at 2025-08-25T02:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:11:35.740Z",
+          "value": 88.71767545921531,
+          "label": "passRate at 2025-08-25T03:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:25:59.740Z",
+          "value": 80.96927905508234,
+          "label": "passRate at 2025-08-25T03:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:40:23.740Z",
+          "value": 88.63985426184793,
+          "label": "passRate at 2025-08-25T03:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:54:47.740Z",
+          "value": 84.68961312332766,
+          "label": "passRate at 2025-08-25T03:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:09:11.740Z",
+          "value": 103.10777673812973,
+          "label": "passRate at 2025-08-25T04:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:23:35.740Z",
+          "value": 90.29902567910628,
+          "label": "passRate at 2025-08-25T04:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:37:59.740Z",
+          "value": 102.72525165634437,
+          "label": "passRate at 2025-08-25T04:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:52:23.740Z",
+          "value": 102.20672368020436,
+          "label": "passRate at 2025-08-25T04:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:06:47.740Z",
+          "value": 103.84510511915823,
+          "label": "passRate at 2025-08-25T05:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:21:11.740Z",
+          "value": 89.97072736806233,
+          "label": "passRate at 2025-08-25T05:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:35:35.740Z",
+          "value": 104.91221304463154,
+          "label": "passRate at 2025-08-25T05:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:49:59.740Z",
+          "value": 92.67519939218099,
+          "label": "passRate at 2025-08-25T05:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:04:23.740Z",
+          "value": 97.16463735324973,
+          "label": "passRate at 2025-08-25T06:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:18:47.740Z",
+          "value": 95.2064757406123,
+          "label": "passRate at 2025-08-25T06:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:33:11.740Z",
+          "value": 92.79296440915785,
+          "label": "passRate at 2025-08-25T06:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:47:35.740Z",
+          "value": 82.56754848216136,
+          "label": "passRate at 2025-08-25T06:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.740Z",
+          "value": 87.42669188533729,
+          "label": "passRate at 2025-08-25T07:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:16:23.740Z",
+          "value": 83.37889107510485,
+          "label": "passRate at 2025-08-25T07:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:30:47.740Z",
+          "value": 92.73422151668501,
+          "label": "passRate at 2025-08-25T07:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:45:11.740Z",
+          "value": 89.29645233792098,
+          "label": "passRate at 2025-08-25T07:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:59:35.740Z",
+          "value": 83.3467271167805,
+          "label": "passRate at 2025-08-25T07:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:13:59.740Z",
+          "value": 101.06155592017292,
+          "label": "passRate at 2025-08-25T08:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:28:23.740Z",
+          "value": 108.68068804928393,
+          "label": "passRate at 2025-08-25T08:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:42:47.740Z",
+          "value": 95.07305159987386,
+          "label": "passRate at 2025-08-25T08:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:57:11.740Z",
+          "value": 106.26069518855135,
+          "label": "passRate at 2025-08-25T08:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:11:35.740Z",
+          "value": 93.32077954823279,
+          "label": "passRate at 2025-08-25T09:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:25:59.740Z",
+          "value": 108.63264136764045,
+          "label": "passRate at 2025-08-25T09:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:40:23.740Z",
+          "value": 92.74928451616499,
+          "label": "passRate at 2025-08-25T09:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:54:47.740Z",
+          "value": 101.55957750382353,
+          "label": "passRate at 2025-08-25T09:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:09:11.740Z",
+          "value": 86.02797166230054,
+          "label": "passRate at 2025-08-25T10:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:23:35.740Z",
+          "value": 90.73356500043118,
+          "label": "passRate at 2025-08-25T10:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:37:59.740Z",
+          "value": 90.59470512798268,
+          "label": "passRate at 2025-08-25T10:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:52:23.740Z",
+          "value": 107.31807901280253,
+          "label": "passRate at 2025-08-25T10:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:06:47.740Z",
+          "value": 107.59242886264443,
+          "label": "passRate at 2025-08-25T11:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:21:11.740Z",
+          "value": 89.09677022587987,
+          "label": "passRate at 2025-08-25T11:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:35:35.740Z",
+          "value": 89.82054771409787,
+          "label": "passRate at 2025-08-25T11:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:49:59.740Z",
+          "value": 105.89741568263392,
+          "label": "passRate at 2025-08-25T11:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:04:23.740Z",
+          "value": 95.07876746222553,
+          "label": "passRate at 2025-08-25T12:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:18:47.740Z",
+          "value": 100.55327442116564,
+          "label": "passRate at 2025-08-25T12:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:33:11.740Z",
+          "value": 106.99319617429383,
+          "label": "passRate at 2025-08-25T12:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:47:35.740Z",
+          "value": 104.35469685183456,
+          "label": "passRate at 2025-08-25T12:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:01:59.740Z",
+          "value": 105.76731620203087,
+          "label": "passRate at 2025-08-25T13:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:16:23.740Z",
+          "value": 106.30527058765468,
+          "label": "passRate at 2025-08-25T13:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:30:47.740Z",
+          "value": 98.2358120013417,
+          "label": "passRate at 2025-08-25T13:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:45:11.740Z",
+          "value": 92.53442948139205,
+          "label": "passRate at 2025-08-25T13:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:59:35.740Z",
+          "value": 86.15663967842718,
+          "label": "passRate at 2025-08-25T13:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.740Z",
+          "value": 93.30879355939159,
+          "label": "passRate at 2025-08-25T14:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:28:23.740Z",
+          "value": 95.15349662468928,
+          "label": "passRate at 2025-08-25T14:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:42:47.740Z",
+          "value": 90.81456013013151,
+          "label": "passRate at 2025-08-25T14:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:57:11.740Z",
+          "value": 105.27751783332545,
+          "label": "passRate at 2025-08-25T14:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:11:35.740Z",
+          "value": 92.49747141427228,
+          "label": "passRate at 2025-08-25T15:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:25:59.740Z",
+          "value": 81.21627125423677,
+          "label": "passRate at 2025-08-25T15:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:40:23.740Z",
+          "value": 83.9856018002572,
+          "label": "passRate at 2025-08-25T15:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:54:47.740Z",
+          "value": 84.42763742829281,
+          "label": "passRate at 2025-08-25T15:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:09:11.740Z",
+          "value": 86.96242753473409,
+          "label": "passRate at 2025-08-25T16:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:23:35.740Z",
+          "value": 100.89260578799318,
+          "label": "passRate at 2025-08-25T16:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:37:59.740Z",
+          "value": 85.63982037229283,
+          "label": "passRate at 2025-08-25T16:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:52:23.740Z",
+          "value": 98.3307046084135,
+          "label": "passRate at 2025-08-25T16:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:06:47.740Z",
+          "value": 89.9739024017941,
+          "label": "passRate at 2025-08-25T17:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:21:11.740Z",
+          "value": 108.31644538758802,
+          "label": "passRate at 2025-08-25T17:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:35:35.740Z",
+          "value": 98.90727480764387,
+          "label": "passRate at 2025-08-25T17:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:49:59.740Z",
+          "value": 85.77975112722905,
+          "label": "passRate at 2025-08-25T17:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:04:23.740Z",
+          "value": 82.97247744366396,
+          "label": "passRate at 2025-08-25T18:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:18:47.740Z",
+          "value": 108.29314749944743,
+          "label": "passRate at 2025-08-25T18:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:33:11.740Z",
+          "value": 96.99080718450742,
+          "label": "passRate at 2025-08-25T18:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:47:35.740Z",
+          "value": 87.86843049046283,
+          "label": "passRate at 2025-08-25T18:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:01:59.740Z",
+          "value": 107.02567730624126,
+          "label": "passRate at 2025-08-25T19:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:16:23.740Z",
+          "value": 83.61138147341133,
+          "label": "passRate at 2025-08-25T19:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:30:47.740Z",
+          "value": 85.07006949694929,
+          "label": "passRate at 2025-08-25T19:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:45:11.740Z",
+          "value": 102.90551646526526,
+          "label": "passRate at 2025-08-25T19:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:59:35.740Z",
+          "value": 88.30727178519638,
+          "label": "passRate at 2025-08-25T19:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:13:59.740Z",
+          "value": 95.12005289352139,
+          "label": "passRate at 2025-08-25T20:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:28:23.740Z",
+          "value": 105.26735293032591,
+          "label": "passRate at 2025-08-25T20:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:42:47.740Z",
+          "value": 94.93490163282506,
+          "label": "passRate at 2025-08-25T20:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:57:11.740Z",
+          "value": 87.08536330909777,
+          "label": "passRate at 2025-08-25T20:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T21:11:35.740Z",
+          "value": 80.99512460935657,
+          "label": "passRate at 2025-08-25T21:11:35.740Z"
+        }
+      ],
+      "performanceMetrics": [
+        {
+          "timestamp": "2025-08-24T21:25:59.740Z",
+          "value": 1277.128338443401,
+          "label": "responseTime at 2025-08-24T21:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:40:23.740Z",
+          "value": 1141.3833855193395,
+          "label": "responseTime at 2025-08-24T21:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:54:47.740Z",
+          "value": 1195.1468157056436,
+          "label": "responseTime at 2025-08-24T21:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:09:11.740Z",
+          "value": 1270.750862902935,
+          "label": "responseTime at 2025-08-24T22:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:23:35.740Z",
+          "value": 1287.3118446675535,
+          "label": "responseTime at 2025-08-24T22:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:37:59.740Z",
+          "value": 1087.9872279626377,
+          "label": "responseTime at 2025-08-24T22:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:52:23.740Z",
+          "value": 1072.304520746634,
+          "label": "responseTime at 2025-08-24T22:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:06:47.740Z",
+          "value": 1346.32089571248,
+          "label": "responseTime at 2025-08-24T23:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:21:11.740Z",
+          "value": 1342.0829268142577,
+          "label": "responseTime at 2025-08-24T23:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:35:35.740Z",
+          "value": 1105.3985822153377,
+          "label": "responseTime at 2025-08-24T23:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.740Z",
+          "value": 1349.2336550553086,
+          "label": "responseTime at 2025-08-24T23:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:04:23.740Z",
+          "value": 1239.080055820103,
+          "label": "responseTime at 2025-08-25T00:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:18:47.740Z",
+          "value": 1022.7368590493675,
+          "label": "responseTime at 2025-08-25T00:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:33:11.740Z",
+          "value": 1305.4486791585396,
+          "label": "responseTime at 2025-08-25T00:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:47:35.740Z",
+          "value": 1288.6044982925193,
+          "label": "responseTime at 2025-08-25T00:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:01:59.740Z",
+          "value": 1032.9974479018613,
+          "label": "responseTime at 2025-08-25T01:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:16:23.740Z",
+          "value": 1291.0645350617622,
+          "label": "responseTime at 2025-08-25T01:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:30:47.740Z",
+          "value": 1279.818739800766,
+          "label": "responseTime at 2025-08-25T01:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:45:11.740Z",
+          "value": 1171.060040866704,
+          "label": "responseTime at 2025-08-25T01:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:59:35.740Z",
+          "value": 1134.0824822863233,
+          "label": "responseTime at 2025-08-25T01:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:13:59.740Z",
+          "value": 1082.0281256888613,
+          "label": "responseTime at 2025-08-25T02:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:28:23.740Z",
+          "value": 1136.5691122196838,
+          "label": "responseTime at 2025-08-25T02:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:42:47.740Z",
+          "value": 1106.1315793130575,
+          "label": "responseTime at 2025-08-25T02:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:57:11.740Z",
+          "value": 1369.1734711132644,
+          "label": "responseTime at 2025-08-25T02:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:11:35.740Z",
+          "value": 1056.0400856173542,
+          "label": "responseTime at 2025-08-25T03:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:25:59.740Z",
+          "value": 1037.7207295800479,
+          "label": "responseTime at 2025-08-25T03:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:40:23.740Z",
+          "value": 1108.9973759269485,
+          "label": "responseTime at 2025-08-25T03:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:54:47.740Z",
+          "value": 1056.7050717785935,
+          "label": "responseTime at 2025-08-25T03:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:09:11.740Z",
+          "value": 1125.3975721588567,
+          "label": "responseTime at 2025-08-25T04:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:23:35.740Z",
+          "value": 1310.628059214318,
+          "label": "responseTime at 2025-08-25T04:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:37:59.740Z",
+          "value": 1272.9330918880028,
+          "label": "responseTime at 2025-08-25T04:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:52:23.740Z",
+          "value": 1095.0904061030292,
+          "label": "responseTime at 2025-08-25T04:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:06:47.740Z",
+          "value": 1149.6947988605914,
+          "label": "responseTime at 2025-08-25T05:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:21:11.740Z",
+          "value": 1293.211340975388,
+          "label": "responseTime at 2025-08-25T05:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:35:35.740Z",
+          "value": 1356.2514829054264,
+          "label": "responseTime at 2025-08-25T05:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:49:59.740Z",
+          "value": 1229.547116664297,
+          "label": "responseTime at 2025-08-25T05:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:04:23.740Z",
+          "value": 1289.128465381889,
+          "label": "responseTime at 2025-08-25T06:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:18:47.740Z",
+          "value": 1234.0333569947577,
+          "label": "responseTime at 2025-08-25T06:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:33:11.740Z",
+          "value": 1109.7250026016388,
+          "label": "responseTime at 2025-08-25T06:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:47:35.740Z",
+          "value": 1204.796514617713,
+          "label": "responseTime at 2025-08-25T06:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.740Z",
+          "value": 1356.0171602359605,
+          "label": "responseTime at 2025-08-25T07:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:16:23.740Z",
+          "value": 1327.7688381312346,
+          "label": "responseTime at 2025-08-25T07:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:30:47.740Z",
+          "value": 1238.5532005389725,
+          "label": "responseTime at 2025-08-25T07:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:45:11.740Z",
+          "value": 1228.781554772956,
+          "label": "responseTime at 2025-08-25T07:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:59:35.740Z",
+          "value": 1303.8259839465757,
+          "label": "responseTime at 2025-08-25T07:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:13:59.740Z",
+          "value": 1115.8335728521145,
+          "label": "responseTime at 2025-08-25T08:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:28:23.740Z",
+          "value": 1134.8761737032937,
+          "label": "responseTime at 2025-08-25T08:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:42:47.740Z",
+          "value": 1023.3774416068329,
+          "label": "responseTime at 2025-08-25T08:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:57:11.740Z",
+          "value": 1284.9339696264856,
+          "label": "responseTime at 2025-08-25T08:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:11:35.740Z",
+          "value": 1165.032313506363,
+          "label": "responseTime at 2025-08-25T09:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:25:59.740Z",
+          "value": 1220.0456857166976,
+          "label": "responseTime at 2025-08-25T09:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:40:23.740Z",
+          "value": 1071.4903795337461,
+          "label": "responseTime at 2025-08-25T09:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:54:47.740Z",
+          "value": 1191.682612133656,
+          "label": "responseTime at 2025-08-25T09:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:09:11.740Z",
+          "value": 1331.1600858381232,
+          "label": "responseTime at 2025-08-25T10:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:23:35.740Z",
+          "value": 1288.93604688175,
+          "label": "responseTime at 2025-08-25T10:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:37:59.740Z",
+          "value": 1195.54058589302,
+          "label": "responseTime at 2025-08-25T10:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:52:23.740Z",
+          "value": 1129.575943910693,
+          "label": "responseTime at 2025-08-25T10:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:06:47.740Z",
+          "value": 1102.4239416558457,
+          "label": "responseTime at 2025-08-25T11:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:21:11.740Z",
+          "value": 1155.6720152396529,
+          "label": "responseTime at 2025-08-25T11:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:35:35.740Z",
+          "value": 1119.3586826005749,
+          "label": "responseTime at 2025-08-25T11:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:49:59.740Z",
+          "value": 1185.4022308694607,
+          "label": "responseTime at 2025-08-25T11:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:04:23.740Z",
+          "value": 1372.224803330562,
+          "label": "responseTime at 2025-08-25T12:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:18:47.740Z",
+          "value": 1197.1159577877306,
+          "label": "responseTime at 2025-08-25T12:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:33:11.740Z",
+          "value": 1244.6005909546825,
+          "label": "responseTime at 2025-08-25T12:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:47:35.740Z",
+          "value": 1113.653624798447,
+          "label": "responseTime at 2025-08-25T12:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:01:59.740Z",
+          "value": 1058.313994232446,
+          "label": "responseTime at 2025-08-25T13:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:16:23.740Z",
+          "value": 1082.1594626122699,
+          "label": "responseTime at 2025-08-25T13:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:30:47.740Z",
+          "value": 1323.8738079362965,
+          "label": "responseTime at 2025-08-25T13:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:45:11.740Z",
+          "value": 1090.9610270136072,
+          "label": "responseTime at 2025-08-25T13:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:59:35.740Z",
+          "value": 1289.9141407401555,
+          "label": "responseTime at 2025-08-25T13:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.740Z",
+          "value": 1110.9611235267867,
+          "label": "responseTime at 2025-08-25T14:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:28:23.740Z",
+          "value": 1309.4534911012465,
+          "label": "responseTime at 2025-08-25T14:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:42:47.740Z",
+          "value": 1095.6612848939676,
+          "label": "responseTime at 2025-08-25T14:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:57:11.740Z",
+          "value": 1328.8493359368288,
+          "label": "responseTime at 2025-08-25T14:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:11:35.740Z",
+          "value": 1197.274213199598,
+          "label": "responseTime at 2025-08-25T15:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:25:59.740Z",
+          "value": 1101.104576515439,
+          "label": "responseTime at 2025-08-25T15:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:40:23.740Z",
+          "value": 1276.6783450976222,
+          "label": "responseTime at 2025-08-25T15:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:54:47.740Z",
+          "value": 1345.0228102574827,
+          "label": "responseTime at 2025-08-25T15:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:09:11.740Z",
+          "value": 1356.3738474850168,
+          "label": "responseTime at 2025-08-25T16:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:23:35.740Z",
+          "value": 1160.0353611957016,
+          "label": "responseTime at 2025-08-25T16:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:37:59.740Z",
+          "value": 1108.054891901236,
+          "label": "responseTime at 2025-08-25T16:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:52:23.740Z",
+          "value": 1150.002208004428,
+          "label": "responseTime at 2025-08-25T16:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:06:47.740Z",
+          "value": 1225.8276532267516,
+          "label": "responseTime at 2025-08-25T17:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:21:11.740Z",
+          "value": 1265.7913418139915,
+          "label": "responseTime at 2025-08-25T17:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:35:35.740Z",
+          "value": 1192.8418611441327,
+          "label": "responseTime at 2025-08-25T17:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:49:59.740Z",
+          "value": 1027.0629136697735,
+          "label": "responseTime at 2025-08-25T17:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:04:23.740Z",
+          "value": 1043.4593482572877,
+          "label": "responseTime at 2025-08-25T18:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:18:47.740Z",
+          "value": 1323.4249059470033,
+          "label": "responseTime at 2025-08-25T18:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:33:11.740Z",
+          "value": 1358.9486594843868,
+          "label": "responseTime at 2025-08-25T18:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:47:35.740Z",
+          "value": 1034.2118958309993,
+          "label": "responseTime at 2025-08-25T18:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:01:59.740Z",
+          "value": 1061.5700726803975,
+          "label": "responseTime at 2025-08-25T19:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:16:23.740Z",
+          "value": 1334.0820315327715,
+          "label": "responseTime at 2025-08-25T19:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:30:47.740Z",
+          "value": 1280.5444400035235,
+          "label": "responseTime at 2025-08-25T19:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:45:11.740Z",
+          "value": 1041.9262395398741,
+          "label": "responseTime at 2025-08-25T19:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:59:35.740Z",
+          "value": 1200.9549613740678,
+          "label": "responseTime at 2025-08-25T19:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:13:59.740Z",
+          "value": 1034.3301853048547,
+          "label": "responseTime at 2025-08-25T20:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:28:23.740Z",
+          "value": 1341.3622611565802,
+          "label": "responseTime at 2025-08-25T20:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:42:47.740Z",
+          "value": 1078.6376714548478,
+          "label": "responseTime at 2025-08-25T20:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:57:11.740Z",
+          "value": 1052.7152189276676,
+          "label": "responseTime at 2025-08-25T20:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T21:11:35.740Z",
+          "value": 1093.7443130939441,
+          "label": "responseTime at 2025-08-25T21:11:35.740Z"
+        }
+      ],
+      "errorRates": [
+        {
+          "timestamp": "2025-08-24T21:25:59.740Z",
+          "value": 2.8042939099013946,
+          "label": "errorRate at 2025-08-24T21:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:40:23.740Z",
+          "value": 2.371381240793643,
+          "label": "errorRate at 2025-08-24T21:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:54:47.740Z",
+          "value": 2.5947181948799134,
+          "label": "errorRate at 2025-08-24T21:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:09:11.740Z",
+          "value": 2.7441906312609725,
+          "label": "errorRate at 2025-08-24T22:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:23:35.740Z",
+          "value": 2.1484132198605326,
+          "label": "errorRate at 2025-08-24T22:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:37:59.740Z",
+          "value": 2.2138039880391687,
+          "label": "errorRate at 2025-08-24T22:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:52:23.740Z",
+          "value": 2.392880641925198,
+          "label": "errorRate at 2025-08-24T22:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:06:47.740Z",
+          "value": 2.816585301835698,
+          "label": "errorRate at 2025-08-24T23:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:21:11.740Z",
+          "value": 2.6643193716167146,
+          "label": "errorRate at 2025-08-24T23:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:35:35.740Z",
+          "value": 2.3379793863290175,
+          "label": "errorRate at 2025-08-24T23:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.740Z",
+          "value": 2.4967603882258382,
+          "label": "errorRate at 2025-08-24T23:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:04:23.740Z",
+          "value": 2.679284263655772,
+          "label": "errorRate at 2025-08-25T00:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:18:47.740Z",
+          "value": 2.3193226014883135,
+          "label": "errorRate at 2025-08-25T00:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:33:11.740Z",
+          "value": 2.683982037590112,
+          "label": "errorRate at 2025-08-25T00:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:47:35.740Z",
+          "value": 2.154291685695089,
+          "label": "errorRate at 2025-08-25T00:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:01:59.740Z",
+          "value": 2.6130743386473165,
+          "label": "errorRate at 2025-08-25T01:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:16:23.740Z",
+          "value": 2.863176315755874,
+          "label": "errorRate at 2025-08-25T01:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:30:47.740Z",
+          "value": 2.4650550331517973,
+          "label": "errorRate at 2025-08-25T01:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:45:11.740Z",
+          "value": 2.595960603729249,
+          "label": "errorRate at 2025-08-25T01:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:59:35.740Z",
+          "value": 2.480817795834201,
+          "label": "errorRate at 2025-08-25T01:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:13:59.740Z",
+          "value": 2.127191082942636,
+          "label": "errorRate at 2025-08-25T02:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:28:23.740Z",
+          "value": 2.4564690024972013,
+          "label": "errorRate at 2025-08-25T02:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:42:47.740Z",
+          "value": 2.8546286702265835,
+          "label": "errorRate at 2025-08-25T02:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:57:11.740Z",
+          "value": 2.7724047301442782,
+          "label": "errorRate at 2025-08-25T02:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:11:35.740Z",
+          "value": 2.8666548294142484,
+          "label": "errorRate at 2025-08-25T03:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:25:59.740Z",
+          "value": 2.7114760798687034,
+          "label": "errorRate at 2025-08-25T03:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:40:23.740Z",
+          "value": 2.388636507894084,
+          "label": "errorRate at 2025-08-25T03:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:54:47.740Z",
+          "value": 2.388671676688768,
+          "label": "errorRate at 2025-08-25T03:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:09:11.740Z",
+          "value": 2.8132260368125115,
+          "label": "errorRate at 2025-08-25T04:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:23:35.740Z",
+          "value": 2.3068564132655225,
+          "label": "errorRate at 2025-08-25T04:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:37:59.740Z",
+          "value": 2.525671454693498,
+          "label": "errorRate at 2025-08-25T04:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:52:23.740Z",
+          "value": 2.8244094561380866,
+          "label": "errorRate at 2025-08-25T04:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:06:47.740Z",
+          "value": 2.407122792979985,
+          "label": "errorRate at 2025-08-25T05:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:21:11.740Z",
+          "value": 2.443109978824666,
+          "label": "errorRate at 2025-08-25T05:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:35:35.740Z",
+          "value": 2.393566668772794,
+          "label": "errorRate at 2025-08-25T05:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:49:59.740Z",
+          "value": 2.708778852766285,
+          "label": "errorRate at 2025-08-25T05:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:04:23.740Z",
+          "value": 2.5874131922304517,
+          "label": "errorRate at 2025-08-25T06:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:18:47.740Z",
+          "value": 2.4695509538483877,
+          "label": "errorRate at 2025-08-25T06:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:33:11.740Z",
+          "value": 2.7933504326813887,
+          "label": "errorRate at 2025-08-25T06:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:47:35.740Z",
+          "value": 2.4409813861283816,
+          "label": "errorRate at 2025-08-25T06:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.740Z",
+          "value": 2.500900512459492,
+          "label": "errorRate at 2025-08-25T07:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:16:23.740Z",
+          "value": 2.4917846252149927,
+          "label": "errorRate at 2025-08-25T07:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:30:47.740Z",
+          "value": 2.7631457278097242,
+          "label": "errorRate at 2025-08-25T07:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:45:11.740Z",
+          "value": 2.411931255737869,
+          "label": "errorRate at 2025-08-25T07:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:59:35.740Z",
+          "value": 2.4060837840051548,
+          "label": "errorRate at 2025-08-25T07:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:13:59.740Z",
+          "value": 2.132852277491806,
+          "label": "errorRate at 2025-08-25T08:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:28:23.740Z",
+          "value": 2.3019922119146576,
+          "label": "errorRate at 2025-08-25T08:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:42:47.740Z",
+          "value": 2.390284543493641,
+          "label": "errorRate at 2025-08-25T08:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:57:11.740Z",
+          "value": 2.7021218508352485,
+          "label": "errorRate at 2025-08-25T08:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:11:35.740Z",
+          "value": 2.271163644120331,
+          "label": "errorRate at 2025-08-25T09:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:25:59.740Z",
+          "value": 2.76908360565194,
+          "label": "errorRate at 2025-08-25T09:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:40:23.740Z",
+          "value": 2.4351150854070083,
+          "label": "errorRate at 2025-08-25T09:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:54:47.740Z",
+          "value": 2.218712867468066,
+          "label": "errorRate at 2025-08-25T09:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:09:11.740Z",
+          "value": 2.7293525386261783,
+          "label": "errorRate at 2025-08-25T10:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:23:35.740Z",
+          "value": 2.4775065180983247,
+          "label": "errorRate at 2025-08-25T10:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:37:59.740Z",
+          "value": 2.3107111040053363,
+          "label": "errorRate at 2025-08-25T10:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:52:23.740Z",
+          "value": 2.3333845734829763,
+          "label": "errorRate at 2025-08-25T10:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:06:47.740Z",
+          "value": 2.5225005149587263,
+          "label": "errorRate at 2025-08-25T11:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:21:11.740Z",
+          "value": 2.3979306473587663,
+          "label": "errorRate at 2025-08-25T11:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:35:35.740Z",
+          "value": 2.5552122249646185,
+          "label": "errorRate at 2025-08-25T11:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:49:59.740Z",
+          "value": 2.576512366739043,
+          "label": "errorRate at 2025-08-25T11:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:04:23.740Z",
+          "value": 2.299673426204816,
+          "label": "errorRate at 2025-08-25T12:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:18:47.740Z",
+          "value": 2.684623162678102,
+          "label": "errorRate at 2025-08-25T12:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:33:11.740Z",
+          "value": 2.3865860879263794,
+          "label": "errorRate at 2025-08-25T12:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:47:35.740Z",
+          "value": 2.4604165475545314,
+          "label": "errorRate at 2025-08-25T12:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:01:59.740Z",
+          "value": 2.4018731230312795,
+          "label": "errorRate at 2025-08-25T13:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:16:23.740Z",
+          "value": 2.294482000106421,
+          "label": "errorRate at 2025-08-25T13:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:30:47.740Z",
+          "value": 2.1825197329007326,
+          "label": "errorRate at 2025-08-25T13:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:45:11.740Z",
+          "value": 2.4205543570439016,
+          "label": "errorRate at 2025-08-25T13:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:59:35.740Z",
+          "value": 2.7526196209280123,
+          "label": "errorRate at 2025-08-25T13:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.740Z",
+          "value": 2.2998906257839486,
+          "label": "errorRate at 2025-08-25T14:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:28:23.740Z",
+          "value": 2.515751934926866,
+          "label": "errorRate at 2025-08-25T14:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:42:47.740Z",
+          "value": 2.485922226876612,
+          "label": "errorRate at 2025-08-25T14:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:57:11.740Z",
+          "value": 2.273588997160228,
+          "label": "errorRate at 2025-08-25T14:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:11:35.740Z",
+          "value": 2.550808892871324,
+          "label": "errorRate at 2025-08-25T15:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:25:59.740Z",
+          "value": 2.446811152000352,
+          "label": "errorRate at 2025-08-25T15:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:40:23.740Z",
+          "value": 2.851279083898641,
+          "label": "errorRate at 2025-08-25T15:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:54:47.740Z",
+          "value": 2.184340526755216,
+          "label": "errorRate at 2025-08-25T15:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:09:11.740Z",
+          "value": 2.836234486214254,
+          "label": "errorRate at 2025-08-25T16:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:23:35.740Z",
+          "value": 2.5300237916155655,
+          "label": "errorRate at 2025-08-25T16:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:37:59.740Z",
+          "value": 2.6916229776953378,
+          "label": "errorRate at 2025-08-25T16:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:52:23.740Z",
+          "value": 2.5838156202099447,
+          "label": "errorRate at 2025-08-25T16:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:06:47.740Z",
+          "value": 2.5288227345368828,
+          "label": "errorRate at 2025-08-25T17:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:21:11.740Z",
+          "value": 2.2876590015769236,
+          "label": "errorRate at 2025-08-25T17:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:35:35.740Z",
+          "value": 2.5672507726083853,
+          "label": "errorRate at 2025-08-25T17:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:49:59.740Z",
+          "value": 2.5598110444049924,
+          "label": "errorRate at 2025-08-25T17:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:04:23.740Z",
+          "value": 2.405831876189097,
+          "label": "errorRate at 2025-08-25T18:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:18:47.740Z",
+          "value": 2.3782505645941514,
+          "label": "errorRate at 2025-08-25T18:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:33:11.740Z",
+          "value": 2.53835322128379,
+          "label": "errorRate at 2025-08-25T18:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:47:35.740Z",
+          "value": 2.7740036571203586,
+          "label": "errorRate at 2025-08-25T18:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:01:59.740Z",
+          "value": 2.5893831674745877,
+          "label": "errorRate at 2025-08-25T19:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:16:23.740Z",
+          "value": 2.700643050300108,
+          "label": "errorRate at 2025-08-25T19:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:30:47.740Z",
+          "value": 2.5484048239244905,
+          "label": "errorRate at 2025-08-25T19:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:45:11.740Z",
+          "value": 2.1672326642706126,
+          "label": "errorRate at 2025-08-25T19:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:59:35.740Z",
+          "value": 2.553873781771697,
+          "label": "errorRate at 2025-08-25T19:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:13:59.740Z",
+          "value": 2.3433199976160273,
+          "label": "errorRate at 2025-08-25T20:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:28:23.740Z",
+          "value": 2.3260444055105274,
+          "label": "errorRate at 2025-08-25T20:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:42:47.740Z",
+          "value": 2.451671276801473,
+          "label": "errorRate at 2025-08-25T20:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:57:11.740Z",
+          "value": 2.6444522085308044,
+          "label": "errorRate at 2025-08-25T20:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T21:11:35.740Z",
+          "value": 2.722970253846426,
+          "label": "errorRate at 2025-08-25T21:11:35.740Z"
+        }
+      ],
+      "systemHealth": [
+        {
+          "timestamp": "2025-08-24T21:25:59.740Z",
+          "value": 79.57824787571974,
+          "label": "healthScore at 2025-08-24T21:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:40:23.740Z",
+          "value": 77.76081297579078,
+          "label": "healthScore at 2025-08-24T21:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T21:54:47.740Z",
+          "value": 79.3249717657636,
+          "label": "healthScore at 2025-08-24T21:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:09:11.740Z",
+          "value": 96.62428918342428,
+          "label": "healthScore at 2025-08-24T22:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:23:35.740Z",
+          "value": 81.81102240515006,
+          "label": "healthScore at 2025-08-24T22:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:37:59.740Z",
+          "value": 89.27796550664668,
+          "label": "healthScore at 2025-08-24T22:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T22:52:23.740Z",
+          "value": 78.15156001317317,
+          "label": "healthScore at 2025-08-24T22:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:06:47.740Z",
+          "value": 93.22184457798765,
+          "label": "healthScore at 2025-08-24T23:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:21:11.740Z",
+          "value": 83.05663690876621,
+          "label": "healthScore at 2025-08-24T23:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:35:35.740Z",
+          "value": 79.70749185332964,
+          "label": "healthScore at 2025-08-24T23:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.740Z",
+          "value": 89.54014091100498,
+          "label": "healthScore at 2025-08-24T23:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:04:23.740Z",
+          "value": 97.59341830083058,
+          "label": "healthScore at 2025-08-25T00:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:18:47.740Z",
+          "value": 83.48647475338309,
+          "label": "healthScore at 2025-08-25T00:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:33:11.740Z",
+          "value": 78.03903102917654,
+          "label": "healthScore at 2025-08-25T00:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T00:47:35.740Z",
+          "value": 89.98567590585559,
+          "label": "healthScore at 2025-08-25T00:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:01:59.740Z",
+          "value": 85.71933502091143,
+          "label": "healthScore at 2025-08-25T01:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:16:23.740Z",
+          "value": 73.36183627688305,
+          "label": "healthScore at 2025-08-25T01:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:30:47.740Z",
+          "value": 74.47695593463914,
+          "label": "healthScore at 2025-08-25T01:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:45:11.740Z",
+          "value": 86.11664634578317,
+          "label": "healthScore at 2025-08-25T01:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T01:59:35.740Z",
+          "value": 87.96122975144058,
+          "label": "healthScore at 2025-08-25T01:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:13:59.740Z",
+          "value": 73.15940101812046,
+          "label": "healthScore at 2025-08-25T02:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:28:23.740Z",
+          "value": 93.68831971132579,
+          "label": "healthScore at 2025-08-25T02:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:42:47.740Z",
+          "value": 80.10358445864597,
+          "label": "healthScore at 2025-08-25T02:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T02:57:11.740Z",
+          "value": 97.54477572056821,
+          "label": "healthScore at 2025-08-25T02:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:11:35.740Z",
+          "value": 81.71933484431563,
+          "label": "healthScore at 2025-08-25T03:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:25:59.740Z",
+          "value": 87.50454967658725,
+          "label": "healthScore at 2025-08-25T03:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:40:23.740Z",
+          "value": 86.75400516205886,
+          "label": "healthScore at 2025-08-25T03:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T03:54:47.740Z",
+          "value": 95.62084925467141,
+          "label": "healthScore at 2025-08-25T03:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:09:11.740Z",
+          "value": 77.58455292263865,
+          "label": "healthScore at 2025-08-25T04:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:23:35.740Z",
+          "value": 86.96255000036399,
+          "label": "healthScore at 2025-08-25T04:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:37:59.740Z",
+          "value": 90.85279588547756,
+          "label": "healthScore at 2025-08-25T04:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T04:52:23.740Z",
+          "value": 89.796066161623,
+          "label": "healthScore at 2025-08-25T04:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:06:47.740Z",
+          "value": 79.01006243737055,
+          "label": "healthScore at 2025-08-25T05:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:21:11.740Z",
+          "value": 74.36240970978484,
+          "label": "healthScore at 2025-08-25T05:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:35:35.740Z",
+          "value": 95.81594551511112,
+          "label": "healthScore at 2025-08-25T05:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T05:49:59.740Z",
+          "value": 97.18045012829614,
+          "label": "healthScore at 2025-08-25T05:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:04:23.740Z",
+          "value": 84.36492467910328,
+          "label": "healthScore at 2025-08-25T06:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:18:47.740Z",
+          "value": 86.64871352052144,
+          "label": "healthScore at 2025-08-25T06:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:33:11.740Z",
+          "value": 90.4280068284552,
+          "label": "healthScore at 2025-08-25T06:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T06:47:35.740Z",
+          "value": 90.14619635069727,
+          "label": "healthScore at 2025-08-25T06:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.740Z",
+          "value": 74.36802478451914,
+          "label": "healthScore at 2025-08-25T07:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:16:23.740Z",
+          "value": 88.93558867456744,
+          "label": "healthScore at 2025-08-25T07:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:30:47.740Z",
+          "value": 78.20704837457342,
+          "label": "healthScore at 2025-08-25T07:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:45:11.740Z",
+          "value": 88.84235755955729,
+          "label": "healthScore at 2025-08-25T07:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:59:35.740Z",
+          "value": 97.060493229753,
+          "label": "healthScore at 2025-08-25T07:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:13:59.740Z",
+          "value": 88.3325822825101,
+          "label": "healthScore at 2025-08-25T08:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:28:23.740Z",
+          "value": 73.7041434842728,
+          "label": "healthScore at 2025-08-25T08:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:42:47.740Z",
+          "value": 85.4931897276599,
+          "label": "healthScore at 2025-08-25T08:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T08:57:11.740Z",
+          "value": 83.41021692037526,
+          "label": "healthScore at 2025-08-25T08:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:11:35.740Z",
+          "value": 78.3887310691031,
+          "label": "healthScore at 2025-08-25T09:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:25:59.740Z",
+          "value": 91.49344891375529,
+          "label": "healthScore at 2025-08-25T09:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:40:23.740Z",
+          "value": 90.81627882336284,
+          "label": "healthScore at 2025-08-25T09:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T09:54:47.740Z",
+          "value": 87.67738157301412,
+          "label": "healthScore at 2025-08-25T09:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:09:11.740Z",
+          "value": 90.55023325259887,
+          "label": "healthScore at 2025-08-25T10:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:23:35.740Z",
+          "value": 84.03794134504697,
+          "label": "healthScore at 2025-08-25T10:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:37:59.740Z",
+          "value": 93.57412164083811,
+          "label": "healthScore at 2025-08-25T10:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T10:52:23.740Z",
+          "value": 88.75947273909287,
+          "label": "healthScore at 2025-08-25T10:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:06:47.740Z",
+          "value": 94.5321583919217,
+          "label": "healthScore at 2025-08-25T11:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:21:11.740Z",
+          "value": 82.31065971779113,
+          "label": "healthScore at 2025-08-25T11:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:35:35.740Z",
+          "value": 89.02397821866947,
+          "label": "healthScore at 2025-08-25T11:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T11:49:59.740Z",
+          "value": 79.71318113812126,
+          "label": "healthScore at 2025-08-25T11:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:04:23.740Z",
+          "value": 78.0382593361913,
+          "label": "healthScore at 2025-08-25T12:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:18:47.740Z",
+          "value": 96.30128215563593,
+          "label": "healthScore at 2025-08-25T12:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:33:11.740Z",
+          "value": 92.14899125849901,
+          "label": "healthScore at 2025-08-25T12:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T12:47:35.740Z",
+          "value": 74.63621459174738,
+          "label": "healthScore at 2025-08-25T12:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:01:59.740Z",
+          "value": 72.70531841289376,
+          "label": "healthScore at 2025-08-25T13:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:16:23.740Z",
+          "value": 75.43175789765566,
+          "label": "healthScore at 2025-08-25T13:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:30:47.740Z",
+          "value": 95.87292188771627,
+          "label": "healthScore at 2025-08-25T13:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:45:11.740Z",
+          "value": 88.09362202185736,
+          "label": "healthScore at 2025-08-25T13:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T13:59:35.740Z",
+          "value": 87.9717960244501,
+          "label": "healthScore at 2025-08-25T13:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.740Z",
+          "value": 78.2877034787063,
+          "label": "healthScore at 2025-08-25T14:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:28:23.740Z",
+          "value": 96.27978080684333,
+          "label": "healthScore at 2025-08-25T14:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:42:47.740Z",
+          "value": 90.19809211594462,
+          "label": "healthScore at 2025-08-25T14:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:57:11.740Z",
+          "value": 90.84226858267107,
+          "label": "healthScore at 2025-08-25T14:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:11:35.740Z",
+          "value": 88.72978158352325,
+          "label": "healthScore at 2025-08-25T15:11:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:25:59.740Z",
+          "value": 73.46326601381405,
+          "label": "healthScore at 2025-08-25T15:25:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:40:23.740Z",
+          "value": 88.95375186054247,
+          "label": "healthScore at 2025-08-25T15:40:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T15:54:47.740Z",
+          "value": 79.57768452378274,
+          "label": "healthScore at 2025-08-25T15:54:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:09:11.740Z",
+          "value": 96.44454543185223,
+          "label": "healthScore at 2025-08-25T16:09:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:23:35.740Z",
+          "value": 83.45195635811729,
+          "label": "healthScore at 2025-08-25T16:23:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:37:59.740Z",
+          "value": 83.2625171565978,
+          "label": "healthScore at 2025-08-25T16:37:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T16:52:23.740Z",
+          "value": 84.75742523707603,
+          "label": "healthScore at 2025-08-25T16:52:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:06:47.740Z",
+          "value": 92.91067957395252,
+          "label": "healthScore at 2025-08-25T17:06:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:21:11.740Z",
+          "value": 91.51962161167087,
+          "label": "healthScore at 2025-08-25T17:21:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:35:35.740Z",
+          "value": 78.96444430517039,
+          "label": "healthScore at 2025-08-25T17:35:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T17:49:59.740Z",
+          "value": 73.99169149195414,
+          "label": "healthScore at 2025-08-25T17:49:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:04:23.740Z",
+          "value": 83.32586223967185,
+          "label": "healthScore at 2025-08-25T18:04:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:18:47.740Z",
+          "value": 80.39373877482856,
+          "label": "healthScore at 2025-08-25T18:18:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:33:11.740Z",
+          "value": 83.06789281481201,
+          "label": "healthScore at 2025-08-25T18:33:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T18:47:35.740Z",
+          "value": 93.92775437936182,
+          "label": "healthScore at 2025-08-25T18:47:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:01:59.740Z",
+          "value": 84.8609724382197,
+          "label": "healthScore at 2025-08-25T19:01:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:16:23.740Z",
+          "value": 78.27067845686756,
+          "label": "healthScore at 2025-08-25T19:16:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:30:47.740Z",
+          "value": 85.77184428642612,
+          "label": "healthScore at 2025-08-25T19:30:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:45:11.740Z",
+          "value": 89.86968506736184,
+          "label": "healthScore at 2025-08-25T19:45:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T19:59:35.740Z",
+          "value": 96.27680316729281,
+          "label": "healthScore at 2025-08-25T19:59:35.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:13:59.740Z",
+          "value": 97.71980128460467,
+          "label": "healthScore at 2025-08-25T20:13:59.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:28:23.740Z",
+          "value": 88.08246148748034,
+          "label": "healthScore at 2025-08-25T20:28:23.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:42:47.740Z",
+          "value": 80.30721896222653,
+          "label": "healthScore at 2025-08-25T20:42:47.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T20:57:11.740Z",
+          "value": 86.63411103599232,
+          "label": "healthScore at 2025-08-25T20:57:11.740Z"
+        },
+        {
+          "timestamp": "2025-08-25T21:11:35.740Z",
+          "value": 77.78885628173443,
+          "label": "healthScore at 2025-08-25T21:11:35.740Z"
+        }
+      ]
+    },
+    "regressionDetection": {
+      "detectedRegressions": [],
+      "qualityTrends": [
+        {
+          "metric": "testPassRates",
+          "currentValue": 93.03227119021902,
+          "previousValue": 94.3072761323043,
+          "trend": "stable",
+          "changePercentage": -1.3519687922028008
+        },
+        {
+          "metric": "performanceMetrics",
+          "currentValue": 1151.986739506853,
+          "previousValue": 1172.962567927999,
+          "trend": "stable",
+          "changePercentage": -1.7882777332101307
+        },
+        {
+          "metric": "errorRates",
+          "currentValue": 2.504799563004675,
+          "previousValue": 2.531542147021986,
+          "trend": "stable",
+          "changePercentage": -1.0563752236465824
+        },
+        {
+          "metric": "systemHealth",
+          "currentValue": 86.55824324682064,
+          "previousValue": 84.61216275850958,
+          "trend": "stable",
+          "changePercentage": 2.300000880328914
+        }
+      ]
+    },
+    "qualityMetrics": {
+      "codeCoverage": [
+        {
+          "timestamp": "2025-07-26T21:25:59.741Z",
+          "value": 81.84920526367024,
+          "label": "codeCoverage at 2025-07-26T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T04:37:59.741Z",
+          "value": 89.02399709732371,
+          "label": "codeCoverage at 2025-07-27T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T11:49:59.741Z",
+          "value": 67.25605377324223,
+          "label": "codeCoverage at 2025-07-27T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T19:01:59.741Z",
+          "value": 75.69735800500894,
+          "label": "codeCoverage at 2025-07-27T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T02:13:59.741Z",
+          "value": 84.34167028976518,
+          "label": "codeCoverage at 2025-07-28T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T09:25:59.741Z",
+          "value": 83.56083546597945,
+          "label": "codeCoverage at 2025-07-28T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T16:37:59.741Z",
+          "value": 75.03800052289866,
+          "label": "codeCoverage at 2025-07-28T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T23:49:59.741Z",
+          "value": 77.23063871937823,
+          "label": "codeCoverage at 2025-07-28T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T07:01:59.741Z",
+          "value": 87.51805166790399,
+          "label": "codeCoverage at 2025-07-29T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T14:13:59.741Z",
+          "value": 85.77818787402691,
+          "label": "codeCoverage at 2025-07-29T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T21:25:59.741Z",
+          "value": 66.40559986775139,
+          "label": "codeCoverage at 2025-07-29T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T04:37:59.741Z",
+          "value": 89.16415200412088,
+          "label": "codeCoverage at 2025-07-30T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T11:49:59.741Z",
+          "value": 83.28256396131992,
+          "label": "codeCoverage at 2025-07-30T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T19:01:59.741Z",
+          "value": 85.6407500991628,
+          "label": "codeCoverage at 2025-07-30T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T02:13:59.741Z",
+          "value": 76.80650544827533,
+          "label": "codeCoverage at 2025-07-31T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T09:25:59.741Z",
+          "value": 79.34845191904368,
+          "label": "codeCoverage at 2025-07-31T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T16:37:59.741Z",
+          "value": 81.71808849979544,
+          "label": "codeCoverage at 2025-07-31T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T23:49:59.741Z",
+          "value": 66.98782905347427,
+          "label": "codeCoverage at 2025-07-31T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T07:01:59.741Z",
+          "value": 70.5998414411493,
+          "label": "codeCoverage at 2025-08-01T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T14:13:59.741Z",
+          "value": 77.85402933894306,
+          "label": "codeCoverage at 2025-08-01T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T21:25:59.741Z",
+          "value": 72.28264635486116,
+          "label": "codeCoverage at 2025-08-01T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T04:37:59.741Z",
+          "value": 67.08797224483133,
+          "label": "codeCoverage at 2025-08-02T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T11:49:59.741Z",
+          "value": 78.97354787007714,
+          "label": "codeCoverage at 2025-08-02T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T19:01:59.741Z",
+          "value": 82.95331942513222,
+          "label": "codeCoverage at 2025-08-02T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T02:13:59.741Z",
+          "value": 86.48697568218478,
+          "label": "codeCoverage at 2025-08-03T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T09:25:59.741Z",
+          "value": 73.91038547413355,
+          "label": "codeCoverage at 2025-08-03T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T16:37:59.741Z",
+          "value": 66.59526704008547,
+          "label": "codeCoverage at 2025-08-03T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T23:49:59.741Z",
+          "value": 87.98165773187621,
+          "label": "codeCoverage at 2025-08-03T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T07:01:59.741Z",
+          "value": 68.15830730020181,
+          "label": "codeCoverage at 2025-08-04T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T14:13:59.741Z",
+          "value": 84.5809856798348,
+          "label": "codeCoverage at 2025-08-04T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T21:25:59.741Z",
+          "value": 66.3406676011872,
+          "label": "codeCoverage at 2025-08-04T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T04:37:59.741Z",
+          "value": 87.83044586464695,
+          "label": "codeCoverage at 2025-08-05T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T11:49:59.741Z",
+          "value": 83.18602800508965,
+          "label": "codeCoverage at 2025-08-05T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T19:01:59.741Z",
+          "value": 72.11281439413409,
+          "label": "codeCoverage at 2025-08-05T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T02:13:59.741Z",
+          "value": 87.16627272222364,
+          "label": "codeCoverage at 2025-08-06T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T09:25:59.741Z",
+          "value": 89.64721753094939,
+          "label": "codeCoverage at 2025-08-06T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T16:37:59.741Z",
+          "value": 82.31380065233058,
+          "label": "codeCoverage at 2025-08-06T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T23:49:59.741Z",
+          "value": 86.13132496971298,
+          "label": "codeCoverage at 2025-08-06T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T07:01:59.741Z",
+          "value": 75.94786474324015,
+          "label": "codeCoverage at 2025-08-07T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T14:13:59.741Z",
+          "value": 70.06169745059066,
+          "label": "codeCoverage at 2025-08-07T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T21:25:59.741Z",
+          "value": 71.88665608055861,
+          "label": "codeCoverage at 2025-08-07T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T04:37:59.741Z",
+          "value": 72.04845718349793,
+          "label": "codeCoverage at 2025-08-08T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T11:49:59.741Z",
+          "value": 78.87171385951956,
+          "label": "codeCoverage at 2025-08-08T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T19:01:59.741Z",
+          "value": 81.25573140568328,
+          "label": "codeCoverage at 2025-08-08T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T02:13:59.741Z",
+          "value": 85.51836761236763,
+          "label": "codeCoverage at 2025-08-09T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T09:25:59.741Z",
+          "value": 70.96537650928504,
+          "label": "codeCoverage at 2025-08-09T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T16:37:59.741Z",
+          "value": 72.77622167078735,
+          "label": "codeCoverage at 2025-08-09T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T23:49:59.741Z",
+          "value": 81.73649509181091,
+          "label": "codeCoverage at 2025-08-09T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T07:01:59.741Z",
+          "value": 81.6425292674085,
+          "label": "codeCoverage at 2025-08-10T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T14:13:59.741Z",
+          "value": 68.91440083920864,
+          "label": "codeCoverage at 2025-08-10T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T21:25:59.741Z",
+          "value": 73.31788714228907,
+          "label": "codeCoverage at 2025-08-10T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T04:37:59.741Z",
+          "value": 71.20699757558029,
+          "label": "codeCoverage at 2025-08-11T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T11:49:59.741Z",
+          "value": 84.63151031263416,
+          "label": "codeCoverage at 2025-08-11T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T19:01:59.741Z",
+          "value": 84.94486436999867,
+          "label": "codeCoverage at 2025-08-11T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T02:13:59.741Z",
+          "value": 79.74155452328334,
+          "label": "codeCoverage at 2025-08-12T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T09:25:59.741Z",
+          "value": 73.26242109618639,
+          "label": "codeCoverage at 2025-08-12T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T16:37:59.741Z",
+          "value": 74.44322493862168,
+          "label": "codeCoverage at 2025-08-12T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T23:49:59.741Z",
+          "value": 82.2125057110314,
+          "label": "codeCoverage at 2025-08-12T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T07:01:59.741Z",
+          "value": 86.91354342212028,
+          "label": "codeCoverage at 2025-08-13T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T14:13:59.741Z",
+          "value": 83.47083402346598,
+          "label": "codeCoverage at 2025-08-13T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T21:25:59.741Z",
+          "value": 66.96825667551622,
+          "label": "codeCoverage at 2025-08-13T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T04:37:59.741Z",
+          "value": 68.07837344129057,
+          "label": "codeCoverage at 2025-08-14T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T11:49:59.741Z",
+          "value": 78.8438860357854,
+          "label": "codeCoverage at 2025-08-14T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T19:01:59.741Z",
+          "value": 77.99146106145913,
+          "label": "codeCoverage at 2025-08-14T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T02:13:59.741Z",
+          "value": 72.95827567205941,
+          "label": "codeCoverage at 2025-08-15T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T09:25:59.741Z",
+          "value": 72.2135237369751,
+          "label": "codeCoverage at 2025-08-15T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T16:37:59.741Z",
+          "value": 84.92115796793503,
+          "label": "codeCoverage at 2025-08-15T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T23:49:59.741Z",
+          "value": 81.08948875803199,
+          "label": "codeCoverage at 2025-08-15T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T07:01:59.741Z",
+          "value": 73.60466750073005,
+          "label": "codeCoverage at 2025-08-16T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T14:13:59.741Z",
+          "value": 80.99311480331168,
+          "label": "codeCoverage at 2025-08-16T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T21:25:59.741Z",
+          "value": 66.92085539749036,
+          "label": "codeCoverage at 2025-08-16T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T04:37:59.741Z",
+          "value": 82.38883641407173,
+          "label": "codeCoverage at 2025-08-17T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T11:49:59.741Z",
+          "value": 78.87064187370703,
+          "label": "codeCoverage at 2025-08-17T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T19:01:59.741Z",
+          "value": 70.79784982137342,
+          "label": "codeCoverage at 2025-08-17T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T02:13:59.741Z",
+          "value": 71.12123489402073,
+          "label": "codeCoverage at 2025-08-18T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T09:25:59.741Z",
+          "value": 66.51935779150458,
+          "label": "codeCoverage at 2025-08-18T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T16:37:59.741Z",
+          "value": 83.72778244872949,
+          "label": "codeCoverage at 2025-08-18T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T23:49:59.741Z",
+          "value": 89.50493673656413,
+          "label": "codeCoverage at 2025-08-18T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T07:01:59.741Z",
+          "value": 87.84202084940355,
+          "label": "codeCoverage at 2025-08-19T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T14:13:59.741Z",
+          "value": 70.72272339825608,
+          "label": "codeCoverage at 2025-08-19T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T21:25:59.741Z",
+          "value": 88.50278164888036,
+          "label": "codeCoverage at 2025-08-19T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T04:37:59.741Z",
+          "value": 88.36205441226575,
+          "label": "codeCoverage at 2025-08-20T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T11:49:59.741Z",
+          "value": 84.79324284276652,
+          "label": "codeCoverage at 2025-08-20T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T19:01:59.741Z",
+          "value": 70.26775056107005,
+          "label": "codeCoverage at 2025-08-20T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T02:13:59.741Z",
+          "value": 75.12906187222193,
+          "label": "codeCoverage at 2025-08-21T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T09:25:59.741Z",
+          "value": 69.09812343181115,
+          "label": "codeCoverage at 2025-08-21T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T16:37:59.741Z",
+          "value": 89.45381712901927,
+          "label": "codeCoverage at 2025-08-21T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T23:49:59.741Z",
+          "value": 70.09162930543157,
+          "label": "codeCoverage at 2025-08-21T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T07:01:59.741Z",
+          "value": 81.06989335437612,
+          "label": "codeCoverage at 2025-08-22T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T14:13:59.741Z",
+          "value": 70.81644374830213,
+          "label": "codeCoverage at 2025-08-22T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T21:25:59.741Z",
+          "value": 69.87499952407128,
+          "label": "codeCoverage at 2025-08-22T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T04:37:59.741Z",
+          "value": 67.03411235653783,
+          "label": "codeCoverage at 2025-08-23T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T11:49:59.741Z",
+          "value": 81.95220316412114,
+          "label": "codeCoverage at 2025-08-23T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T19:01:59.741Z",
+          "value": 88.74758006550074,
+          "label": "codeCoverage at 2025-08-23T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T02:13:59.741Z",
+          "value": 75.79612753834841,
+          "label": "codeCoverage at 2025-08-24T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T09:25:59.741Z",
+          "value": 88.46411144494317,
+          "label": "codeCoverage at 2025-08-24T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T16:37:59.741Z",
+          "value": 79.40316210333431,
+          "label": "codeCoverage at 2025-08-24T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.741Z",
+          "value": 66.76129212180022,
+          "label": "codeCoverage at 2025-08-24T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.741Z",
+          "value": 72.71334680212175,
+          "label": "codeCoverage at 2025-08-25T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.741Z",
+          "value": 73.1267649261005,
+          "label": "codeCoverage at 2025-08-25T14:13:59.741Z"
+        }
+      ],
+      "featureCompleteness": [
+        {
+          "timestamp": "2025-07-26T21:25:59.741Z",
+          "value": 82.83497397292452,
+          "label": "featureCompleteness at 2025-07-26T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T04:37:59.741Z",
+          "value": 79.02935609822624,
+          "label": "featureCompleteness at 2025-07-27T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T11:49:59.741Z",
+          "value": 104.50676277018806,
+          "label": "featureCompleteness at 2025-07-27T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T19:01:59.741Z",
+          "value": 88.3211342803597,
+          "label": "featureCompleteness at 2025-07-27T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T02:13:59.741Z",
+          "value": 85.8572832294684,
+          "label": "featureCompleteness at 2025-07-28T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T09:25:59.741Z",
+          "value": 78.39935542796539,
+          "label": "featureCompleteness at 2025-07-28T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T16:37:59.741Z",
+          "value": 89.73559259860858,
+          "label": "featureCompleteness at 2025-07-28T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T23:49:59.741Z",
+          "value": 79.69730466364284,
+          "label": "featureCompleteness at 2025-07-28T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T07:01:59.741Z",
+          "value": 90.11161983142564,
+          "label": "featureCompleteness at 2025-07-29T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T14:13:59.741Z",
+          "value": 91.47156508494297,
+          "label": "featureCompleteness at 2025-07-29T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T21:25:59.741Z",
+          "value": 91.5041784120658,
+          "label": "featureCompleteness at 2025-07-29T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T04:37:59.741Z",
+          "value": 95.02105184441936,
+          "label": "featureCompleteness at 2025-07-30T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T11:49:59.741Z",
+          "value": 84.52731474824394,
+          "label": "featureCompleteness at 2025-07-30T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T19:01:59.741Z",
+          "value": 82.40525836750996,
+          "label": "featureCompleteness at 2025-07-30T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T02:13:59.741Z",
+          "value": 81.83134542491244,
+          "label": "featureCompleteness at 2025-07-31T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T09:25:59.741Z",
+          "value": 86.20135462977288,
+          "label": "featureCompleteness at 2025-07-31T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T16:37:59.741Z",
+          "value": 99.28497911899166,
+          "label": "featureCompleteness at 2025-07-31T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T23:49:59.741Z",
+          "value": 79.58611025716424,
+          "label": "featureCompleteness at 2025-07-31T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T07:01:59.741Z",
+          "value": 86.50208073211087,
+          "label": "featureCompleteness at 2025-08-01T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T14:13:59.741Z",
+          "value": 102.93728215123103,
+          "label": "featureCompleteness at 2025-08-01T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T21:25:59.741Z",
+          "value": 91.2127095349432,
+          "label": "featureCompleteness at 2025-08-01T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T04:37:59.741Z",
+          "value": 83.78639931277189,
+          "label": "featureCompleteness at 2025-08-02T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T11:49:59.741Z",
+          "value": 88.73208220203584,
+          "label": "featureCompleteness at 2025-08-02T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T19:01:59.741Z",
+          "value": 102.96259880576318,
+          "label": "featureCompleteness at 2025-08-02T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T02:13:59.741Z",
+          "value": 92.76057538312985,
+          "label": "featureCompleteness at 2025-08-03T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T09:25:59.741Z",
+          "value": 86.76054932293796,
+          "label": "featureCompleteness at 2025-08-03T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T16:37:59.741Z",
+          "value": 91.49954015242675,
+          "label": "featureCompleteness at 2025-08-03T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T23:49:59.741Z",
+          "value": 101.09620549582816,
+          "label": "featureCompleteness at 2025-08-03T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T07:01:59.741Z",
+          "value": 92.43446834528434,
+          "label": "featureCompleteness at 2025-08-04T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T14:13:59.741Z",
+          "value": 89.5143612990958,
+          "label": "featureCompleteness at 2025-08-04T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T21:25:59.741Z",
+          "value": 97.56052764473984,
+          "label": "featureCompleteness at 2025-08-04T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T04:37:59.741Z",
+          "value": 87.14708700619812,
+          "label": "featureCompleteness at 2025-08-05T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T11:49:59.741Z",
+          "value": 88.51072103630196,
+          "label": "featureCompleteness at 2025-08-05T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T19:01:59.741Z",
+          "value": 78.85442281001357,
+          "label": "featureCompleteness at 2025-08-05T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T02:13:59.741Z",
+          "value": 91.90739848144474,
+          "label": "featureCompleteness at 2025-08-06T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T09:25:59.741Z",
+          "value": 98.70049284254532,
+          "label": "featureCompleteness at 2025-08-06T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T16:37:59.741Z",
+          "value": 100.1688073112879,
+          "label": "featureCompleteness at 2025-08-06T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T23:49:59.741Z",
+          "value": 96.7452267992691,
+          "label": "featureCompleteness at 2025-08-06T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T07:01:59.741Z",
+          "value": 88.1999687628951,
+          "label": "featureCompleteness at 2025-08-07T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T14:13:59.741Z",
+          "value": 94.81081551507759,
+          "label": "featureCompleteness at 2025-08-07T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T21:25:59.741Z",
+          "value": 82.52914807352533,
+          "label": "featureCompleteness at 2025-08-07T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T04:37:59.741Z",
+          "value": 91.34563588839173,
+          "label": "featureCompleteness at 2025-08-08T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T11:49:59.741Z",
+          "value": 97.47649494105413,
+          "label": "featureCompleteness at 2025-08-08T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T19:01:59.741Z",
+          "value": 103.1147527176072,
+          "label": "featureCompleteness at 2025-08-08T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T02:13:59.741Z",
+          "value": 99.1199074709196,
+          "label": "featureCompleteness at 2025-08-09T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T09:25:59.741Z",
+          "value": 97.10655623738161,
+          "label": "featureCompleteness at 2025-08-09T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T16:37:59.741Z",
+          "value": 97.7202771336146,
+          "label": "featureCompleteness at 2025-08-09T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T23:49:59.741Z",
+          "value": 83.28656732642663,
+          "label": "featureCompleteness at 2025-08-09T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T07:01:59.741Z",
+          "value": 102.80838241877319,
+          "label": "featureCompleteness at 2025-08-10T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T14:13:59.741Z",
+          "value": 90.9861280060316,
+          "label": "featureCompleteness at 2025-08-10T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T21:25:59.741Z",
+          "value": 79.43663780248764,
+          "label": "featureCompleteness at 2025-08-10T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T04:37:59.741Z",
+          "value": 92.26148676290694,
+          "label": "featureCompleteness at 2025-08-11T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T11:49:59.741Z",
+          "value": 90.43870921115253,
+          "label": "featureCompleteness at 2025-08-11T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T19:01:59.741Z",
+          "value": 85.09635710799816,
+          "label": "featureCompleteness at 2025-08-11T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T02:13:59.741Z",
+          "value": 89.90007168882234,
+          "label": "featureCompleteness at 2025-08-12T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T09:25:59.741Z",
+          "value": 103.21329534166411,
+          "label": "featureCompleteness at 2025-08-12T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T16:37:59.741Z",
+          "value": 91.90952009366653,
+          "label": "featureCompleteness at 2025-08-12T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T23:49:59.741Z",
+          "value": 104.28377617368311,
+          "label": "featureCompleteness at 2025-08-12T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T07:01:59.741Z",
+          "value": 90.8376398518679,
+          "label": "featureCompleteness at 2025-08-13T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T14:13:59.741Z",
+          "value": 100.68900817512647,
+          "label": "featureCompleteness at 2025-08-13T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T21:25:59.741Z",
+          "value": 102.78655789859175,
+          "label": "featureCompleteness at 2025-08-13T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T04:37:59.741Z",
+          "value": 83.55864126194051,
+          "label": "featureCompleteness at 2025-08-14T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T11:49:59.741Z",
+          "value": 93.48003433807176,
+          "label": "featureCompleteness at 2025-08-14T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T19:01:59.741Z",
+          "value": 81.74536448935666,
+          "label": "featureCompleteness at 2025-08-14T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T02:13:59.741Z",
+          "value": 83.88833529477381,
+          "label": "featureCompleteness at 2025-08-15T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T09:25:59.741Z",
+          "value": 95.7562322290181,
+          "label": "featureCompleteness at 2025-08-15T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T16:37:59.741Z",
+          "value": 87.82966460536275,
+          "label": "featureCompleteness at 2025-08-15T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T23:49:59.741Z",
+          "value": 91.0956277257023,
+          "label": "featureCompleteness at 2025-08-15T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T07:01:59.741Z",
+          "value": 83.98700606243882,
+          "label": "featureCompleteness at 2025-08-16T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T14:13:59.741Z",
+          "value": 93.49509172655146,
+          "label": "featureCompleteness at 2025-08-16T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T21:25:59.741Z",
+          "value": 90.85949589156232,
+          "label": "featureCompleteness at 2025-08-16T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T04:37:59.741Z",
+          "value": 86.01826746416207,
+          "label": "featureCompleteness at 2025-08-17T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T11:49:59.741Z",
+          "value": 104.8238467572271,
+          "label": "featureCompleteness at 2025-08-17T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T19:01:59.741Z",
+          "value": 80.72758477014872,
+          "label": "featureCompleteness at 2025-08-17T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T02:13:59.741Z",
+          "value": 99.1927044148118,
+          "label": "featureCompleteness at 2025-08-18T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T09:25:59.741Z",
+          "value": 101.07573444911964,
+          "label": "featureCompleteness at 2025-08-18T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T16:37:59.741Z",
+          "value": 93.22097332618603,
+          "label": "featureCompleteness at 2025-08-18T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T23:49:59.741Z",
+          "value": 91.20930203143286,
+          "label": "featureCompleteness at 2025-08-18T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T07:01:59.741Z",
+          "value": 105.27578288966465,
+          "label": "featureCompleteness at 2025-08-19T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T14:13:59.741Z",
+          "value": 103.56580706833829,
+          "label": "featureCompleteness at 2025-08-19T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T21:25:59.741Z",
+          "value": 85.64429826839154,
+          "label": "featureCompleteness at 2025-08-19T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T04:37:59.741Z",
+          "value": 92.47844812308297,
+          "label": "featureCompleteness at 2025-08-20T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T11:49:59.741Z",
+          "value": 88.39545918012102,
+          "label": "featureCompleteness at 2025-08-20T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T19:01:59.741Z",
+          "value": 101.89507061530456,
+          "label": "featureCompleteness at 2025-08-20T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T02:13:59.741Z",
+          "value": 94.69825099142014,
+          "label": "featureCompleteness at 2025-08-21T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T09:25:59.741Z",
+          "value": 79.94736439506968,
+          "label": "featureCompleteness at 2025-08-21T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T16:37:59.741Z",
+          "value": 80.08301596836765,
+          "label": "featureCompleteness at 2025-08-21T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T23:49:59.741Z",
+          "value": 97.99007656046373,
+          "label": "featureCompleteness at 2025-08-21T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T07:01:59.741Z",
+          "value": 87.44964070825522,
+          "label": "featureCompleteness at 2025-08-22T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T14:13:59.741Z",
+          "value": 99.31020317268317,
+          "label": "featureCompleteness at 2025-08-22T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T21:25:59.741Z",
+          "value": 88.59032756806398,
+          "label": "featureCompleteness at 2025-08-22T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T04:37:59.741Z",
+          "value": 99.32237763428678,
+          "label": "featureCompleteness at 2025-08-23T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T11:49:59.741Z",
+          "value": 99.47067912864958,
+          "label": "featureCompleteness at 2025-08-23T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T19:01:59.741Z",
+          "value": 87.14762591083642,
+          "label": "featureCompleteness at 2025-08-23T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T02:13:59.741Z",
+          "value": 102.81215611751477,
+          "label": "featureCompleteness at 2025-08-24T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T09:25:59.741Z",
+          "value": 104.34307129585875,
+          "label": "featureCompleteness at 2025-08-24T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T16:37:59.741Z",
+          "value": 86.69261760576914,
+          "label": "featureCompleteness at 2025-08-24T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.741Z",
+          "value": 100.40294745133829,
+          "label": "featureCompleteness at 2025-08-24T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.741Z",
+          "value": 87.14305417732722,
+          "label": "featureCompleteness at 2025-08-25T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.741Z",
+          "value": 88.68759515447894,
+          "label": "featureCompleteness at 2025-08-25T14:13:59.741Z"
+        }
+      ],
+      "securityVulnerabilities": [
+        {
+          "timestamp": "2025-07-26T21:25:59.741Z",
+          "value": 3.032213623052877,
+          "label": "securityVulnerabilities at 2025-07-26T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T04:37:59.741Z",
+          "value": 2.8650188715025506,
+          "label": "securityVulnerabilities at 2025-07-27T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T11:49:59.741Z",
+          "value": 3.244789239654254,
+          "label": "securityVulnerabilities at 2025-07-27T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T19:01:59.741Z",
+          "value": 2.9078061436254905,
+          "label": "securityVulnerabilities at 2025-07-27T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T02:13:59.741Z",
+          "value": 2.6579941834004153,
+          "label": "securityVulnerabilities at 2025-07-28T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T09:25:59.741Z",
+          "value": 3.060130396382654,
+          "label": "securityVulnerabilities at 2025-07-28T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T16:37:59.741Z",
+          "value": 3.107213373500306,
+          "label": "securityVulnerabilities at 2025-07-28T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T23:49:59.741Z",
+          "value": 2.63147640054027,
+          "label": "securityVulnerabilities at 2025-07-28T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T07:01:59.741Z",
+          "value": 2.793183746211709,
+          "label": "securityVulnerabilities at 2025-07-29T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T14:13:59.741Z",
+          "value": 2.5663064723720654,
+          "label": "securityVulnerabilities at 2025-07-29T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T21:25:59.741Z",
+          "value": 2.7075275759820405,
+          "label": "securityVulnerabilities at 2025-07-29T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T04:37:59.741Z",
+          "value": 2.7580895385832647,
+          "label": "securityVulnerabilities at 2025-07-30T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T11:49:59.741Z",
+          "value": 2.9260444688290614,
+          "label": "securityVulnerabilities at 2025-07-30T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T19:01:59.741Z",
+          "value": 3.1244348589207434,
+          "label": "securityVulnerabilities at 2025-07-30T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T02:13:59.741Z",
+          "value": 3.443695544678518,
+          "label": "securityVulnerabilities at 2025-07-31T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T09:25:59.741Z",
+          "value": 3.056949928052979,
+          "label": "securityVulnerabilities at 2025-07-31T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T16:37:59.741Z",
+          "value": 3.1406045925683723,
+          "label": "securityVulnerabilities at 2025-07-31T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T23:49:59.741Z",
+          "value": 3.2848037018098655,
+          "label": "securityVulnerabilities at 2025-07-31T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T07:01:59.741Z",
+          "value": 3.0260705291422485,
+          "label": "securityVulnerabilities at 2025-08-01T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T14:13:59.741Z",
+          "value": 3.049870832009666,
+          "label": "securityVulnerabilities at 2025-08-01T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T21:25:59.741Z",
+          "value": 3.1757319747712365,
+          "label": "securityVulnerabilities at 2025-08-01T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T04:37:59.741Z",
+          "value": 2.769486344590046,
+          "label": "securityVulnerabilities at 2025-08-02T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T11:49:59.741Z",
+          "value": 2.7717511678376128,
+          "label": "securityVulnerabilities at 2025-08-02T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T19:01:59.741Z",
+          "value": 2.7710719852004027,
+          "label": "securityVulnerabilities at 2025-08-02T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T02:13:59.741Z",
+          "value": 2.8579917673822686,
+          "label": "securityVulnerabilities at 2025-08-03T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T09:25:59.741Z",
+          "value": 2.6736472918118652,
+          "label": "securityVulnerabilities at 2025-08-03T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T16:37:59.741Z",
+          "value": 2.5756672868469086,
+          "label": "securityVulnerabilities at 2025-08-03T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T23:49:59.741Z",
+          "value": 3.006638858546699,
+          "label": "securityVulnerabilities at 2025-08-03T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T07:01:59.741Z",
+          "value": 3.050485507422649,
+          "label": "securityVulnerabilities at 2025-08-04T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T14:13:59.741Z",
+          "value": 3.027272543891109,
+          "label": "securityVulnerabilities at 2025-08-04T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T21:25:59.741Z",
+          "value": 2.83787874115999,
+          "label": "securityVulnerabilities at 2025-08-04T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T04:37:59.741Z",
+          "value": 2.8022095694471187,
+          "label": "securityVulnerabilities at 2025-08-05T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T11:49:59.741Z",
+          "value": 3.358376378620961,
+          "label": "securityVulnerabilities at 2025-08-05T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T19:01:59.741Z",
+          "value": 3.3617450525014645,
+          "label": "securityVulnerabilities at 2025-08-05T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T02:13:59.741Z",
+          "value": 2.8128423523414514,
+          "label": "securityVulnerabilities at 2025-08-06T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T09:25:59.741Z",
+          "value": 3.2407154282246218,
+          "label": "securityVulnerabilities at 2025-08-06T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T16:37:59.741Z",
+          "value": 2.9407203785318248,
+          "label": "securityVulnerabilities at 2025-08-06T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T23:49:59.741Z",
+          "value": 2.9157609089232266,
+          "label": "securityVulnerabilities at 2025-08-06T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T07:01:59.741Z",
+          "value": 2.576255822334576,
+          "label": "securityVulnerabilities at 2025-08-07T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T14:13:59.741Z",
+          "value": 2.8756782391468727,
+          "label": "securityVulnerabilities at 2025-08-07T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T21:25:59.741Z",
+          "value": 3.173074033967021,
+          "label": "securityVulnerabilities at 2025-08-07T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T04:37:59.741Z",
+          "value": 3.2699398895669827,
+          "label": "securityVulnerabilities at 2025-08-08T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T11:49:59.741Z",
+          "value": 2.641307050192806,
+          "label": "securityVulnerabilities at 2025-08-08T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T19:01:59.741Z",
+          "value": 2.902907970354685,
+          "label": "securityVulnerabilities at 2025-08-08T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T02:13:59.741Z",
+          "value": 3.2264669260741927,
+          "label": "securityVulnerabilities at 2025-08-09T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T09:25:59.741Z",
+          "value": 3.003230789857113,
+          "label": "securityVulnerabilities at 2025-08-09T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T16:37:59.741Z",
+          "value": 3.130505979926097,
+          "label": "securityVulnerabilities at 2025-08-09T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T23:49:59.741Z",
+          "value": 3.2243122389551897,
+          "label": "securityVulnerabilities at 2025-08-09T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T07:01:59.741Z",
+          "value": 2.721497994425905,
+          "label": "securityVulnerabilities at 2025-08-10T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T14:13:59.741Z",
+          "value": 2.82031568154243,
+          "label": "securityVulnerabilities at 2025-08-10T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T21:25:59.741Z",
+          "value": 3.374016085665824,
+          "label": "securityVulnerabilities at 2025-08-10T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T04:37:59.741Z",
+          "value": 3.2870817446530745,
+          "label": "securityVulnerabilities at 2025-08-11T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T11:49:59.741Z",
+          "value": 2.6857453745823605,
+          "label": "securityVulnerabilities at 2025-08-11T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T19:01:59.741Z",
+          "value": 2.732427524569309,
+          "label": "securityVulnerabilities at 2025-08-11T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T02:13:59.741Z",
+          "value": 3.033595484703496,
+          "label": "securityVulnerabilities at 2025-08-12T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T09:25:59.741Z",
+          "value": 3.11651506375476,
+          "label": "securityVulnerabilities at 2025-08-12T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T16:37:59.741Z",
+          "value": 2.9031160676715126,
+          "label": "securityVulnerabilities at 2025-08-12T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T23:49:59.741Z",
+          "value": 2.9177588237570315,
+          "label": "securityVulnerabilities at 2025-08-12T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T07:01:59.741Z",
+          "value": 2.762256630736482,
+          "label": "securityVulnerabilities at 2025-08-13T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T14:13:59.741Z",
+          "value": 2.849307168305473,
+          "label": "securityVulnerabilities at 2025-08-13T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T21:25:59.741Z",
+          "value": 3.1740903689973963,
+          "label": "securityVulnerabilities at 2025-08-13T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T04:37:59.741Z",
+          "value": 2.776634607247897,
+          "label": "securityVulnerabilities at 2025-08-14T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T11:49:59.741Z",
+          "value": 2.7753405005334164,
+          "label": "securityVulnerabilities at 2025-08-14T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T19:01:59.741Z",
+          "value": 3.4267324776160035,
+          "label": "securityVulnerabilities at 2025-08-14T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T02:13:59.741Z",
+          "value": 3.2581754319744336,
+          "label": "securityVulnerabilities at 2025-08-15T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T09:25:59.741Z",
+          "value": 3.3387501040009147,
+          "label": "securityVulnerabilities at 2025-08-15T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T16:37:59.741Z",
+          "value": 3.2497502371761713,
+          "label": "securityVulnerabilities at 2025-08-15T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T23:49:59.741Z",
+          "value": 2.6730861443531193,
+          "label": "securityVulnerabilities at 2025-08-15T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T07:01:59.741Z",
+          "value": 2.707644987845076,
+          "label": "securityVulnerabilities at 2025-08-16T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T14:13:59.741Z",
+          "value": 2.79411323818141,
+          "label": "securityVulnerabilities at 2025-08-16T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T21:25:59.741Z",
+          "value": 2.937904075132739,
+          "label": "securityVulnerabilities at 2025-08-16T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T04:37:59.741Z",
+          "value": 3.0552405927824147,
+          "label": "securityVulnerabilities at 2025-08-17T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T11:49:59.741Z",
+          "value": 3.191707170878255,
+          "label": "securityVulnerabilities at 2025-08-17T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T19:01:59.741Z",
+          "value": 2.993132501889385,
+          "label": "securityVulnerabilities at 2025-08-17T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T02:13:59.741Z",
+          "value": 2.928874429946982,
+          "label": "securityVulnerabilities at 2025-08-18T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T09:25:59.741Z",
+          "value": 3.430848913329305,
+          "label": "securityVulnerabilities at 2025-08-18T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T16:37:59.741Z",
+          "value": 2.9384690519849226,
+          "label": "securityVulnerabilities at 2025-08-18T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T23:49:59.741Z",
+          "value": 2.8159678322264,
+          "label": "securityVulnerabilities at 2025-08-18T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T07:01:59.741Z",
+          "value": 2.776539952443966,
+          "label": "securityVulnerabilities at 2025-08-19T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T14:13:59.741Z",
+          "value": 2.918380206642344,
+          "label": "securityVulnerabilities at 2025-08-19T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T21:25:59.741Z",
+          "value": 2.989491999314551,
+          "label": "securityVulnerabilities at 2025-08-19T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T04:37:59.741Z",
+          "value": 3.1353229918263006,
+          "label": "securityVulnerabilities at 2025-08-20T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T11:49:59.741Z",
+          "value": 3.0482977157869104,
+          "label": "securityVulnerabilities at 2025-08-20T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T19:01:59.741Z",
+          "value": 2.9140271864191925,
+          "label": "securityVulnerabilities at 2025-08-20T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T02:13:59.741Z",
+          "value": 3.2491397926704955,
+          "label": "securityVulnerabilities at 2025-08-21T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T09:25:59.741Z",
+          "value": 3.3790945484583523,
+          "label": "securityVulnerabilities at 2025-08-21T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T16:37:59.741Z",
+          "value": 3.200889577977132,
+          "label": "securityVulnerabilities at 2025-08-21T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T23:49:59.741Z",
+          "value": 3.309356709452951,
+          "label": "securityVulnerabilities at 2025-08-21T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T07:01:59.741Z",
+          "value": 2.9066484023316863,
+          "label": "securityVulnerabilities at 2025-08-22T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T14:13:59.741Z",
+          "value": 2.6488892572027507,
+          "label": "securityVulnerabilities at 2025-08-22T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T21:25:59.741Z",
+          "value": 2.94288794748456,
+          "label": "securityVulnerabilities at 2025-08-22T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T04:37:59.741Z",
+          "value": 3.0850009118294333,
+          "label": "securityVulnerabilities at 2025-08-23T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T11:49:59.741Z",
+          "value": 3.247949644773991,
+          "label": "securityVulnerabilities at 2025-08-23T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T19:01:59.741Z",
+          "value": 3.2477045342265134,
+          "label": "securityVulnerabilities at 2025-08-23T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T02:13:59.741Z",
+          "value": 3.064405908051387,
+          "label": "securityVulnerabilities at 2025-08-24T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T09:25:59.741Z",
+          "value": 3.217758133656319,
+          "label": "securityVulnerabilities at 2025-08-24T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T16:37:59.741Z",
+          "value": 3.4160683234098475,
+          "label": "securityVulnerabilities at 2025-08-24T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.741Z",
+          "value": 3.17615192864581,
+          "label": "securityVulnerabilities at 2025-08-24T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.741Z",
+          "value": 2.8893068586831916,
+          "label": "securityVulnerabilities at 2025-08-25T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.741Z",
+          "value": 2.966909870716906,
+          "label": "securityVulnerabilities at 2025-08-25T14:13:59.741Z"
+        }
+      ],
+      "accessibilityCompliance": [
+        {
+          "timestamp": "2025-07-26T21:25:59.741Z",
+          "value": 78.22807923412643,
+          "label": "accessibilityCompliance at 2025-07-26T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T04:37:59.741Z",
+          "value": 90.61570107259992,
+          "label": "accessibilityCompliance at 2025-07-27T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T11:49:59.741Z",
+          "value": 76.44186379050328,
+          "label": "accessibilityCompliance at 2025-07-27T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-27T19:01:59.741Z",
+          "value": 79.65708970413974,
+          "label": "accessibilityCompliance at 2025-07-27T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T02:13:59.741Z",
+          "value": 83.15052055769611,
+          "label": "accessibilityCompliance at 2025-07-28T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T09:25:59.741Z",
+          "value": 74.9793939866428,
+          "label": "accessibilityCompliance at 2025-07-28T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T16:37:59.741Z",
+          "value": 90.10742763675785,
+          "label": "accessibilityCompliance at 2025-07-28T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-28T23:49:59.741Z",
+          "value": 93.86102407496921,
+          "label": "accessibilityCompliance at 2025-07-28T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T07:01:59.741Z",
+          "value": 81.28786500572996,
+          "label": "accessibilityCompliance at 2025-07-29T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T14:13:59.741Z",
+          "value": 95.10833707936438,
+          "label": "accessibilityCompliance at 2025-07-29T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-29T21:25:59.741Z",
+          "value": 95.57559057536766,
+          "label": "accessibilityCompliance at 2025-07-29T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T04:37:59.741Z",
+          "value": 98.95718516219034,
+          "label": "accessibilityCompliance at 2025-07-30T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T11:49:59.741Z",
+          "value": 75.86350539554333,
+          "label": "accessibilityCompliance at 2025-07-30T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-30T19:01:59.741Z",
+          "value": 80.54762266173103,
+          "label": "accessibilityCompliance at 2025-07-30T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T02:13:59.741Z",
+          "value": 97.31346682166271,
+          "label": "accessibilityCompliance at 2025-07-31T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T09:25:59.741Z",
+          "value": 87.30276503536874,
+          "label": "accessibilityCompliance at 2025-07-31T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T16:37:59.741Z",
+          "value": 86.02685038060548,
+          "label": "accessibilityCompliance at 2025-07-31T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-07-31T23:49:59.741Z",
+          "value": 83.26847746664029,
+          "label": "accessibilityCompliance at 2025-07-31T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T07:01:59.741Z",
+          "value": 76.2780353797273,
+          "label": "accessibilityCompliance at 2025-08-01T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T14:13:59.741Z",
+          "value": 87.93911299988687,
+          "label": "accessibilityCompliance at 2025-08-01T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-01T21:25:59.741Z",
+          "value": 97.20528046798657,
+          "label": "accessibilityCompliance at 2025-08-01T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T04:37:59.741Z",
+          "value": 80.46951643639827,
+          "label": "accessibilityCompliance at 2025-08-02T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T11:49:59.741Z",
+          "value": 76.77539697307917,
+          "label": "accessibilityCompliance at 2025-08-02T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-02T19:01:59.741Z",
+          "value": 89.67184957988462,
+          "label": "accessibilityCompliance at 2025-08-02T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T02:13:59.741Z",
+          "value": 89.41937884431297,
+          "label": "accessibilityCompliance at 2025-08-03T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T09:25:59.741Z",
+          "value": 76.23523722441914,
+          "label": "accessibilityCompliance at 2025-08-03T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T16:37:59.741Z",
+          "value": 86.01549182309721,
+          "label": "accessibilityCompliance at 2025-08-03T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-03T23:49:59.741Z",
+          "value": 93.52059215643077,
+          "label": "accessibilityCompliance at 2025-08-03T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T07:01:59.741Z",
+          "value": 79.68724620189181,
+          "label": "accessibilityCompliance at 2025-08-04T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T14:13:59.741Z",
+          "value": 88.61278972728886,
+          "label": "accessibilityCompliance at 2025-08-04T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-04T21:25:59.741Z",
+          "value": 89.09854852202574,
+          "label": "accessibilityCompliance at 2025-08-04T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T04:37:59.741Z",
+          "value": 99.95526157160732,
+          "label": "accessibilityCompliance at 2025-08-05T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T11:49:59.741Z",
+          "value": 94.86899339787226,
+          "label": "accessibilityCompliance at 2025-08-05T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-05T19:01:59.741Z",
+          "value": 90.87809848722009,
+          "label": "accessibilityCompliance at 2025-08-05T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T02:13:59.741Z",
+          "value": 92.28870697525863,
+          "label": "accessibilityCompliance at 2025-08-06T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T09:25:59.741Z",
+          "value": 98.50138996129493,
+          "label": "accessibilityCompliance at 2025-08-06T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T16:37:59.741Z",
+          "value": 85.11198445828538,
+          "label": "accessibilityCompliance at 2025-08-06T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-06T23:49:59.741Z",
+          "value": 95.13802391544208,
+          "label": "accessibilityCompliance at 2025-08-06T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T07:01:59.741Z",
+          "value": 85.43506383863757,
+          "label": "accessibilityCompliance at 2025-08-07T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T14:13:59.741Z",
+          "value": 93.85886177558329,
+          "label": "accessibilityCompliance at 2025-08-07T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-07T21:25:59.741Z",
+          "value": 77.37559086389741,
+          "label": "accessibilityCompliance at 2025-08-07T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T04:37:59.741Z",
+          "value": 98.16426807416639,
+          "label": "accessibilityCompliance at 2025-08-08T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T11:49:59.741Z",
+          "value": 76.96171605682503,
+          "label": "accessibilityCompliance at 2025-08-08T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-08T19:01:59.741Z",
+          "value": 95.71621683363352,
+          "label": "accessibilityCompliance at 2025-08-08T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T02:13:59.741Z",
+          "value": 79.51431163766911,
+          "label": "accessibilityCompliance at 2025-08-09T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T09:25:59.741Z",
+          "value": 76.81117969211577,
+          "label": "accessibilityCompliance at 2025-08-09T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T16:37:59.741Z",
+          "value": 84.07237008952482,
+          "label": "accessibilityCompliance at 2025-08-09T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-09T23:49:59.741Z",
+          "value": 90.68115504026646,
+          "label": "accessibilityCompliance at 2025-08-09T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T07:01:59.741Z",
+          "value": 97.77499027061191,
+          "label": "accessibilityCompliance at 2025-08-10T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T14:13:59.741Z",
+          "value": 80.03470928241389,
+          "label": "accessibilityCompliance at 2025-08-10T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-10T21:25:59.741Z",
+          "value": 99.85172471838555,
+          "label": "accessibilityCompliance at 2025-08-10T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T04:37:59.741Z",
+          "value": 79.26758006632909,
+          "label": "accessibilityCompliance at 2025-08-11T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T11:49:59.741Z",
+          "value": 93.28408438965718,
+          "label": "accessibilityCompliance at 2025-08-11T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-11T19:01:59.741Z",
+          "value": 75.66931958801538,
+          "label": "accessibilityCompliance at 2025-08-11T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T02:13:59.741Z",
+          "value": 100.86081316648784,
+          "label": "accessibilityCompliance at 2025-08-12T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T09:25:59.741Z",
+          "value": 79.96008249561173,
+          "label": "accessibilityCompliance at 2025-08-12T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T16:37:59.741Z",
+          "value": 89.87248401013088,
+          "label": "accessibilityCompliance at 2025-08-12T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-12T23:49:59.741Z",
+          "value": 94.42779282819359,
+          "label": "accessibilityCompliance at 2025-08-12T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T07:01:59.741Z",
+          "value": 78.94056888210227,
+          "label": "accessibilityCompliance at 2025-08-13T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T14:13:59.741Z",
+          "value": 82.32927330044267,
+          "label": "accessibilityCompliance at 2025-08-13T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-13T21:25:59.741Z",
+          "value": 93.46716340523481,
+          "label": "accessibilityCompliance at 2025-08-13T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T04:37:59.741Z",
+          "value": 88.24750721875273,
+          "label": "accessibilityCompliance at 2025-08-14T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T11:49:59.741Z",
+          "value": 76.25729278392986,
+          "label": "accessibilityCompliance at 2025-08-14T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-14T19:01:59.741Z",
+          "value": 95.3635816272923,
+          "label": "accessibilityCompliance at 2025-08-14T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T02:13:59.741Z",
+          "value": 100.3910540929394,
+          "label": "accessibilityCompliance at 2025-08-15T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T09:25:59.741Z",
+          "value": 86.34073270773395,
+          "label": "accessibilityCompliance at 2025-08-15T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T16:37:59.741Z",
+          "value": 100.19942308139986,
+          "label": "accessibilityCompliance at 2025-08-15T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-15T23:49:59.741Z",
+          "value": 80.70019461619427,
+          "label": "accessibilityCompliance at 2025-08-15T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T07:01:59.741Z",
+          "value": 87.85368918765805,
+          "label": "accessibilityCompliance at 2025-08-16T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T14:13:59.741Z",
+          "value": 94.71948541100478,
+          "label": "accessibilityCompliance at 2025-08-16T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-16T21:25:59.741Z",
+          "value": 85.32923574984281,
+          "label": "accessibilityCompliance at 2025-08-16T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T04:37:59.741Z",
+          "value": 100.94106193941506,
+          "label": "accessibilityCompliance at 2025-08-17T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T11:49:59.741Z",
+          "value": 79.67156326756988,
+          "label": "accessibilityCompliance at 2025-08-17T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-17T19:01:59.741Z",
+          "value": 100.19213044186758,
+          "label": "accessibilityCompliance at 2025-08-17T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T02:13:59.741Z",
+          "value": 97.0530961903285,
+          "label": "accessibilityCompliance at 2025-08-18T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T09:25:59.741Z",
+          "value": 97.29695095661691,
+          "label": "accessibilityCompliance at 2025-08-18T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T16:37:59.741Z",
+          "value": 76.83632573200663,
+          "label": "accessibilityCompliance at 2025-08-18T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-18T23:49:59.741Z",
+          "value": 86.59809648834312,
+          "label": "accessibilityCompliance at 2025-08-18T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T07:01:59.741Z",
+          "value": 86.25277604223905,
+          "label": "accessibilityCompliance at 2025-08-19T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T14:13:59.741Z",
+          "value": 100.15883281160498,
+          "label": "accessibilityCompliance at 2025-08-19T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-19T21:25:59.741Z",
+          "value": 88.98246546774357,
+          "label": "accessibilityCompliance at 2025-08-19T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T04:37:59.741Z",
+          "value": 82.09062162239263,
+          "label": "accessibilityCompliance at 2025-08-20T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T11:49:59.741Z",
+          "value": 87.0830841772589,
+          "label": "accessibilityCompliance at 2025-08-20T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-20T19:01:59.741Z",
+          "value": 95.30053109068962,
+          "label": "accessibilityCompliance at 2025-08-20T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T02:13:59.741Z",
+          "value": 91.71758602312941,
+          "label": "accessibilityCompliance at 2025-08-21T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T09:25:59.741Z",
+          "value": 100.19108068461165,
+          "label": "accessibilityCompliance at 2025-08-21T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T16:37:59.741Z",
+          "value": 76.4612140201589,
+          "label": "accessibilityCompliance at 2025-08-21T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-21T23:49:59.741Z",
+          "value": 92.31476319412302,
+          "label": "accessibilityCompliance at 2025-08-21T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T07:01:59.741Z",
+          "value": 82.33553944108847,
+          "label": "accessibilityCompliance at 2025-08-22T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T14:13:59.741Z",
+          "value": 81.7165965193678,
+          "label": "accessibilityCompliance at 2025-08-22T14:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-22T21:25:59.741Z",
+          "value": 83.92979875951482,
+          "label": "accessibilityCompliance at 2025-08-22T21:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T04:37:59.741Z",
+          "value": 79.48827315155019,
+          "label": "accessibilityCompliance at 2025-08-23T04:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T11:49:59.741Z",
+          "value": 97.4569278208867,
+          "label": "accessibilityCompliance at 2025-08-23T11:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-23T19:01:59.741Z",
+          "value": 81.06532774359017,
+          "label": "accessibilityCompliance at 2025-08-23T19:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T02:13:59.741Z",
+          "value": 88.83390143953106,
+          "label": "accessibilityCompliance at 2025-08-24T02:13:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T09:25:59.741Z",
+          "value": 101.15394274842446,
+          "label": "accessibilityCompliance at 2025-08-24T09:25:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T16:37:59.741Z",
+          "value": 83.28627718684949,
+          "label": "accessibilityCompliance at 2025-08-24T16:37:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-24T23:49:59.741Z",
+          "value": 85.70464661858709,
+          "label": "accessibilityCompliance at 2025-08-24T23:49:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T07:01:59.741Z",
+          "value": 75.88918918392082,
+          "label": "accessibilityCompliance at 2025-08-25T07:01:59.741Z"
+        },
+        {
+          "timestamp": "2025-08-25T14:13:59.741Z",
+          "value": 97.2198235530522,
+          "label": "accessibilityCompliance at 2025-08-25T14:13:59.741Z"
+        }
+      ]
+    },
+    "improvementRecommendations": [
+      {
+        "id": "improve-test-reliability",
+        "priority": "high",
+        "category": "reliability",
+        "title": "Improve Test Reliability",
+        "description": "Current test failure rate is 25.0%, which is above the recommended 5% threshold.",
+        "impact": "Reducing test failures will improve system reliability and developer confidence",
+        "effort": "medium",
+        "actionItems": [
+          "Analyze most frequently failing tests",
+          "Improve test data management and cleanup",
+          "Review test environment stability",
+          "Implement better error handling in tests"
+        ]
+      }
+    ]
+  }
+}
