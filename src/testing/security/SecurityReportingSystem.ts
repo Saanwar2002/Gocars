@@ -1,46 +1,46 @@
 /**
  * Security Reporting System
- * Comprehensive security reporting and analytics system
+ * Comprehensive security reporting with multiple formats and compliance frameworks
  */
 
-import { TestResult } from '../core/TestingAgentController'
-import { SecurityIncident } from './SecurityMonitoringTester'
+import { SecurityMonitoringSystem, SecurityVulnerability, SecurityIncident, SecurityMetrics } from './SecurityMonitoringSystem'
 
 export interface SecurityReport {
   id: string
-  type: 'executive' | 'technical' | 'compliance' | 'incident' | 'trend'
+  type: 'executive' | 'technical' | 'compliance' | 'incident' | 'vulnerability'
   title: string
   generatedAt: number
+  generatedBy: string
   period: {
     start: number
     end: number
   }
-  summary: SecurityReportSummary
-  sections: SecurityReportSection[]
-  recommendations: string[]
-  attachments?: SecurityReportAttachment[]
+  format: 'json' | 'html' | 'pdf' | 'csv'
+  content: any
+  metadata: {
+    version: string
+    confidentiality: 'public' | 'internal' | 'confidential' | 'restricted'
+    distribution: string[]
+  }
 }
 
-export interface SecurityReportSummary {
-  overallSecurityScore: number
-  securityGrade: string
-  totalTests: number
-  passedTests: number
-  failedTests: number
-  criticalIssues: number
-  highIssues: number
-  mediumIssues: number
-  lowIssues: number
-  complianceScore: number
-  incidentCount: number
-  trendsAnalysis: string
-}
-
-export interface SecurityReportSection {
-  id: string
-  title: string
-  content: string
-  charts?: SecurityChart[]
+export interface ExecutiveSecurityReport {
+  summary: {
+    overallRiskLevel: 'low' | 'medium' | 'high' | 'critical'
+    totalVulnerabilities: number
+    criticalIssues: number
+    incidentsThisPeriod: number
+    complianceScore: number
+    trendDirection: 'improving' | 'stable' | 'declining'
+  }
+  keyFindings: string[]
+  riskAssessment: {
+    topRisks: Array<{
+      risk: string
+      impact: string
+      likelihood: string
+      mitigation: string
+    }>
   tables?: SecurityTable[]
   metrics?: SecurityMetric[]
 }
