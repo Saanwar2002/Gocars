@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+/**
+ * GoCars Testing Agent CLI
+ * Command-line interface for the comprehensive testing agent
+ */
+
+const path = require('path');
+const fs = require('fs');
+
+// Check if we're running from source or installed package
+const isSource = fs.existsSync(path.join(__dirname, '../src'));
+const cliPath = isSource 
+  ? path.join(__dirname, '../src/testing/cli/CLI.ts')
+  : path.join(__dirname, '../dist/testing/cli/CLI.js');
+
+// Check if TypeScript is available for source execution
+if (isSource) {
+  try {
+    require('ts-node/register');
+    require(cliPath);
+  } catch (error) {
+    if (error.code === 'MODULE_NOT_FOUND' && error.message.includes('ts-node')) {
+      console.error('Error: ts-node is required to run from source.');
+      console.error('Install it with: npm install -g ts-node');
+      console.error('Or build the project first: npm run build:agent');
+      process.exit(1);
+    } else {
+      throw error;
+    }
+  }
+} else {
+  // Running from compiled JavaScript
+  if (!fs.existsSync(cliPath)) {
+    console.error('Error: CLI not found. Please build the project first.');
+    console.error('Run: npm run build:agent');
+    process.exit(1);
+  }
+  require(cliPath);
+}

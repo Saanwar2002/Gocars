@@ -939,3 +939,225 @@ See the TypeScript interfaces and classes for complete API documentation:
 - `MetricsService` - Metrics collection and export
 - `AlertingService` - Alert management and notifications
 - `DashboardService` - Dashboard creation and management
+# En
+hanced Monitoring Infrastructure
+
+## 🏗️ Architecture Overview
+
+The monitoring infrastructure consists of four main components:
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Logging        │    │  Metrics        │    │  Alerting       │
+│  Service        │    │  Service        │    │  Service        │
+│                 │    │                 │    │                 │
+│ • File logs     │    │ • Prometheus    │    │ • Rule engine   │
+│ • Console logs  │    │ • Custom metrics│    │ • Notifications │
+│ • Elasticsearch │    │ • Health checks │    │ • Escalation    │
+│ • HTTP transport│    │ • Performance   │    │ • Channels      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │  Dashboard      │
+                    │  Service        │
+                    │                 │
+                    │ • Real-time UI  │
+                    │ • Visualizations│
+                    │ • Custom panels │
+                    │ • Data sources  │
+                    └─────────────────┘
+```
+
+## 📊 Enhanced Features
+
+### Advanced Logging
+- **Multiple Transports**: Console, File, HTTP, Elasticsearch
+- **Log Rotation**: Size and time-based rotation
+- **Structured Logging**: JSON format with metadata
+- **Performance Logging**: Built-in performance measurement
+- **Child Loggers**: Context-aware logging
+
+### Comprehensive Metrics
+- **Prometheus Integration**: Native Prometheus metrics
+- **System Metrics**: Memory, CPU, Event loop lag
+- **Test Metrics**: Execution rates, success rates, durations
+- **Custom Metrics**: Counters, Gauges, Histograms
+- **Health Metrics**: Service health indicators
+
+### Intelligent Alerting
+- **Rule-Based Engine**: Flexible condition evaluation
+- **Multiple Channels**: Email, Slack, Webhook, PagerDuty, SMS
+- **Escalation Policies**: Multi-level alert escalation
+- **Rate Limiting**: Cooldown periods and hourly limits
+- **Common Rules**: Pre-built alert rules
+
+### Real-time Dashboards
+- **Multiple Data Sources**: Prometheus, Elasticsearch, APIs
+- **Widget Types**: Charts, Metrics, Tables, Logs, Alerts
+- **Auto-refresh**: Real-time data updates
+- **Custom Panels**: Configurable visualizations
+- **Export/Import**: Dashboard configuration management
+
+## 🚀 Quick Start
+
+```typescript
+import { MonitoringService, createDefaultMonitoringConfig } from './MonitoringService';
+
+// Create with default configuration
+const config = createDefaultMonitoringConfig();
+const monitoring = new MonitoringService(config);
+
+// Initialize and start
+await monitoring.initialize();
+
+// Record metrics
+monitoring.recordTestExecution('test-123', 'auth-suite', 'pass', 2.5);
+monitoring.recordPerformanceMetric('api_response_time', 0.150, 'seconds', 'api');
+
+// Get health status
+const health = await monitoring.getHealthStatus();
+console.log('System Health:', health.status);
+```
+
+## 📈 Configuration Examples
+
+### Production Configuration
+```typescript
+import { createMonitoringConfig } from './config/monitoring-config';
+
+const prodConfig = createMonitoringConfig('production');
+// Includes Elasticsearch logging, all alerts, production dashboards
+```
+
+### Development Configuration
+```typescript
+const devConfig = createMonitoringConfig('development');
+// Console logging, frequent metrics, minimal alerts
+```
+
+### Custom Configuration
+```typescript
+const customConfig = {
+  logging: {
+    level: 'info',
+    enableConsole: true,
+    enableElasticsearch: true,
+    elasticsearchConfig: {
+      host: 'elasticsearch.company.com',
+      port: 9200,
+      index: 'gocars-logs'
+    }
+  },
+  metrics: {
+    enabled: true,
+    prometheusEnabled: true,
+    collectInterval: 15000
+  },
+  alerting: {
+    enabled: true,
+    enableCommonRules: true,
+    maxAlertsPerHour: 20
+  },
+  dashboard: {
+    enabled: true,
+    autoRefresh: true,
+    theme: 'dark'
+  }
+};
+```
+
+## 🔧 Environment Variables
+
+```bash
+# Logging
+LOG_LEVEL=info
+LOG_DIRECTORY=./logs
+ELASTICSEARCH_HOST=localhost
+ELASTICSEARCH_PORT=9200
+
+# Metrics  
+METRICS_PORT=9090
+METRICS_COLLECT_INTERVAL=15000
+
+# Alerting
+ALERT_EVALUATION_INTERVAL=60
+MAX_ALERTS_PER_HOUR=10
+
+# Dashboard
+DASHBOARD_REFRESH_INTERVAL=30000
+DASHBOARD_THEME=dark
+```
+
+## 📊 Available Metrics
+
+### System Metrics
+- `memory_usage_bytes{type="heap_used|heap_total|rss|external"}`
+- `cpu_usage_percent`
+- `event_loop_lag_seconds`
+
+### Test Metrics
+- `test_executions_total{suite,status}`
+- `test_successes_total{suite}`
+- `test_failures_total{suite,error_type}`
+- `test_duration_seconds{suite}`
+
+### API Metrics
+- `api_request_duration_seconds{endpoint,method}`
+- `api_requests_total{endpoint,method,status_code}`
+
+## 🚨 Pre-built Alert Rules
+
+1. **High Error Rate**: Error rate > 5% for 5 minutes
+2. **High Memory Usage**: Memory usage > 90% for 2 minutes  
+3. **Service Down**: Service not responding to health checks
+4. **Test Failure Spike**: Test failure rate increase > 50%
+5. **Database Connection Failure**: DB connection errors detected
+
+## 📊 Dashboard Widgets
+
+- **Chart**: Time series visualizations
+- **Gauge**: Progress indicators with thresholds
+- **Stat**: Single value displays
+- **Table**: Tabular data with sorting
+- **Log**: Real-time log streaming
+- **Alert**: Active alert displays
+- **Heatmap**: 2D data visualization
+
+## 🔍 Health Checks
+
+Comprehensive health monitoring includes:
+- Service availability checks
+- Resource utilization monitoring
+- Database connectivity verification
+- Memory and performance analysis
+- Alert system health
+
+## 🎯 Best Practices
+
+### Logging
+- Use structured logging with consistent fields
+- Include correlation IDs for request tracking
+- Set appropriate log levels for different environments
+- Implement log sampling for high-volume events
+
+### Metrics
+- Follow Prometheus naming conventions
+- Use consistent labels across metrics
+- Avoid high-cardinality labels
+- Include units in metric names
+
+### Alerting
+- Set realistic thresholds based on baselines
+- Implement proper cooldown periods
+- Use severity levels appropriately
+- Test alert rules regularly
+
+### Dashboards
+- Design for different audiences (ops, dev, business)
+- Use appropriate time ranges
+- Implement proper data retention
+- Optimize query performance
+
+This enhanced monitoring infrastructure provides production-ready observability for the GoCars Testing Agent with comprehensive logging, metrics, alerting, and visualization capabilities.

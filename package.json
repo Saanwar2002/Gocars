@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Enhanced GoCars ride-sharing application with comprehensive testing framework",
   "main": "src/index.tsx",
+  "bin": {
+    "gocars-test": "./bin/gocars-test"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -53,7 +56,9 @@
     "cors": "^2.8.5",
     "helmet": "^6.1.0",
     "compression": "^1.7.4",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "js-yaml": "^4.1.0",
+    "commander": "^9.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
@@ -64,6 +69,7 @@
     "@types/express": "^4.17.0",
     "@types/cors": "^2.8.0",
     "@types/compression": "^1.7.0",
+    "@types/js-yaml": "^4.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/jest-dom": "^5.16.0",
     "@testing-library/user-event": "^14.4.0",
