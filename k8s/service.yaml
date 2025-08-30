@@ -1,0 +1,76 @@
+# Service for GoCars Testing Agent
+apiVersion: v1
+kind: Service
+metadata:
+  name: testing-agent-service
+  namespace: gocars-testing
+  labels:
+    app: gocars-testing-agent
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: gocars-testing-agent
+
+---
+# Headless service for StatefulSet components
+apiVersion: v1
+kind: Service
+metadata:
+  name: testing-agent-headless
+  namespace: gocars-testing
+  labels:
+    app: gocars-testing-agent
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: gocars-testing-agent
+
+---
+# LoadBalancer service for external access (optional)
+apiVersion: v1
+kind: Service
+metadata:
+  name: testing-agent-lb
+  namespace: gocars-testing
+  labels:
+    app: gocars-testing-agent
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: gocars-testing-agent
+  sessionAffinity: ClientIP
