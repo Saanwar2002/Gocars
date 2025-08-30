@@ -1,6 +1,3 @@
-# Monitoring stack for GoCars Testing Agent
-
-# Prometheus Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,7 +5,6 @@ metadata:
   namespace: gocars-testing
   labels:
     app: prometheus
-    component: monitoring
 spec:
   replicas: 1
   selector:
@@ -18,9 +14,7 @@ spec:
     metadata:
       labels:
         app: prometheus
-        component: monitoring
     spec:
-      serviceAccountName: prometheus-sa
       containers:
       - name: prometheus
         image: prom/prometheus:latest
@@ -28,37 +22,37 @@ spec:
         - containerPort: 9090
           name: prometheus
         args:
-        - '--config.file=/etc/prometheus/prometheus.yml'
-        - '--storage.tsdb.path=/prometheus'
-        - '--web.console.libraries=/etc/prometheus/console_libraries'
-        - '--web.console.templates=/etc/prometheus/consoles'
-        - '--storage.tsdb.retention.time=200h'
-        - '--web.enable-lifecycle'
-        - '--web.enable-admin-api'
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus'
+          - '--web.console.libraries=/etc/prometheus/console_libraries'
+          - '--web.console.templates=/etc/prometheus/consoles'
+          - '--storage.tsdb.retention.time=200h'
+          - '--web.enable-lifecycle'
+          - '--web.enable-admin-api'
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
         volumeMounts:
         - name: prometheus-config
           mountPath: /etc/prometheus
         - name: prometheus-data
           mountPath: /prometheus
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
         livenessProbe:
           httpGet:
             path: /-/healthy
             port: 9090
-          initialDelaySeconds: 60
-          periodSeconds: 30
+          initialDelaySeconds: 30
+          periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /-/ready
             port: 9090
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 5
+          periodSeconds: 5
       volumes:
       - name: prometheus-config
         configMap:
@@ -66,30 +60,7 @@ spec:
       - name: prometheus-data
         persistentVolumeClaim:
           claimName: prometheus-data-pvc
-
 ---
-# Prometheus Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus-service
-  namespace: gocars-testing
-  labels:
-    app: prometheus
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "9090"
-spec:
-  type: ClusterIP
-  ports:
-  - port: 9090
-    targetPort: 9090
-    name: prometheus
-  selector:
-    app: prometheus
-
----
-# Grafana Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -97,7 +68,6 @@ metadata:
   namespace: gocars-testing
   labels:
     app: grafana
-    component: monitoring
 spec:
   replicas: 1
   selector:
@@ -107,7 +77,6 @@ spec:
     metadata:
       labels:
         app: grafana
-        component: monitoring
     spec:
       containers:
       - name: grafana
@@ -119,158 +88,144 @@ spec:
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: monitoring-secrets
-              key: grafana-admin-password
-        - name: GF_INSTALL_PLUGINS
-          value: "grafana-piechart-panel,grafana-worldmap-panel,grafana-clock-panel"
-        volumeMounts:
-        - name: grafana-data
-          mountPath: /var/lib/grafana
-        - name: grafana-config
-          mountPath: /etc/grafana/provisioning
+              name: testing-agent-secrets
+              key: GRAFANA_PASSWORD
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: "false"
+        - name: GF_SERVER_ROOT_URL
+          value: "https://testing.gocars.com/grafana"
+        - name: GF_SERVER_SERVE_FROM_SUB_PATH
+          value: "true"
         resources:
           requests:
             memory: "256Mi"
             cpu: "100m"
           limits:
-            memory: "512Mi"
+            memory: "1Gi"
             cpu: "500m"
+        volumeMounts:
+        - name: grafana-data
+          mountPath: /var/lib/grafana
+        - name: grafana-dashboards
+          mountPath: /etc/grafana/provisioning/dashboards
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
         livenessProbe:
-          httpGet:
-            path: /api/health
-            port: 3000
-          initialDelaySeconds: 60
-          periodSeconds: 30
-        readinessProbe:
           httpGet:
             path: /api/health
             port: 3000
           initialDelaySeconds: 30
           periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
       volumes:
       - name: grafana-data
         persistentVolumeClaim:
           claimName: grafana-data-pvc
-      - name: grafana-config
+      - name: grafana-dashboards
         configMap:
-          name: grafana-config
-
+          name: grafana-dashboards
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources
 ---
-# Grafana Service
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: grafana-service
+  name: grafana-datasources
   namespace: gocars-testing
-  labels:
-    app: grafana
-spec:
-  type: ClusterIP
-  ports:
-  - port: 3000
-    targetPort: 3000
-    name: grafana
-  selector:
-    app: grafana
-
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      url: http://prometheus-service:9090
+      isDefault: true
+      editable: true
 ---
-# ServiceMonitor for Prometheus to scrape testing agent metrics
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: testing-agent-metrics
-  namespace: gocars-testing
-  labels:
-    app: gocars-testing-agent
-spec:
-  selector:
-    matchLabels:
-      app: gocars-testing-agent
-  endpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-
----
-# PrometheusRule for alerting
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: testing-agent-alerts
-  namespace: gocars-testing
-  labels:
-    app: gocars-testing-agent
-spec:
-  groups:
-  - name: testing-agent.rules
-    rules:
-    - alert: TestingAgentDown
-      expr: up{job="testing-agent"} == 0
-      for: 5m
-      labels:
-        severity: critical
-      annotations:
-        summary: "Testing Agent is down"
-        description: "Testing Agent has been down for more than 5 minutes."
-    
-    - alert: HighTestFailureRate
-      expr: test_failure_rate > 0.1
-      for: 10m
-      labels:
-        severity: warning
-      annotations:
-        summary: "High test failure rate detected"
-        description: "Test failure rate is {{ $value }}% for more than 10 minutes."
-    
-    - alert: HighMemoryUsage
-      expr: container_memory_usage_bytes{pod=~"testing-agent-.*"} / container_spec_memory_limit_bytes > 0.9
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "High memory usage in testing agent"
-        description: "Memory usage is above 90% for more than 5 minutes."
-    
-    - alert: HighCPUUsage
-      expr: rate(container_cpu_usage_seconds_total{pod=~"testing-agent-.*"}[5m]) > 0.8
-      for: 10m
-      labels:
-        severity: warning
-      annotations:
-        summary: "High CPU usage in testing agent"
-        description: "CPU usage is above 80% for more than 10 minutes."
-
----
-# PVC for Prometheus data
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: ConfigMap
 metadata:
-  name: prometheus-data-pvc
+  name: grafana-dashboards
   namespace: gocars-testing
-  labels:
-    app: prometheus
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Gi
-  storageClassName: fast-ssd
-
----
-# PVC for Grafana data
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: grafana-data-pvc
-  namespace: gocars-testing
-  labels:
-    app: grafana
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: standard
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      updateIntervalSeconds: 10
+      allowUiUpdates: true
+      options:
+        path: /etc/grafana/provisioning/dashboards
+  testing-agent-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Testing Agent Dashboard",
+        "tags": ["testing", "gocars"],
+        "style": "dark",
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Test Execution Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(test_executions_total[5m])",
+                "legendFormat": "Tests per second"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Test Success Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(test_successes_total[5m]) / rate(test_executions_total[5m]) * 100",
+                "legendFormat": "Success Rate %"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Active Virtual Users",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "active_virtual_users",
+                "legendFormat": "Virtual Users"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+          },
+          {
+            "id": 4,
+            "title": "Error Rate by Category",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(test_errors_total[5m]) by (category)",
+                "legendFormat": "{{category}}"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+          }
+        ],
+        "time": {"from": "now-1h", "to": "now"},
+        "refresh": "5s"
+      }
+    }

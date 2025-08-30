@@ -1,8 +1,7 @@
-# Kubernetes namespace for GoCars Testing Agent
 apiVersion: v1
 kind: Namespace
 metadata:
   name: gocars-testing
   labels:
     name: gocars-testing
-    app: gocars-testing-agent
+    app: comprehensive-testing-agent

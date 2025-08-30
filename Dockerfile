@@ -1,74 +1,55 @@
-# Multi-stage Docker build for GoCars Testing Agent
+# Multi-stage build for the Comprehensive Testing Agent
 FROM node:18-alpine AS base
 
-# Set working directory
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    git \
-    curl \
-    bash
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
-
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Development stage
-FROM base AS development
-RUN npm ci
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-EXPOSE 3000 8080
-CMD ["npm", "run", "dev"]
 
-# Build stage
-FROM base AS build
-RUN npm ci
-COPY . .
+# Build the testing agent
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine AS production
-
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S testingagent -u 1001
-
-# Set working directory
+# Production image, copy all the files and run the testing agent
+FROM base AS runner
 WORKDIR /app
 
-# Install production dependencies
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 testingagent
 
 # Copy built application
-COPY --from=build --chown=testingagent:nodejs /app/dist ./dist
-COPY --from=build --chown=testingagent:nodejs /app/public ./public
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 # Create necessary directories
-RUN mkdir -p /app/logs /app/test-data /app/reports && \
-    chown -R testingagent:nodejs /app
+RUN mkdir -p /app/logs /app/reports /app/data
+RUN chown -R testingagent:nodejs /app
 
-# Switch to non-root user
 USER testingagent
 
+# Expose ports for API and monitoring
+EXPOSE 3000 9090
+
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
 
-# Expose ports
-EXPOSE 3000 8080
-
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV METRICS_PORT=8080
-
-# Start the application
-CMD ["node", "dist/index.js"]
+# Start the testing agent
+CMD ["node", "dist/testing/runAllTests.js"]

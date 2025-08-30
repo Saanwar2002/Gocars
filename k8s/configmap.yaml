@@ -1,116 +1,56 @@
-# ConfigMap for GoCars Testing Agent configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: testing-agent-config
   namespace: gocars-testing
-  labels:
-    app: gocars-testing-agent
 data:
   NODE_ENV: "production"
-  PORT: "3000"
-  METRICS_PORT: "8080"
   LOG_LEVEL: "info"
-  REDIS_URL: "redis://redis-service:6379"
-  MONGODB_URL: "mongodb://mongodb-service:27017/gocars-testing"
-  POSTGRES_URL: "postgresql://postgres:password@postgres-service:5432/gocars_testing"
-  
-  # Testing configuration
-  TEST_TIMEOUT: "300000"
-  MAX_CONCURRENT_TESTS: "10"
-  TEST_DATA_RETENTION_DAYS: "30"
-  
-  # Analytics configuration
-  METRICS_COLLECTION_INTERVAL: "60000"
-  ENABLE_REAL_TIME_ANALYSIS: "true"
-  ENABLE_BUSINESS_IMPACT_ANALYSIS: "true"
-  
-  # Security configuration
-  ENABLE_SECURITY_SCANNING: "true"
-  SECURITY_SCAN_INTERVAL: "3600000"
-  
-  # Performance configuration
-  ENABLE_PERFORMANCE_MONITORING: "true"
-  PERFORMANCE_THRESHOLD_CPU: "80"
-  PERFORMANCE_THRESHOLD_MEMORY: "85"
-
+  METRICS_ENABLED: "true"
+  AUTO_FIX_ENABLED: "true"
+  API_PORT: "3000"
+  METRICS_PORT: "9090"
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "testing_agent"
+  POSTGRES_USER: "testingagent"
 ---
-# ConfigMap for application configuration files
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: testing-agent-app-config
+  name: prometheus-config
   namespace: gocars-testing
-  labels:
-    app: gocars-testing-agent
 data:
-  app-config.json: |
-    {
-      "testing": {
-        "suites": {
-          "firebase": {
-            "enabled": true,
-            "timeout": 30000,
-            "retries": 3
-          },
-          "websocket": {
-            "enabled": true,
-            "timeout": 15000,
-            "retries": 2
-          },
-          "ui": {
-            "enabled": true,
-            "browsers": ["chrome", "firefox"],
-            "timeout": 60000
-          },
-          "api": {
-            "enabled": true,
-            "timeout": 10000,
-            "retries": 3
-          }
-        },
-        "reporting": {
-          "formats": ["json", "html", "junit"],
-          "outputDir": "/app/reports",
-          "includeScreenshots": true
-        }
-      },
-      "analytics": {
-        "kpis": {
-          "testPassRate": {
-            "target": 95,
-            "critical": 80,
-            "warning": 90
-          },
-          "systemAvailability": {
-            "target": 99.9,
-            "critical": 95,
-            "warning": 98
-          },
-          "responseTime": {
-            "target": 500,
-            "critical": 2000,
-            "warning": 1000
-          }
-        }
-      }
-    }
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
 
-  logging-config.json: |
-    {
-      "level": "info",
-      "format": "json",
-      "transports": [
-        {
-          "type": "console",
-          "level": "info"
-        },
-        {
-          "type": "file",
-          "level": "debug",
-          "filename": "/app/logs/testing-agent.log",
-          "maxsize": "10MB",
-          "maxFiles": 5
-        }
-      ]
-    }
+    rule_files:
+      - "first_rules.yml"
+
+    scrape_configs:
+      - job_name: 'testing-agent'
+        static_configs:
+          - targets: ['testing-agent-service:9090']
+        metrics_path: /metrics
+        scrape_interval: 10s
+
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__

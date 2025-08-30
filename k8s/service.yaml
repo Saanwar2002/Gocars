@@ -1,76 +1,88 @@
-# Service for GoCars Testing Agent
 apiVersion: v1
 kind: Service
 metadata:
   name: testing-agent-service
   namespace: gocars-testing
   labels:
-    app: gocars-testing-agent
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "8080"
-    prometheus.io/path: "/metrics"
+    app: testing-agent
 spec:
   type: ClusterIP
   ports:
-  - name: http
-    port: 80
+  - port: 3000
     targetPort: 3000
     protocol: TCP
-  - name: metrics
-    port: 8080
-    targetPort: 8080
+    name: api
+  - port: 9090
+    targetPort: 9090
     protocol: TCP
+    name: metrics
   selector:
-    app: gocars-testing-agent
-
+    app: testing-agent
 ---
-# Headless service for StatefulSet components
 apiVersion: v1
 kind: Service
 metadata:
-  name: testing-agent-headless
+  name: redis-service
   namespace: gocars-testing
   labels:
-    app: gocars-testing-agent
+    app: redis
 spec:
   type: ClusterIP
-  clusterIP: None
   ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
+  - port: 6379
+    targetPort: 6379
     protocol: TCP
-  - name: metrics
-    port: 8080
-    targetPort: 8080
-    protocol: TCP
+    name: redis
   selector:
-    app: gocars-testing-agent
-
+    app: redis
 ---
-# LoadBalancer service for external access (optional)
 apiVersion: v1
 kind: Service
 metadata:
-  name: testing-agent-lb
+  name: postgres-service
   namespace: gocars-testing
   labels:
-    app: gocars-testing-agent
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    app: postgres
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
-  - name: http
-    port: 80
-    targetPort: 3000
+  - port: 5432
+    targetPort: 5432
     protocol: TCP
-  - name: https
-    port: 443
-    targetPort: 3000
-    protocol: TCP
+    name: postgres
   selector:
-    app: gocars-testing-agent
-  sessionAffinity: ClientIP
+    app: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: gocars-testing
+  labels:
+    app: prometheus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: prometheus
+  selector:
+    app: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: gocars-testing
+  labels:
+    app: grafana
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: grafana
+  selector:
+    app: grafana

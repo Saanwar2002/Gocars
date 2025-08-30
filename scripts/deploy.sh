@@ -1,13 +1,7 @@
 #!/bin/bash
 
 # GoCars Testing Agent Deployment Script
-set -euo pipefail
-
-# Configuration
-NAMESPACE="gocars-testing"
-IMAGE_TAG="${IMAGE_TAG:-latest}"
-ENVIRONMENT="${ENVIRONMENT:-production}"
-KUBECTL_CONTEXT="${KUBECTL_CONTEXT:-}"
+set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -16,298 +10,224 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Logging functions
-log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
+# Configuration
+NAMESPACE="gocars-testing"
+IMAGE_TAG=${1:-latest}
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-"gocars"}
+IMAGE_NAME="${DOCKER_REGISTRY}/testing-agent:${IMAGE_TAG}"
 
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
+echo -e "${BLUE}🚀 Starting GoCars Testing Agent Deployment${NC}"
+echo -e "${BLUE}Image: ${IMAGE_NAME}${NC}"
+echo -e "${BLUE}Namespace: ${NAMESPACE}${NC}"
 
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-# Check prerequisites
-check_prerequisites() {
-    log_info "Checking prerequisites..."
-    
-    # Check if kubectl is installed
+# Function to check if kubectl is available
+check_kubectl() {
     if ! command -v kubectl &> /dev/null; then
-        log_error "kubectl is not installed or not in PATH"
+        echo -e "${RED}❌ kubectl is not installed or not in PATH${NC}"
         exit 1
     fi
-    
-    # Check if docker is installed
+    echo -e "${GREEN}✅ kubectl is available${NC}"
+}
+
+# Function to check if Docker is available
+check_docker() {
     if ! command -v docker &> /dev/null; then
-        log_error "docker is not installed or not in PATH"
+        echo -e "${RED}❌ Docker is not installed or not in PATH${NC}"
         exit 1
     fi
-    
-    # Check kubectl context
-    if [[ -n "$KUBECTL_CONTEXT" ]]; then
-        kubectl config use-context "$KUBECTL_CONTEXT"
-    fi
-    
-    # Verify cluster connection
-    if ! kubectl cluster-info &> /dev/null; then
-        log_error "Cannot connect to Kubernetes cluster"
-        exit 1
-    fi
-    
-    log_success "Prerequisites check passed"
+    echo -e "${GREEN}✅ Docker is available${NC}"
 }
 
-# Build Docker image
+# Function to build Docker image
 build_image() {
-    log_info "Building Docker image..."
+    echo -e "${YELLOW}🔨 Building Docker image...${NC}"
+    docker build -t ${IMAGE_NAME} .
     
-    docker build -t "gocars/testing-agent:${IMAGE_TAG}" .
-    
-    if [[ "$ENVIRONMENT" != "local" ]]; then
-        log_info "Pushing image to registry..."
-        docker push "gocars/testing-agent:${IMAGE_TAG}"
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Docker image built successfully${NC}"
+    else
+        echo -e "${RED}❌ Failed to build Docker image${NC}"
+        exit 1
     fi
-    
-    log_success "Docker image built and pushed"
 }
 
-# Create namespace
+# Function to push Docker image
+push_image() {
+    echo -e "${YELLOW}📤 Pushing Docker image to registry...${NC}"
+    docker push ${IMAGE_NAME}
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Docker image pushed successfully${NC}"
+    else
+        echo -e "${RED}❌ Failed to push Docker image${NC}"
+        exit 1
+    fi
+}
+
+# Function to create namespace
 create_namespace() {
-    log_info "Creating namespace..."
-    
-    if kubectl get namespace "$NAMESPACE" &> /dev/null; then
-        log_warning "Namespace $NAMESPACE already exists"
-    else
-        kubectl apply -f k8s/namespace.yaml
-        log_success "Namespace created"
-    fi
+    echo -e "${YELLOW}📁 Creating namespace...${NC}"
+    kubectl apply -f k8s/namespace.yaml
+    echo -e "${GREEN}✅ Namespace created/updated${NC}"
 }
 
-# Deploy secrets
-deploy_secrets() {
-    log_info "Deploying secrets..."
+# Function to apply secrets
+apply_secrets() {
+    echo -e "${YELLOW}🔐 Applying secrets...${NC}"
     
-    # Check if secrets already exist
-    if kubectl get secret testing-agent-secrets -n "$NAMESPACE" &> /dev/null; then
-        log_warning "Secrets already exist, skipping creation"
-    else
-        kubectl apply -f k8s/secrets.yaml
-        log_success "Secrets deployed"
+    # Check if secrets file exists and has been configured
+    if [ ! -f "k8s/secrets.yaml" ]; then
+        echo -e "${RED}❌ secrets.yaml not found. Please create it first.${NC}"
+        exit 1
     fi
+    
+    # Check if Firebase secrets are configured
+    if grep -q '""' k8s/secrets.yaml; then
+        echo -e "${YELLOW}⚠️  Warning: Some secrets appear to be empty. Please configure them properly.${NC}"
+        read -p "Continue anyway? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+    
+    kubectl apply -f k8s/secrets.yaml
+    echo -e "${GREEN}✅ Secrets applied${NC}"
 }
 
-# Deploy ConfigMaps
-deploy_configmaps() {
-    log_info "Deploying ConfigMaps..."
-    
+# Function to apply ConfigMaps
+apply_configmaps() {
+    echo -e "${YELLOW}⚙️  Applying ConfigMaps...${NC}"
     kubectl apply -f k8s/configmap.yaml
-    log_success "ConfigMaps deployed"
+    echo -e "${GREEN}✅ ConfigMaps applied${NC}"
 }
 
-# Deploy RBAC
-deploy_rbac() {
-    log_info "Deploying RBAC..."
-    
-    kubectl apply -f k8s/rbac.yaml
-    log_success "RBAC deployed"
-}
-
-# Deploy PVCs
-deploy_storage() {
-    log_info "Deploying storage..."
-    
+# Function to apply PVCs
+apply_pvcs() {
+    echo -e "${YELLOW}💾 Creating Persistent Volume Claims...${NC}"
     kubectl apply -f k8s/pvc.yaml
-    log_success "Storage deployed"
+    echo -e "${GREEN}✅ PVCs created${NC}"
 }
 
-# Deploy databases
-deploy_databases() {
-    log_info "Deploying databases..."
+# Function to deploy applications
+deploy_apps() {
+    echo -e "${YELLOW}🚀 Deploying applications...${NC}"
     
-    kubectl apply -f k8s/databases.yaml
-    
-    # Wait for databases to be ready
-    log_info "Waiting for databases to be ready..."
-    kubectl wait --for=condition=ready pod -l app=redis -n "$NAMESPACE" --timeout=300s
-    kubectl wait --for=condition=ready pod -l app=mongodb -n "$NAMESPACE" --timeout=300s
-    kubectl wait --for=condition=ready pod -l app=postgres -n "$NAMESPACE" --timeout=300s
-    
-    log_success "Databases deployed and ready"
-}
-
-# Deploy main application
-deploy_application() {
-    log_info "Deploying testing agent application..."
-    
-    # Update image tag in deployment
-    sed -i.bak "s|gocars/testing-agent:latest|gocars/testing-agent:${IMAGE_TAG}|g" k8s/deployment.yaml
+    # Update image in deployment
+    sed -i.bak "s|image: gocars/testing-agent:latest|image: ${IMAGE_NAME}|g" k8s/deployment.yaml
     
     kubectl apply -f k8s/deployment.yaml
     kubectl apply -f k8s/service.yaml
-    
-    # Wait for deployment to be ready
-    log_info "Waiting for application to be ready..."
-    kubectl wait --for=condition=available deployment/testing-agent -n "$NAMESPACE" --timeout=600s
+    kubectl apply -f k8s/monitoring.yaml
     
     # Restore original deployment file
     mv k8s/deployment.yaml.bak k8s/deployment.yaml
     
-    log_success "Application deployed and ready"
+    echo -e "${GREEN}✅ Applications deployed${NC}"
 }
 
-# Deploy HPA
-deploy_autoscaling() {
-    log_info "Deploying autoscaling..."
-    
+# Function to apply HPA
+apply_hpa() {
+    echo -e "${YELLOW}📈 Setting up Horizontal Pod Autoscaler...${NC}"
     kubectl apply -f k8s/hpa.yaml
-    log_success "Autoscaling deployed"
+    echo -e "${GREEN}✅ HPA configured${NC}"
 }
 
-# Deploy Ingress
-deploy_ingress() {
-    log_info "Deploying Ingress..."
-    
+# Function to apply Ingress
+apply_ingress() {
+    echo -e "${YELLOW}🌐 Setting up Ingress...${NC}"
     kubectl apply -f k8s/ingress.yaml
-    log_success "Ingress deployed"
+    echo -e "${GREEN}✅ Ingress configured${NC}"
 }
 
-# Deploy monitoring (optional)
-deploy_monitoring() {
-    if [[ "$ENVIRONMENT" == "production" ]] || [[ "$ENVIRONMENT" == "staging" ]]; then
-        log_info "Deploying monitoring stack..."
-        
-        kubectl apply -f k8s/monitoring.yaml
-        
-        # Wait for monitoring to be ready
-        log_info "Waiting for monitoring to be ready..."
-        kubectl wait --for=condition=available deployment/prometheus -n "$NAMESPACE" --timeout=300s
-        kubectl wait --for=condition=available deployment/grafana -n "$NAMESPACE" --timeout=300s
-        
-        log_success "Monitoring deployed"
-    else
-        log_info "Skipping monitoring deployment for $ENVIRONMENT environment"
-    fi
-}
-
-# Verify deployment
-verify_deployment() {
-    log_info "Verifying deployment..."
+# Function to wait for deployments
+wait_for_deployments() {
+    echo -e "${YELLOW}⏳ Waiting for deployments to be ready...${NC}"
     
-    # Check pod status
-    kubectl get pods -n "$NAMESPACE"
+    deployments=("testing-agent" "redis" "postgres" "prometheus" "grafana")
     
-    # Check service endpoints
-    kubectl get endpoints -n "$NAMESPACE"
-    
-    # Test health endpoint
-    if kubectl get service testing-agent-service -n "$NAMESPACE" &> /dev/null; then
-        log_info "Testing health endpoint..."
-        kubectl port-forward service/testing-agent-service 8080:80 -n "$NAMESPACE" &
-        PORT_FORWARD_PID=$!
-        sleep 5
+    for deployment in "${deployments[@]}"; do
+        echo -e "${BLUE}Waiting for ${deployment}...${NC}"
+        kubectl wait --for=condition=available --timeout=300s deployment/${deployment} -n ${NAMESPACE}
         
-        if curl -f http://localhost:8080/health &> /dev/null; then
-            log_success "Health check passed"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}✅ ${deployment} is ready${NC}"
         else
-            log_warning "Health check failed"
+            echo -e "${RED}❌ ${deployment} failed to become ready${NC}"
+            exit 1
         fi
-        
-        kill $PORT_FORWARD_PID 2>/dev/null || true
-    fi
+    done
+}
+
+# Function to show deployment status
+show_status() {
+    echo -e "${BLUE}📊 Deployment Status${NC}"
+    echo -e "${BLUE}==================${NC}"
     
-    log_success "Deployment verification completed"
+    echo -e "\n${YELLOW}Pods:${NC}"
+    kubectl get pods -n ${NAMESPACE}
+    
+    echo -e "\n${YELLOW}Services:${NC}"
+    kubectl get services -n ${NAMESPACE}
+    
+    echo -e "\n${YELLOW}Ingress:${NC}"
+    kubectl get ingress -n ${NAMESPACE}
+    
+    echo -e "\n${YELLOW}HPA:${NC}"
+    kubectl get hpa -n ${NAMESPACE}
+    
+    echo -e "\n${GREEN}🎉 Deployment completed successfully!${NC}"
+    echo -e "${BLUE}Access the testing agent at: https://testing.gocars.com${NC}"
+    echo -e "${BLUE}Grafana dashboard: https://testing.gocars.com/grafana${NC}"
+    echo -e "${BLUE}Prometheus: https://testing.gocars.com/prometheus${NC}"
 }
 
-# Cleanup function
-cleanup() {
-    log_info "Cleaning up..."
-    # Kill any background processes
-    jobs -p | xargs -r kill 2>/dev/null || true
-}
-
-# Main deployment function
+# Main deployment flow
 main() {
-    log_info "Starting GoCars Testing Agent deployment..."
-    log_info "Environment: $ENVIRONMENT"
-    log_info "Image Tag: $IMAGE_TAG"
-    log_info "Namespace: $NAMESPACE"
+    echo -e "${BLUE}Starting deployment process...${NC}"
     
-    # Set trap for cleanup
-    trap cleanup EXIT
+    check_kubectl
+    check_docker
     
-    check_prerequisites
-    
-    if [[ "$ENVIRONMENT" != "local" ]]; then
+    # Build and push image if not in local mode
+    if [ "${LOCAL_DEPLOY:-false}" != "true" ]; then
         build_image
+        push_image
     fi
     
     create_namespace
-    deploy_secrets
-    deploy_configmaps
-    deploy_rbac
-    deploy_storage
-    deploy_databases
-    deploy_application
-    deploy_autoscaling
-    deploy_ingress
-    deploy_monitoring
-    verify_deployment
-    
-    log_success "Deployment completed successfully!"
-    
-    # Display access information
-    echo ""
-    log_info "Access Information:"
-    echo "  Application: https://testing.gocars.com"
-    echo "  API: https://api.testing.gocars.com"
-    
-    if [[ "$ENVIRONMENT" == "production" ]] || [[ "$ENVIRONMENT" == "staging" ]]; then
-        echo "  Monitoring: https://monitoring.testing.gocars.com"
-    fi
-    
-    echo ""
-    log_info "To check deployment status:"
-    echo "  kubectl get pods -n $NAMESPACE"
-    echo "  kubectl logs -f deployment/testing-agent -n $NAMESPACE"
+    apply_secrets
+    apply_configmaps
+    apply_pvcs
+    deploy_apps
+    apply_hpa
+    apply_ingress
+    wait_for_deployments
+    show_status
 }
 
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --environment|-e)
-            ENVIRONMENT="$2"
-            shift 2
-            ;;
-        --image-tag|-t)
-            IMAGE_TAG="$2"
-            shift 2
-            ;;
-        --context|-c)
-            KUBECTL_CONTEXT="$2"
-            shift 2
-            ;;
-        --help|-h)
-            echo "Usage: $0 [OPTIONS]"
-            echo ""
-            echo "Options:"
-            echo "  -e, --environment    Deployment environment (local|staging|production)"
-            echo "  -t, --image-tag      Docker image tag (default: latest)"
-            echo "  -c, --context        Kubectl context to use"
-            echo "  -h, --help          Show this help message"
-            exit 0
-            ;;
-        *)
-            log_error "Unknown option: $1"
-            exit 1
-            ;;
-    esac
-done
-
-# Run main function
-main
+# Handle script arguments
+case "${1:-deploy}" in
+    "build")
+        check_docker
+        build_image
+        ;;
+    "push")
+        check_docker
+        push_image
+        ;;
+    "deploy")
+        main
+        ;;
+    "status")
+        show_status
+        ;;
+    *)
+        echo "Usage: $0 [build|push|deploy|status] [image_tag]"
+        echo "  build  - Build Docker image only"
+        echo "  push   - Push Docker image to registry"
+        echo "  deploy - Full deployment (default)"
+        echo "  status - Show deployment status"
+        exit 1
+        ;;
+esac

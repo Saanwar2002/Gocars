@@ -1,699 +1,400 @@
-# GoCars Testing Agent - Deployment Guide
+# GoCars Testing Agent - Containerized Deployment
 
-This guide covers the containerized deployment of the GoCars Testing Agent using Docker and Kubernetes.
+This document provides comprehensive instructions for deploying the GoCars Testing Agent using Docker and Kubernetes.
 
-## Table of Contents
+## Overview
 
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Docker Deployment](#docker-deployment)
-- [Kubernetes Deployment](#kubernetes-deployment)
-- [Configuration](#configuration)
-- [Monitoring](#monitoring)
-- [Scaling](#scaling)
-- [Security](#security)
-- [Troubleshooting](#troubleshooting)
+The GoCars Testing Agent is containerized for easy deployment and scaling. It includes:
+
+- **Main Testing Agent**: Core testing functionality with REST API
+- **Metrics Service**: Prometheus-compatible metrics endpoint
+- **Health Checks**: Kubernetes-ready health and readiness probes
+- **Monitoring Stack**: Prometheus and Grafana for observability
+- **Auto-scaling**: Horizontal Pod Autoscaler configuration
+- **Persistent Storage**: For logs, reports, and data
 
 ## Prerequisites
 
-### Required Tools
+### Local Development
+- Node.js 18+
+- Docker Desktop
+- Docker Compose
 
-- **Docker** (v20.10+)
-- **Docker Compose** (v2.0+)
-- **Kubernetes** (v1.24+)
-- **kubectl** (compatible with your cluster version)
-- **Helm** (v3.8+) - optional but recommended
-
-### System Requirements
-
-#### Minimum Requirements
-- **CPU**: 2 cores
-- **Memory**: 4GB RAM
-- **Storage**: 20GB available space
-- **Network**: Stable internet connection
-
-#### Recommended for Production
-- **CPU**: 4+ cores
-- **Memory**: 8GB+ RAM
-- **Storage**: 100GB+ SSD storage
-- **Network**: High-bandwidth connection
-
-### Kubernetes Cluster Requirements
-
-- **Node Count**: 3+ nodes (for high availability)
-- **Storage Classes**: 
-  - `fast-ssd` for databases and critical data
-  - `standard` for logs and reports
-- **Ingress Controller**: NGINX Ingress Controller
-- **Cert Manager**: For SSL/TLS certificates
-- **Metrics Server**: For HPA functionality
+### Production Deployment
+- Kubernetes cluster (1.20+)
+- kubectl configured
+- Helm (optional, for advanced deployments)
+- Container registry access
 
 ## Quick Start
 
-### Local Development with Docker Compose
+### 1. Local Development with Docker Compose
 
 ```bash
-# Clone the repository
-git clone https://github.com/Saanwar2002/Gocars.git
-cd Gocars
+# Clone and setup
+git clone <repository>
+cd gocars-testing-agent
 
-# Start the development environment
-docker-compose --profile dev up -d
+# Copy environment configuration
+cp .env.example .env
+# Edit .env with your configuration
 
-# Check status
-docker-compose ps
+# Build and run with Docker Compose
+docker-compose up --build
 
-# View logs
-docker-compose logs -f testing-agent-dev
+# Access services
+# API: http://localhost:3000
+# Metrics: http://localhost:9090/metrics
+# Grafana: http://localhost:3001 (admin/admin123)
+# Prometheus: http://localhost:9091
 ```
 
-Access the application at:
-- **Main App**: http://localhost:3001
-- **Metrics**: http://localhost:8081/metrics
-
-### Production Deployment with Kubernetes
+### 2. Build Docker Image
 
 ```bash
+# Build the testing agent image
+npm run docker:build
+
+# Or manually
+docker build -t gocars/testing-agent:latest .
+
+# Run the container
+npm run docker:run
+
+# Or manually
+docker run -p 3000:3000 -p 9090:9090 gocars/testing-agent:latest
+```
+
+### 3. Kubernetes Deployment
+
+```bash
+# Make scripts executable (Linux/Mac)
+chmod +x scripts/deploy.sh scripts/undeploy.sh
+
 # Deploy to Kubernetes
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh --environment production --image-tag v1.0.0
+./scripts/deploy.sh
+
+# Or on Windows
+bash scripts/deploy.sh
 
 # Check deployment status
 kubectl get pods -n gocars-testing
-
-# View logs
-kubectl logs -f deployment/testing-agent -n gocars-testing
-```
-
-## Docker Deployment
-
-### Building the Image
-
-```bash
-# Build production image
-docker build -t gocars/testing-agent:latest .
-
-# Build development image
-docker build --target development -t gocars/testing-agent:dev .
-
-# Build with specific tag
-docker build -t gocars/testing-agent:v1.0.0 .
-```
-
-### Running with Docker
-
-```bash
-# Run standalone container
-docker run -d \
-  --name gocars-testing-agent \
-  -p 3000:3000 \
-  -p 8080:8080 \
-  -e NODE_ENV=production \
-  -v $(pwd)/test-data:/app/test-data \
-  -v $(pwd)/logs:/app/logs \
-  gocars/testing-agent:latest
-
-# Run with environment file
-docker run -d \
-  --name gocars-testing-agent \
-  --env-file .env.production \
-  -p 3000:3000 \
-  -p 8080:8080 \
-  gocars/testing-agent:latest
-```
-
-### Docker Compose Profiles
-
-#### Development Profile
-```bash
-# Start development environment
-docker-compose --profile dev up -d
-
-# Includes:
-# - Testing agent (development mode)
-# - Redis
-# - MongoDB
-# - PostgreSQL
-```
-
-#### Production Profile
-```bash
-# Start production environment
-docker-compose --profile production up -d
-
-# Includes:
-# - Testing agent (production mode)
-# - Redis
-# - MongoDB
-# - PostgreSQL
-# - Nginx reverse proxy
-```
-
-#### Monitoring Profile
-```bash
-# Start with monitoring
-docker-compose --profile monitoring up -d
-
-# Additional services:
-# - Prometheus
-# - Grafana
-```
-
-### Environment Variables
-
-Create `.env` file for Docker Compose:
-
-```bash
-# Database passwords
-REDIS_PASSWORD=your_redis_password
-MONGO_PASSWORD=your_mongo_password
-POSTGRES_PASSWORD=your_postgres_password
-
-# Application secrets
-JWT_SECRET=your_jwt_secret
-API_KEY=your_api_key
-ENCRYPTION_KEY=your_encryption_key
-
-# External services
-SLACK_WEBHOOK_URL=your_slack_webhook
-SMTP_USERNAME=your_smtp_username
-SMTP_PASSWORD=your_smtp_password
-
-# Monitoring
-GRAFANA_PASSWORD=your_grafana_password
-```
-
-## Kubernetes Deployment
-
-### Automated Deployment
-
-Use the provided deployment script:
-
-```bash
-# Deploy to staging
-./scripts/deploy.sh --environment staging --image-tag v1.0.0
-
-# Deploy to production
-./scripts/deploy.sh --environment production --image-tag v1.0.0
-
-# Deploy with specific context
-./scripts/deploy.sh --context my-cluster --environment production
-```
-
-### Manual Deployment
-
-```bash
-# Create namespace
-kubectl apply -f k8s/namespace.yaml
-
-# Deploy secrets (update with real values first)
-kubectl apply -f k8s/secrets.yaml
-
-# Deploy configuration
-kubectl apply -f k8s/configmap.yaml
-
-# Deploy RBAC
-kubectl apply -f k8s/rbac.yaml
-
-# Deploy storage
-kubectl apply -f k8s/pvc.yaml
-
-# Deploy databases
-kubectl apply -f k8s/databases.yaml
-
-# Wait for databases
-kubectl wait --for=condition=ready pod -l component=database -n gocars-testing --timeout=300s
-
-# Deploy main application
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
-
-# Deploy autoscaling
-kubectl apply -f k8s/hpa.yaml
-
-# Deploy ingress
-kubectl apply -f k8s/ingress.yaml
-
-# Deploy monitoring (optional)
-kubectl apply -f k8s/monitoring.yaml
-```
-
-### Updating Secrets
-
-Before deployment, update the secrets in `k8s/secrets.yaml`:
-
-```bash
-# Generate base64 encoded secrets
-echo -n "your_password" | base64
-
-# Update secrets.yaml with real values
-# Then apply:
-kubectl apply -f k8s/secrets.yaml
-```
-
-### Verifying Deployment
-
-```bash
-# Check all resources
-kubectl get all -n gocars-testing
-
-# Check pod status
-kubectl get pods -n gocars-testing -o wide
-
-# Check services
 kubectl get services -n gocars-testing
-
-# Check ingress
-kubectl get ingress -n gocars-testing
-
-# Check persistent volumes
-kubectl get pv,pvc -n gocars-testing
-
-# Test connectivity
-kubectl port-forward service/testing-agent-service 8080:80 -n gocars-testing
-curl http://localhost:8080/health
 ```
 
 ## Configuration
 
-### Application Configuration
+### Environment Variables
 
-The application can be configured through:
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode | `production` |
+| `API_PORT` | Main API server port | `3000` |
+| `METRICS_PORT` | Metrics server port | `9090` |
+| `LOG_LEVEL` | Logging level | `info` |
+| `AUTO_FIX_ENABLED` | Enable automatic fixes | `true` |
+| `METRICS_ENABLED` | Enable metrics collection | `true` |
+| `MAX_CONCURRENT_USERS` | Max virtual users | `100` |
+| `TEST_TIMEOUT` | Test timeout (ms) | `300000` |
 
-1. **Environment Variables** (highest priority)
-2. **ConfigMaps** (Kubernetes)
-3. **Configuration Files** (mounted volumes)
-4. **Default Values** (lowest priority)
+### Firebase Configuration
 
-### Key Configuration Options
-
-#### Testing Configuration
-```yaml
-TEST_TIMEOUT: "300000"              # Test timeout in milliseconds
-MAX_CONCURRENT_TESTS: "10"         # Maximum concurrent test executions
-TEST_DATA_RETENTION_DAYS: "30"     # How long to keep test data
-```
-
-#### Analytics Configuration
-```yaml
-METRICS_COLLECTION_INTERVAL: "60000"        # Metrics collection interval
-ENABLE_REAL_TIME_ANALYSIS: "true"           # Enable real-time analysis
-ENABLE_BUSINESS_IMPACT_ANALYSIS: "true"     # Enable business impact analysis
-```
-
-#### Performance Configuration
-```yaml
-PERFORMANCE_THRESHOLD_CPU: "80"      # CPU usage threshold (%)
-PERFORMANCE_THRESHOLD_MEMORY: "85"   # Memory usage threshold (%)
+```bash
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_API_KEY=your-api-key
+FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
+FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=123456789
+FIREBASE_APP_ID=1:123456789:web:abcdef123456
 ```
 
 ### Database Configuration
 
-#### Redis Configuration
-```yaml
-REDIS_URL: "redis://redis-service:6379"
-REDIS_PASSWORD: "from_secret"
-```
-
-#### MongoDB Configuration
-```yaml
-MONGODB_URL: "mongodb://mongodb-service:27017/gocars-testing"
-MONGO_USERNAME: "from_secret"
-MONGO_PASSWORD: "from_secret"
-```
-
-#### PostgreSQL Configuration
-```yaml
-POSTGRES_URL: "postgresql://postgres:password@postgres-service:5432/gocars_testing"
-POSTGRES_USERNAME: "from_secret"
-POSTGRES_PASSWORD: "from_secret"
-```
-
-## Monitoring
-
-### Prometheus Metrics
-
-The application exposes metrics at `/metrics` endpoint:
-
-- **Test Metrics**: Pass rates, execution times, failure counts
-- **System Metrics**: CPU, memory, disk usage
-- **Business Metrics**: User satisfaction, system availability
-- **Custom Metrics**: Application-specific KPIs
-
-### Grafana Dashboards
-
-Pre-configured dashboards for:
-
-- **Application Overview**: High-level system health
-- **Test Execution**: Test results and trends
-- **Performance Monitoring**: Resource usage and bottlenecks
-- **Business Impact**: Business metrics and KPIs
-
-### Alerting Rules
-
-Configured alerts for:
-
-- **Application Down**: Service unavailability
-- **High Test Failure Rate**: Unusual test failures
-- **Resource Usage**: High CPU/memory usage
-- **Database Issues**: Database connectivity problems
-
-### Accessing Monitoring
-
 ```bash
-# Port forward to Prometheus
-kubectl port-forward service/prometheus-service 9090:9090 -n gocars-testing
-
-# Port forward to Grafana
-kubectl port-forward service/grafana-service 3000:3000 -n gocars-testing
-
-# Access via ingress (if configured)
-# https://monitoring.testing.gocars.com/prometheus
-# https://monitoring.testing.gocars.com/grafana
+POSTGRES_HOST=postgres-service
+POSTGRES_PORT=5432
+POSTGRES_DB=testing_agent
+POSTGRES_USER=testingagent
+POSTGRES_PASSWORD=testingagent123
 ```
 
-## Scaling
+## Kubernetes Resources
 
-### Horizontal Pod Autoscaler (HPA)
+### Core Components
 
-Automatic scaling based on:
+1. **Namespace**: `gocars-testing`
+2. **Deployments**:
+   - `testing-agent` (3 replicas)
+   - `redis` (1 replica)
+   - `postgres` (1 replica)
+   - `prometheus` (1 replica)
+   - `grafana` (1 replica)
+
+3. **Services**:
+   - `testing-agent-service` (ClusterIP)
+   - `redis-service` (ClusterIP)
+   - `postgres-service` (ClusterIP)
+   - `prometheus-service` (ClusterIP)
+   - `grafana-service` (ClusterIP)
+
+4. **Storage**:
+   - `testing-agent-logs-pvc` (10Gi)
+   - `testing-agent-reports-pvc` (20Gi)
+   - `redis-data-pvc` (5Gi)
+   - `postgres-data-pvc` (50Gi)
+   - `prometheus-data-pvc` (20Gi)
+   - `grafana-data-pvc` (5Gi)
+
+### Auto-scaling Configuration
+
+The Horizontal Pod Autoscaler (HPA) scales the testing agent based on:
+
 - **CPU Usage**: Target 70%
 - **Memory Usage**: Target 80%
-- **Custom Metrics**: Active tests count
+- **Active Test Sessions**: Target 10 per pod
+- **Min Replicas**: 3
+- **Max Replicas**: 20
 
-```bash
-# Check HPA status
-kubectl get hpa -n gocars-testing
+### Health Checks
 
-# View HPA details
-kubectl describe hpa testing-agent-hpa -n gocars-testing
-```
+- **Liveness Probe**: `/health` endpoint
+- **Readiness Probe**: `/ready` endpoint
+- **Startup Probe**: 40s initial delay
 
-### Manual Scaling
+## Monitoring and Observability
 
-```bash
-# Scale deployment
-kubectl scale deployment testing-agent --replicas=5 -n gocars-testing
+### Metrics
 
-# Check scaling status
-kubectl get deployment testing-agent -n gocars-testing
-```
+The testing agent exposes Prometheus metrics at `/metrics`:
 
-### Vertical Pod Autoscaler (VPA)
+- `test_executions_total` - Total test executions
+- `test_successes_total` - Successful tests
+- `test_failures_total` - Failed tests
+- `active_virtual_users` - Current virtual users
+- `test_duration_seconds` - Test execution time
+- `memory_usage_bytes` - Memory consumption
+- `api_request_duration_seconds` - API response times
 
-Automatic resource adjustment:
-- **CPU**: 100m - 2000m
-- **Memory**: 256Mi - 4Gi
+### Dashboards
 
-```bash
-# Check VPA recommendations
-kubectl describe vpa testing-agent-vpa -n gocars-testing
-```
+Grafana dashboards are automatically provisioned:
 
-### Database Scaling
+- **Testing Agent Overview**: Key metrics and health
+- **Performance Metrics**: Response times and throughput
+- **System Resources**: CPU, memory, and storage
+- **Error Analysis**: Error rates and categories
 
-#### Redis Scaling
-```bash
-# Scale Redis (if using deployment instead of StatefulSet)
-kubectl scale deployment redis --replicas=3 -n gocars-testing
-```
+### Alerting
 
-#### MongoDB Scaling
-```bash
-# For production, consider MongoDB replica sets
-# Update StatefulSet replicas
-kubectl patch statefulset mongodb -p '{"spec":{"replicas":3}}' -n gocars-testing
-```
+Prometheus alerting rules (configure as needed):
+
+- High error rate (>5%)
+- High response time (>2s)
+- Memory usage (>90%)
+- Pod restart frequency
+- Test execution failures
 
 ## Security
 
-### Network Policies
+### Container Security
 
-```yaml
-# Example network policy
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: testing-agent-netpol
-  namespace: gocars-testing
-spec:
-  podSelector:
-    matchLabels:
-      app: gocars-testing-agent
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 3000
-```
+- Non-root user (UID 1001)
+- Read-only root filesystem where possible
+- Dropped capabilities
+- Security context constraints
 
-### Pod Security Standards
+### Network Security
 
-```yaml
-# Pod Security Context
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1001
-  runAsGroup: 1001
-  fsGroup: 1001
-  seccompProfile:
-    type: RuntimeDefault
-```
+- Network policies for pod-to-pod communication
+- TLS termination at ingress
+- Secrets management for sensitive data
 
-### RBAC Configuration
+### Access Control
 
-The deployment includes minimal RBAC permissions:
+- RBAC for service accounts
+- Pod security policies
+- Resource quotas and limits
 
-- **ServiceAccount**: `testing-agent-sa`
-- **ClusterRole**: Read-only access to cluster resources
-- **Role**: Namespace-specific permissions for testing
+## Scaling and Performance
 
-### Secrets Management
-
-#### Using External Secret Management
+### Horizontal Scaling
 
 ```bash
-# Example with AWS Secrets Manager
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: aws-secrets-manager
-  namespace: gocars-testing
-spec:
-  provider:
-    aws:
-      service: SecretsManager
-      region: us-west-2
+# Manual scaling
+kubectl scale deployment testing-agent --replicas=10 -n gocars-testing
+
+# Auto-scaling is configured via HPA
+kubectl get hpa -n gocars-testing
 ```
 
-#### Rotating Secrets
+### Vertical Scaling
 
-```bash
-# Update secret
-kubectl create secret generic testing-agent-secrets \
-  --from-literal=JWT_SECRET=new_jwt_secret \
-  --dry-run=client -o yaml | kubectl apply -f -
+Update resource requests/limits in `k8s/deployment.yaml`:
 
-# Restart deployment to pick up new secrets
-kubectl rollout restart deployment/testing-agent -n gocars-testing
+```yaml
+resources:
+  requests:
+    memory: "1Gi"
+    cpu: "500m"
+  limits:
+    memory: "4Gi"
+    cpu: "2000m"
 ```
+
+### Performance Tuning
+
+1. **Node.js Optimization**:
+   ```bash
+   NODE_OPTIONS="--max-old-space-size=2048"
+   UV_THREADPOOL_SIZE=16
+   ```
+
+2. **Database Connection Pooling**:
+   ```bash
+   POSTGRES_MAX_CONNECTIONS=20
+   POSTGRES_IDLE_TIMEOUT=30000
+   ```
+
+3. **Redis Configuration**:
+   ```bash
+   REDIS_MAX_CONNECTIONS=10
+   REDIS_CONNECT_TIMEOUT=5000
+   ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Pod Startup Issues
+1. **Pod Startup Failures**:
+   ```bash
+   kubectl describe pod <pod-name> -n gocars-testing
+   kubectl logs <pod-name> -n gocars-testing
+   ```
+
+2. **Database Connection Issues**:
+   ```bash
+   kubectl exec -it <postgres-pod> -n gocars-testing -- psql -U testingagent -d testing_agent
+   ```
+
+3. **Redis Connection Issues**:
+   ```bash
+   kubectl exec -it <redis-pod> -n gocars-testing -- redis-cli ping
+   ```
+
+4. **Storage Issues**:
+   ```bash
+   kubectl get pvc -n gocars-testing
+   kubectl describe pvc <pvc-name> -n gocars-testing
+   ```
+
+### Debug Mode
+
+Enable debug logging:
 
 ```bash
-# Check pod status
-kubectl get pods -n gocars-testing
-
-# View pod logs
-kubectl logs -f pod/testing-agent-xxx -n gocars-testing
-
-# Describe pod for events
-kubectl describe pod testing-agent-xxx -n gocars-testing
-
-# Check resource constraints
-kubectl top pods -n gocars-testing
+kubectl set env deployment/testing-agent LOG_LEVEL=debug -n gocars-testing
 ```
 
-#### Database Connection Issues
+### Health Check Debugging
 
 ```bash
-# Test database connectivity
-kubectl exec -it deployment/testing-agent -n gocars-testing -- /bin/sh
+# Check health endpoint
+kubectl port-forward svc/testing-agent-service 3000:3000 -n gocars-testing
+curl http://localhost:3000/health
 
-# Inside the pod:
-# Test Redis
-redis-cli -h redis-service -p 6379 ping
-
-# Test MongoDB
-mongosh mongodb://mongodb-service:27017/gocars-testing
-
-# Test PostgreSQL
-psql postgresql://postgres:password@postgres-service:5432/gocars_testing
+# Check metrics
+curl http://localhost:3000/metrics
 ```
 
-#### Storage Issues
+## Backup and Recovery
+
+### Database Backup
 
 ```bash
-# Check PVC status
-kubectl get pvc -n gocars-testing
+# Create backup
+kubectl exec <postgres-pod> -n gocars-testing -- pg_dump -U testingagent testing_agent > backup.sql
 
-# Check PV status
-kubectl get pv
-
-# Check storage class
-kubectl get storageclass
-
-# View PVC events
-kubectl describe pvc test-data-pvc -n gocars-testing
+# Restore backup
+kubectl exec -i <postgres-pod> -n gocars-testing -- psql -U testingagent testing_agent < backup.sql
 ```
 
-#### Ingress Issues
+### Persistent Volume Backup
+
+Use your cloud provider's volume snapshot feature or:
 
 ```bash
-# Check ingress status
-kubectl get ingress -n gocars-testing
-
-# Check ingress controller logs
-kubectl logs -f deployment/ingress-nginx-controller -n ingress-nginx
-
-# Test internal service
-kubectl port-forward service/testing-agent-service 8080:80 -n gocars-testing
+# Example with rsync
+kubectl exec <pod-name> -n gocars-testing -- tar czf - /app/data | tar xzf - -C ./backup/
 ```
 
-### Performance Issues
+## Maintenance
 
-#### High CPU Usage
+### Updates
 
-```bash
-# Check resource usage
-kubectl top pods -n gocars-testing
+1. **Rolling Update**:
+   ```bash
+   kubectl set image deployment/testing-agent testing-agent=gocars/testing-agent:v2.0.0 -n gocars-testing
+   ```
 
-# Check HPA status
-kubectl get hpa -n gocars-testing
+2. **Configuration Updates**:
+   ```bash
+   kubectl apply -f k8s/configmap.yaml
+   kubectl rollout restart deployment/testing-agent -n gocars-testing
+   ```
 
-# Scale manually if needed
-kubectl scale deployment testing-agent --replicas=5 -n gocars-testing
-```
-
-#### Memory Leaks
-
-```bash
-# Monitor memory usage over time
-kubectl top pods -n gocars-testing --sort-by=memory
-
-# Check for memory limits
-kubectl describe pod testing-agent-xxx -n gocars-testing
-
-# Restart pod if necessary
-kubectl delete pod testing-agent-xxx -n gocars-testing
-```
-
-#### Database Performance
+### Cleanup
 
 ```bash
-# Check database resource usage
-kubectl top pods -l component=database -n gocars-testing
-
-# Check database logs
-kubectl logs -f statefulset/mongodb -n gocars-testing
-kubectl logs -f statefulset/postgres -n gocars-testing
-kubectl logs -f statefulset/redis -n gocars-testing
-```
-
-### Debugging Commands
-
-```bash
-# Get all resources
-kubectl get all -n gocars-testing
-
-# Check events
-kubectl get events -n gocars-testing --sort-by='.lastTimestamp'
-
-# Check resource quotas
-kubectl describe resourcequota -n gocars-testing
-
-# Check network policies
-kubectl get networkpolicy -n gocars-testing
-
-# Export configuration for debugging
-kubectl get deployment testing-agent -o yaml -n gocars-testing > debug-deployment.yaml
-```
-
-### Log Analysis
-
-```bash
-# View application logs
-kubectl logs -f deployment/testing-agent -n gocars-testing
-
-# View logs from all pods
-kubectl logs -f -l app=gocars-testing-agent -n gocars-testing
-
-# View previous container logs (if pod restarted)
-kubectl logs --previous deployment/testing-agent -n gocars-testing
-
-# Export logs for analysis
-kubectl logs deployment/testing-agent -n gocars-testing > application.log
-```
-
-### Health Checks
-
-```bash
-# Test health endpoint
-kubectl exec -it deployment/testing-agent -n gocars-testing -- curl http://localhost:3000/health
-
-# Test metrics endpoint
-kubectl exec -it deployment/testing-agent -n gocars-testing -- curl http://localhost:8080/metrics
-
-# Test database connections
-kubectl exec -it deployment/testing-agent -n gocars-testing -- npm run health-check
-```
-
-## Cleanup
-
-### Undeployment
-
-```bash
-# Use the undeployment script
+# Remove deployment
 ./scripts/undeploy.sh
 
-# Or force deletion without confirmation
-./scripts/undeploy.sh --force
-
-# Manual cleanup
+# Or manually
 kubectl delete namespace gocars-testing
 ```
 
-### Docker Cleanup
+## Production Considerations
 
-```bash
-# Stop and remove containers
-docker-compose down
+### High Availability
 
-# Remove volumes (careful - this deletes data)
-docker-compose down -v
+- Deploy across multiple availability zones
+- Use external managed databases (RDS, Cloud SQL)
+- Implement proper backup strategies
+- Configure monitoring and alerting
 
-# Remove images
-docker rmi gocars/testing-agent:latest
-```
+### Security Hardening
+
+- Use private container registries
+- Implement network policies
+- Regular security scanning
+- Rotate secrets regularly
+
+### Cost Optimization
+
+- Use spot instances where appropriate
+- Implement resource quotas
+- Monitor and optimize resource usage
+- Use cluster autoscaling
 
 ## Support
 
-For deployment issues:
+For issues and questions:
 
-1. Check the [troubleshooting section](#troubleshooting)
-2. Review application logs
-3. Check Kubernetes events
-4. Verify configuration and secrets
-5. Test connectivity between components
+1. Check the logs: `kubectl logs -f deployment/testing-agent -n gocars-testing`
+2. Review metrics: Access Grafana dashboard
+3. Check health status: `curl http://<service>/health`
+4. Review documentation and troubleshooting guide
 
-For additional support, please refer to the main project documentation or create an issue in the repository.
+## API Endpoints
+
+Once deployed, the testing agent provides these endpoints:
+
+- `GET /` - API information
+- `GET /health` - Health check
+- `GET /ready` - Readiness check
+- `GET /info` - System information
+- `GET /metrics` - Prometheus metrics
+- `POST /api/tests/start` - Start test execution
+- `GET /api/tests/:id/status` - Get test status
+- `POST /api/tests/:id/stop` - Stop test execution
+- `GET /api/config` - Get configuration
