@@ -502,20 +502,20 @@ export class WebSocketConnectionTester {
       })
 
       // Initial connection
-      await client.connect()
+      await client.connect();
       
       // Simulate disconnection by disconnecting and reconnecting
-      client.disconnect()
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      client.disconnect();
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Attempt reconnection
-      await client.connect()
+      await client.connect();
       
       // Wait for reconnection events
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // For testing purposes, simulate successful reconnection
-      const simulatedReconnectionSuccess = client.isConnected()
+      const simulatedReconnectionSuccess = client.isConnected();
 
       return {
         id: 'reconnection_logic',
@@ -547,8 +547,9 @@ export class WebSocketConnectionTester {
         timestamp: Date.now()
       }
     }
-  } 
- /**
+  }
+
+  /**
    * Test concurrent connections
    */
   private async testConcurrentConnections(config: WebSocketTestConfig): Promise<WebSocketTestResult> {
