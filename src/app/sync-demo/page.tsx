@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import {
-  Sync, Smartphone, Monitor, Settings, Database,
+  RefreshCw, Smartphone, Monitor, Settings, Database,
   Users, Clock, Wifi, AlertTriangle, CheckCircle,
   Share, GitMerge, Activity, Zap
 } from 'lucide-react';

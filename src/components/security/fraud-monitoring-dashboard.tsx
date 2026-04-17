@@ -347,7 +347,7 @@ export default function FraudMonitoringDashboard() {
                     <CardContent>
                         <div className="text-2xl font-bold text-orange-600">{metrics.highRiskUsers}</div>
                         <p className="text-xs text-muted-foreground">
-              Risk score > 70
+              Risk score &gt; 70
                         </p>
                     </CardContent>
                 </Card>

@@ -196,9 +196,10 @@ class RouteOptimizationService {
       console.error('Error optimizing route:', error)
       throw new Error('Failed to optimize route')
     }
-  }  /**
-   
-* Get real-time route updates
+  }
+
+  /**
+   * Get real-time route updates
    */
   async getRouteUpdates(routeId: string): Promise<RouteUpdate[]> {
     try {
@@ -487,8 +488,9 @@ class RouteOptimizationService {
     }
 
     return Math.min(Math.max(score, 0), 1)
-  }  p
-rivate checkIfRouteNeedsUpdate(route: OptimizedRoute, trafficData: TrafficData[]): boolean {
+  }
+
+  private checkIfRouteNeedsUpdate(route: OptimizedRoute, trafficData: TrafficData[]): boolean {
     // Check if traffic conditions have significantly changed
     for (const segment of route.segments) {
       const trafficInfo = trafficData.find(t => t.segmentId === segment.id)

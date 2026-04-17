@@ -32,13 +32,13 @@ let serverMockTickets: SupportTicket[] = [
 
 
 interface UpdateContext {
-  params: {
+  params: Promise<{
     ticketId: string;
-  };
+  }>;
 }
 
 export async function PUT(request: NextRequest, context: UpdateContext) {
-  const { ticketId } = context.params;
+  const { ticketId } = await context.params;
   // TODO: Implement admin authentication
   try {
     const { status } = await request.json() as { status: SupportTicket['status'] };
@@ -68,7 +68,7 @@ export async function PUT(request: NextRequest, context: UpdateContext) {
 }
 
 export async function DELETE(request: NextRequest, context: UpdateContext) {
-  const { ticketId } = context.params;
+  const { ticketId } = await context.params;
   // TODO: Implement admin authentication
   try {
     const initialLength = serverMockTickets.length;

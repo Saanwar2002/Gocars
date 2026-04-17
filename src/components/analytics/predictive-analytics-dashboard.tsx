@@ -259,7 +259,7 @@ export function PredictiveAnalyticsDashboard({ userId, userRole }: PredictiveAna
           <TabsTrigger value="competitive">Competitive</TabsTrigger>
           <TabsTrigger value="anomalies">Anomalies</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
-        </Tabs>
+        </TabsList>
 
         {/* Forecasting Tab */}
         <TabsContent value="forecasting" className="space-y-4">

@@ -95,9 +95,9 @@ const bookingUpdateSchema = z.object({
 export type BookingUpdatePayload = z.infer<typeof bookingUpdateSchema>;
 
 interface PostContext {
-  params: {
+  params: Promise<{
     bookingId: string;
-  };
+  }>;
 }
 
 function generateFourDigitPin(): string {
@@ -153,11 +153,12 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 export async function POST(request: NextRequest, context: PostContext) {
   let bookingIdForHandler: string = "UNKNOWN_BOOKING_ID_CONTEXT_ERROR";
   try {
-    if (!context || !context.params || typeof context.params.bookingId !== 'string' || context.params.bookingId.trim() === '') {
-        console.error("API POST /api/operator/bookings/[bookingId]: Critical error - bookingId not found in context.params. Context:", JSON.stringify(context, null, 2));
-        return NextResponse.json({ message: 'Booking ID is missing in the request path or context is malformed.' }, { status: 400 });
+    const { bookingId } = await context.params;
+    if (!bookingId || typeof bookingId !== 'string' || bookingId.trim() === '') {
+        console.error("API POST /api/operator/bookings/[bookingId]: Critical error - bookingId not found in context.params.");
+        return NextResponse.json({ message: 'Booking ID is missing in the request path.' }, { status: 400 });
     }
-    bookingIdForHandler = context.params.bookingId;
+    bookingIdForHandler = bookingId;
     console.log(`API POST /api/operator/bookings/${bookingIdForHandler}: Handler entered. Extracted bookingId: ${bookingIdForHandler}`);
   } catch (contextError: any) {
     console.error("API POST /api/operator/bookings/[bookingId]: Error processing context parameters:", contextError);
@@ -700,12 +701,12 @@ export async function POST(request: NextRequest, context: PostContext) {
 
 // GET handler
 interface GetContext {
-  params: {
+  params: Promise<{
     bookingId: string;
-  };
+  }>;
 }
 export async function GET(request: NextRequest, context: GetContext) {
-  const { bookingId } = context.params;
+  const { bookingId } = await context.params;
   console.log(`API GET /api/operator/bookings/${bookingId}: Handler entered.`);
 
   if (!db) {

@@ -135,3 +135,122 @@ const NotificationTestingAgent: React.FC = () => {
           { id: 'int-promotion-workflow', name: 'Promotion Notification Workflow', status: 'pending' },
           { id: 'int-driver-workflow', name: 'Driver Notification Workflow', status: 'pending' },
           { id: 'int-system-workflow', name: 'System Notification Workflow', status: 'pending' }
+        ]
+      }
+    ]
+    setTestSuites(suites)
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'passed': return <CheckCircle className="h-4 w-4 text-green-500" />
+      case 'failed': return <XCircle className="h-4 w-4 text-red-500" />
+      case 'running': return <Clock className="h-4 w-4 text-blue-500 animate-spin" />
+      default: return <Clock className="h-4 w-4 text-gray-400" />
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, string> = {
+      passed: 'bg-green-100 text-green-800',
+      failed: 'bg-red-100 text-red-800',
+      running: 'bg-blue-100 text-blue-800',
+      pending: 'bg-gray-100 text-gray-800',
+      completed: 'bg-green-100 text-green-800'
+    }
+    return (
+      <Badge className={variants[status] || variants.pending}>
+        {status}
+      </Badge>
+    )
+  }
+
+  const totalTests = testSuites.reduce((sum, s) => sum + s.totalCount, 0)
+  const totalPassed = testSuites.reduce((sum, s) => sum + s.passedCount, 0)
+
+  return (
+    <div className="space-y-6 p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TestTube className="h-6 w-6" />
+            Notification Testing Agent
+          </CardTitle>
+          <CardDescription>
+            Comprehensive testing suite for all notification features
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-sm text-muted-foreground">
+              {totalPassed} / {totalTests} tests passed
+            </div>
+            <Button disabled={isRunning}>
+              <Play className="h-4 w-4 mr-2" />
+              {isRunning ? 'Running...' : 'Run All Tests'}
+            </Button>
+          </div>
+          <Progress value={overallProgress} className="w-full" />
+        </CardContent>
+      </Card>
+
+      <Tabs defaultValue="firebase-messaging">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="firebase-messaging">
+            <Bell className="h-4 w-4 mr-1" /> FCM
+          </TabsTrigger>
+          <TabsTrigger value="push-notification-service">
+            <Zap className="h-4 w-4 mr-1" /> Push
+          </TabsTrigger>
+          <TabsTrigger value="intelligent-management">
+            <Brain className="h-4 w-4 mr-1" /> AI
+          </TabsTrigger>
+          <TabsTrigger value="integration-tests">
+            <Shield className="h-4 w-4 mr-1" /> Integration
+          </TabsTrigger>
+        </TabsList>
+
+        {testSuites.map((suite) => (
+          <TabsContent key={suite.id} value={suite.id}>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{suite.name}</CardTitle>
+                    <CardDescription>{suite.description}</CardDescription>
+                  </div>
+                  {getStatusBadge(suite.status)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {suite.tests.map((test) => (
+                    <div
+                      key={test.id}
+                      className="flex items-center justify-between p-3 rounded-lg border"
+                    >
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(test.status)}
+                        <span className="text-sm">{test.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {test.duration && (
+                          <span className="text-xs text-muted-foreground">
+                            {test.duration}ms
+                          </span>
+                        )}
+                        {getStatusBadge(test.status)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  )
+}
+
+export default NotificationTestingAgent

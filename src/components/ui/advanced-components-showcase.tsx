@@ -21,9 +21,9 @@ import {
     Shield,
     Settings,
     Home,
-    Dashboard,
-    Analytics,
-    Reports,
+    LayoutDashboard,
+    BarChart as BarChartIcon,
+    FileBarChart,
     User,
     Bell,
     Search,
@@ -59,12 +59,12 @@ export function AdvancedComponentsShowcase() {
             id: 'dashboard',
             label: 'Dashboard',
             href: '/dashboard',
-            icon: <Dashboard className="h-4 w-4" />,
+            icon: <LayoutDashboard className="h-4 w-4" />,
         },
         {
             id: 'analytics',
             label: 'Analytics',
-            icon: <Analytics className="h-4 w-4" />,
+            icon: <BarChartIcon className="h-4 w-4" />,
             badge: { text: 'New', variant: 'success' as const },
             children: [
                 {
@@ -85,7 +85,7 @@ export function AdvancedComponentsShowcase() {
             id: 'reports',
             label: 'Reports',
             href: '/reports',
-            icon: <Reports className="h-4 w-4" />,
+            icon: <FileBarChart className="h-4 w-4" />,
         },
         {
             id: 'settings',
@@ -150,8 +150,8 @@ export function AdvancedComponentsShowcase() {
                         <Breadcrumbs
                             items={[
                                 { label: 'Home', href: '/', icon: <Home className="h-4 w-4" /> },
-                                { label: 'Dashboard', href: '/dashboard', icon: <Dashboard className="h-4 w-4" /> },
-                                { label: 'Analytics', href: '/analytics', icon: <Analytics className="h-4 w-4" /> },
+                                { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
+                                { label: 'Analytics', href: '/analytics', icon: <BarChartIcon className="h-4 w-4" /> },
                                 { label: 'Ride Reports' },
                             ]}
                         />

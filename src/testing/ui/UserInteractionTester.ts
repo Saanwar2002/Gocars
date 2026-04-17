@@ -107,7 +107,9 @@ export class UserInteractionTester {
    */
   private initializeDefaultConfigurations(): void {
     // Default configurations will be set up here
-  }  /**
+  }
+
+  /**
 
    * Run comprehensive user interaction tests
    */
@@ -571,9 +573,10 @@ export class UserInteractionTester {
         timestamp: Date.now()
       }
     }
-  }  /**
-   
-* Test drag and drop interactions
+  }
+
+  /**
+   * Test drag and drop interactions
    */
   private async testDragAndDropInteractions(config: UserInteractionConfig): Promise<UserInteractionResult> {
     const startTime = Date.now()
@@ -830,9 +833,10 @@ export class UserInteractionTester {
         timestamp: Date.now()
       }
     }
-  }  /**
-   
-* Test performance under interaction load
+  }
+
+  /**
+   * Test performance under interaction load
    */
   private async testPerformanceUnderInteractionLoad(config: UserInteractionConfig): Promise<UserInteractionResult> {
     const startTime = Date.now()

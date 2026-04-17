@@ -135,8 +135,9 @@ export class ConfigurationUI {
         <div id="notification-container" class="notification-container"></div>
       </div>
     `;
-  }  privat
-e generateConfigurationEditor(config?: TestConfiguration): string {
+  }
+
+  private generateConfigurationEditor(config?: TestConfiguration): string {
     const isEditing = !!config;
     const currentConfig = config || this.getDefaultConfiguration();
 
@@ -448,8 +449,9 @@ e generateConfigurationEditor(config?: TestConfiguration): string {
         </div>
       </div>
     `;
-  }  pr
-ivate generateReportingTab(config: TestConfiguration): string {
+  }
+
+  private generateReportingTab(config: TestConfiguration): string {
     const reporting = config.reportingOptions || {};
     
     return `
@@ -893,8 +895,9 @@ ivate generateReportingTab(config: TestConfiguration): string {
       }
     });
     return parameters;
-  }  pr
-ivate refreshConfigurationList(): void {
+  }
+
+  private refreshConfigurationList(): void {
     const configList = document.getElementById('config-list');
     if (!configList) return;
 

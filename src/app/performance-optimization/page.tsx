@@ -184,7 +184,7 @@ export default function PerformanceOptimizationPage() {
             <TabsTrigger value="bundle">Bundle Analysis</TabsTrigger>
             <TabsTrigger value="caching">Caching</TabsTrigger>
             <TabsTrigger value="database">Database</TabsTrigger>
-          </Tabs>
+          </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6 mt-6">

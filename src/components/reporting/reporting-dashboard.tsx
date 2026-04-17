@@ -32,7 +32,6 @@ import {
   Search,
   FileSpreadsheet,
   FileImage,
-  FilePdf,
   FileJson,
   User
 } from 'lucide-react';

@@ -3,15 +3,15 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function NotificationDemo() {
+export default function SettingsPanel() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Notification Demo</CardTitle>
+        <CardTitle>Settings Panel</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">
-          Notification demo component — implementation pending.
+          Settings panel implementation pending.
         </p>
       </CardContent>
     </Card>

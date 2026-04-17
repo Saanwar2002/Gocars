@@ -78,8 +78,8 @@ export class WebSocketConnectionTester {
     console.log(`WebSocket Connection Tests completed: ${results.length} tests run`)
     return results
   }
-}  /
-**
+
+  /**
    * Test connection establishment
    */
   private async testConnectionEstablishment(config: WebSocketTestConfig): Promise<WebSocketTestResult> {

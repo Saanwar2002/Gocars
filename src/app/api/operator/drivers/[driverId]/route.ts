@@ -36,14 +36,14 @@ interface Driver {
 }
 
 interface GetContext {
-  params: {
+  params: Promise<{
     driverId: string;
-  };
+  }>;
 }
 
-export async function GET(req: Request, { params }: { params: { driverId: string } }) {
+export async function GET(req: Request, { params }: GetContext) {
   try {
-    const driverId = params.driverId;
+    const { driverId } = await params;
     const docRef = db.collection('users').doc(driverId);
     const docSnap = await docRef.get();
     if (!docSnap.exists) {
@@ -114,11 +114,11 @@ async function generateSequentialDriverId(operatorCode: string): Promise<string>
   }
 }
 
-export async function POST(request: NextRequest, context: { params: { driverId: string } }) {
+export async function POST(request: NextRequest, context: GetContext) {
   if (!db) {
     return NextResponse.json({ message: 'Database connection failed: Firestore not initialized.' }, { status: 500 });
   }
-  const { driverId } = context.params;
+  const { driverId } = await context.params;
 
   if (!driverId || typeof driverId !== 'string' || driverId.trim() === '') {
     return NextResponse.json({ message: 'A valid Driver ID path parameter is required.' }, { status: 400 });
@@ -241,7 +241,7 @@ export async function DELETE(request: NextRequest, context: GetContext) {
   if (!db) {
     return NextResponse.json({ message: 'Database connection failed: Firestore not initialized.' }, { status: 500 });
   }
-  const { driverId } = context.params;
+  const { driverId } = await context.params;
   if (!driverId || typeof driverId !== 'string' || driverId.trim() === '') {
     return NextResponse.json({ message: 'A valid Driver ID path parameter is required.' }, { status: 400 });
   }

@@ -613,9 +613,10 @@ export class PaymentProcessingTester {
         timestamp: Date.now()
       }
     }
-  }  /**
- 
-  * Test payment gateway integration
+  }
+
+  /**
+   * Test payment gateway integration
    */
   private async testPaymentGatewayIntegration(config: PaymentProcessingConfig): Promise<PaymentProcessingResult> {
     const startTime = Date.now()

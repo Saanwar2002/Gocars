@@ -13,6 +13,6 @@ export type {
   CreditAccount,
   FirebaseError,
   ApiResponse
-} from './global.d'
+} from './types'
 
-export { Timestamp } from './global.d'
+export { Timestamp } from './types'

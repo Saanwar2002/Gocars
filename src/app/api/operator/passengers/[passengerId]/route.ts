@@ -29,19 +29,19 @@ interface Passenger {
 }
 
 interface GetContext {
-  params: {
+  params: Promise<{
     passengerId: string;
-  };
+  }>;
 }
 
-export async function GET(req: Request, { params }: { params: { passengerId: string } }) {
+export async function GET(req: Request, { params }: GetContext) {
   // TODO: Implement authentication/authorization for operator role.
   // const operator = await getAuthenticatedOperator(request);
   // if (!operator) {
   //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   // }
 
-  const passengerId = params.passengerId;
+  const { passengerId } = await params;
 
   if (!passengerId || typeof passengerId !== 'string' || passengerId.trim() === '') {
     return NextResponse.json({ message: 'A valid Passenger ID path parameter is required.' }, { status: 400 });

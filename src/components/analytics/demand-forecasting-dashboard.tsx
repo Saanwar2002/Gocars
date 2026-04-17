@@ -238,8 +238,9 @@ export default function DemandForecastingDashboard({
                 </CardContent>
             </Card>
         </div>
-    )  con
-st renderPricingRecommendations = () => (
+    )
+
+    const renderPricingRecommendations = () => (
         <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card>

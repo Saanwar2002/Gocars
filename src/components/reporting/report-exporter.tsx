@@ -14,7 +14,6 @@ import {
   Download, 
   FileText, 
   FileSpreadsheet, 
-  FilePdf, 
   FileJson,
   FileImage,
   Settings,
@@ -83,7 +82,7 @@ export function ReportExporter({ reportData, reportTitle, onExportComplete }: Re
     { 
       value: 'pdf', 
       label: 'PDF Document', 
-      icon: FilePdf, 
+      icon: FileText, 
       description: 'Portable document format, ideal for sharing and printing',
       color: 'text-red-600'
     },

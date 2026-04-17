@@ -478,7 +478,7 @@ export function FleetOptimizationDashboard({
                         </div>
                         <div className="text-xs text-muted-foreground">Wear Score</div>
                         <div className="text-xs text-muted-foreground">
-                          Target: <70
+                          Target: {'<'}70
                         </div>
                       </div>
                     </div>

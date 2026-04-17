@@ -7,8 +7,8 @@ if (!getApps().length) {
 }
 const db = getFirestore();
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const userId = params.id;
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: userId } = await params;
   if (!userId) {
     return NextResponse.json({ message: 'User ID is required.' }, { status: 400 });
   }

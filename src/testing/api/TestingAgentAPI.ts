@@ -87,7 +87,9 @@ export class TestingAgentAPI {
     } catch (error) {
       return this.errorResponse(`Failed to start testing: ${error}`, requestId)
     }
-  }  /**
+  }
+
+  /**
 
    * Stop test execution
    * POST /api/testing/stop/{sessionId}

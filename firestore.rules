@@ -2,8 +2,87 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin'
+      );
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // Bookings
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.passengerId || 
+        request.auth.uid == resource.data.driverId || 
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.passengerId || 
+        request.auth.uid == resource.data.driverId || 
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Scheduled Bookings
+    match /scheduledBookings/{scheduleId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.passengerId || 
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.passengerId || 
+        isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        request.auth.uid == resource.data.passengerId || 
+        isAdmin()
+      );
+    }
+
+    // Drivers specific data (availability, etc.)
+    match /driverStatus/{driverId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(driverId) || isAdmin();
+    }
+
+    // System settings - Admin only
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Support tickets
+    match /supportTickets/{ticketId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || 
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Default deny
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if isAdmin();
     }
   }
 }

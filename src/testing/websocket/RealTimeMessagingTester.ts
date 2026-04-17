@@ -306,8 +306,9 @@ export class RealTimeMessagingTester {
         timestamp: Date.now()
       }
     }
-  }  /
-**
+  }
+
+  /**
    * Test message persistence
    */
   private async testMessagePersistence(config: MessagingTestConfig): Promise<MessagingTestResult> {
@@ -734,7 +735,9 @@ export class RealTimeMessagingTester {
         timestamp: Date.now()
       }
     }
-  }  /**
+  }
+
+  /**
 
    * Test message priority and queuing
    */
@@ -1511,129 +1514,4 @@ export class RealTimeMessagingTester {
 
     return messages
   }
-}omise.all(messagePromises)
-
-      // Wait for message delivery
-      await new Promise(resolve => setTimeout(resolve, config.messageTimeout))
-
-      // For testing purposes, simulate concurrent message delivery
-      const expectedTotalReceived = totalMessagesSent * (concurrentUsers - 1) // Each user receives messages from others
-      const simulatedMessagesReceived = expectedTotalReceived
-
-      const concurrentMessagingSuccess = simulatedMessagesReceived > 0
-
-      return {
-        id: 'concurrent_messaging',
-        name: 'Concurrent Messaging',
-        status: concurrentMessagingSuccess ? 'passed' : 'failed',
-        duration: Date.now() - startTime,
-        message: concurrentMessagingSuccess ? 
-          `Concurrent messaging successful: ${simulatedMessagesReceived} messages delivered` : 
-          'Concurrent messaging failed',
-        messagingDetails: {
-          messagesSent: totalMessagesSent,
-          messagesReceived: simulatedMessagesReceived,
-          messagesDelivered: simulatedMessagesReceived
-        },
-        details: {
-          concurrentUsers,
-          messagesPerUser,
-          expectedTotalReceived,
-          actualMessagesReceived: totalMessagesReceived,
-          simulatedMessagesReceived,
-          note: 'Concurrent messaging simulation - real implementation requires actual concurrent message handling'
-        },
-        timestamp: Date.now()
-      }
-    } catch (error) {
-      return {
-        id: 'concurrent_messaging',
-        name: 'Concurrent Messaging',
-        status: 'failed',
-        duration: Date.now() - startTime,
-        message: `Concurrent messaging test failed: ${error}`,
-        timestamp: Date.now()
-      }
-    }
-  }
-
-  /**
-   * Test message acknowledgment
-   */
-  private async testMessageAcknowledment(config: MessagingTestConfig): Promise<MessagingTestResult> {
-    const startTime = Date.now()
-    
-    try {
-      const userId = `ack_user_${Date.now()}`
-      const client = await this.createTestClient(userId, config)
-
-      let acknowledgementsReceived = 0
-      const acknowledgmentIds: string[] = []
-
-      // Set up acknowledgment listener
-      client.subscribe('message_ack', (data) => {
-        acknowledgementsReceived++
-        acknowledgmentIds.push(data.messageId)
-      })
-
-      // Send messages that require acknowledgment
-      const ackMessages = [
-        { id: 'ack_msg_1', content: 'Message requiring acknowledgment 1' },
-        { id: 'ack_msg_2', content: 'Message requiring acknowledgment 2' },
-        { id: 'ack_msg_3', content: 'Message requiring acknowledgment 3' }
-      ]
-
-      let messagesSent = 0
-      for (const msg of ackMessages) {
-        const wsMessage: WebSocketMessage = {
-          type: 'chat_message',
-          payload: { content: msg.content, requireAck: true },
-          timestamp: Date.now(),
-          userId,
-          metadata: { id: msg.id, requireAck: true }
-        }
-
-        client.sendMessage(wsMessage)
-        messagesSent++
-        await new Promise(resolve => setTimeout(resolve, 300))
-      }
-
-      // Wait for acknowledgments
-      await new Promise(resolve => setTimeout(resolve, config.messageTimeout))
-
-      // For testing purposes, simulate acknowledgments
-      const simulatedAcknowledgments = messagesSent
-      const acknowledgmentSuccess = simulatedAcknowledgments === messagesSent
-
-      return {
-        id: 'message_acknowledgment',
-        name: 'Message Acknowledgment',
-        status: acknowledgmentSuccess ? 'passed' : 'failed',
-        duration: Date.now() - startTime,
-        message: acknowledgmentSuccess ? 
-          `All ${messagesSent} messages acknowledged` : 
-          `Message acknowledgment failed: ${simulatedAcknowledgments}/${messagesSent} acknowledged`,
-        messagingDetails: {
-          messagesSent,
-          messagesReceived: simulatedAcknowledgments
-        },
-        details: {
-          expectedAcknowledgments: messagesSent,
-          simulatedAcknowledgments,
-          actualAcknowledgments: acknowledgementsReceived,
-          acknowledgmentIds: acknowledgmentIds.length,
-          note: 'Message acknowledgment simulation - real implementation requires server-side acknowledgment handling'
-        },
-        timestamp: Date.now()
-      }
-    } catch (error) {
-      return {
-        id: 'message_acknowledgment',
-        name: 'Message Acknowledgment',
-        status: 'failed',
-        duration: Date.now() - startTime,
-        message: `Message acknowledgment test failed: ${error}`,
-        timestamp: Date.now()
-      }
-    }
-  }
+}

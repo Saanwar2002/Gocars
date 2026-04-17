@@ -155,7 +155,9 @@ export class BookingFlowTester {
    */
   private initializeDefaultConfigurations(): void {
     // Default configurations will be set up here
-  }  /**
+  }
+
+  /**
 
    * Run comprehensive booking flow tests
    */
@@ -461,8 +463,9 @@ export class BookingFlowTester {
         timestamp: Date.now()
       }
     }
-  }  
-/**
+  }
+
+  /**
    * Test payment processing integration
    */
   private async testPaymentProcessingIntegration(config: BookingFlowConfig): Promise<BookingFlowResult> {
@@ -1180,8 +1183,9 @@ export class BookingFlowTester {
         validationPoints: []
       }
     ]
-  }  //
- Additional simulation methods
+  }
+
+  // Additional simulation methods
 
   /**
    * Simulate driver matching

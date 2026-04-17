@@ -71,8 +71,9 @@ export interface PerformanceMetrics {
     maxConcurrency: number;
     queuedTests: number;
   };
-}export
- interface SystemHealthMetrics {
+}
+
+export interface SystemHealthMetrics {
   overallHealth: 'healthy' | 'degraded' | 'unhealthy' | 'critical';
   healthScore: number; // 0-100
   components: {
@@ -222,8 +223,9 @@ export class RealTimeMonitoringDashboard extends EventEmitter {
       },
       timestamp: new Date()
     };
-  }  /
-**
+  }
+
+  /**
    * Start the monitoring dashboard
    */
   public start(): void {
@@ -381,9 +383,10 @@ export class RealTimeMonitoringDashboard extends EventEmitter {
 
     // Emit update event
     this.emit('errorTrackingUpdate', tracking);
-  }  /**
-   *
- Update performance metrics
+  }
+
+  /**
+   * Update performance metrics
    */
   public updatePerformanceMetrics(responseTime: number, throughput: number): void {
     const performance = this.metrics.performance;
@@ -542,8 +545,9 @@ export class RealTimeMonitoringDashboard extends EventEmitter {
    */
   public getActiveAlerts(): Alert[] {
     return this.alerts.filter(alert => !alert.acknowledged);
-  }  /
-**
+  }
+
+  /**
    * Update metrics periodically
    */
   private updateMetrics(): void {

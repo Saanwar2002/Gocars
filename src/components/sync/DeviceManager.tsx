@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import {
   Smartphone, Monitor, Tablet, Wifi, WifiOff, Battery,
-  Clock, MapPin, Settings, Sync, MoreHorizontal,
+  Clock, MapPin, Settings, RefreshCw, MoreHorizontal,
   CheckCircle, AlertCircle, Share, Eye, EyeOff
 } from 'lucide-react';
 

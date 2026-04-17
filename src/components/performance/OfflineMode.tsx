@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import {
-  Wifi, WifiOff, Download, Upload, Sync, AlertTriangle,
+  Wifi, WifiOff, Download, Upload, RefreshCw, AlertTriangle,
   CheckCircle, Clock, Database, Smartphone
 } from 'lucide-react';
 

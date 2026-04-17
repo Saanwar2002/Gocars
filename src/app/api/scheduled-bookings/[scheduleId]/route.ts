@@ -77,13 +77,13 @@ const scheduledRideUpdateSchema = z.object({
 });
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     scheduleId: string;
-  };
+  }>;
 }
 
 export async function PUT(request: NextRequest, context: RouteContext) {
-  const { scheduleId } = context.params;
+  const { scheduleId } = await context.params;
   // TODO: Implement user authentication and get authenticatedUserId
   // const authenticatedUserId = await getUserIdFromRequest(request);
 
@@ -157,7 +157,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
-  const { scheduleId } = context.params;
+  const { scheduleId } = await context.params;
   const { searchParams } = new URL(request.url);
   const passengerId = searchParams.get('passengerId'); 
 
@@ -192,7 +192,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
 // GET specific schedule (for the edit page)
 export async function GET(request: NextRequest, context: RouteContext) {
-  const { scheduleId } = context.params;
+  const { scheduleId } = await context.params;
   // TODO: Add passengerId verification if needed, or rely on Firestore rules
   // const { searchParams } = new URL(request.url);
   // const passengerId = searchParams.get('passengerId');

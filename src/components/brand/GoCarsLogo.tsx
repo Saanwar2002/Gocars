@@ -184,6 +184,8 @@ export function GoCarsLogoIcon(props: Omit<GoCarsLogoProps, 'variant'>) {
   return <GoCarsLogo {...props} variant="icon" />;
 }
 
+export const GoCarsIcon = GoCarsLogoIcon;
+
 export function GoCarsLogoMonochrome(props: Omit<GoCarsLogoProps, 'variant'>) {
   return <GoCarsLogo {...props} variant="monochrome" />;
 }
